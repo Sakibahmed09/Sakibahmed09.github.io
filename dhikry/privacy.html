@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>privacy policy — dhikry</title>
+<meta name="description" content="dhikry privacy policy — what we collect, what stays on your device, and your rights.">
+<style>
+  :root {
+    --bg: #0A0E1E; --elevated: #111628; --surface: #1A1F38;
+    --gold: #D4A853; --cream: #F5F0E8; --secondary: #8A8D9E; --muted: #555770;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--cream);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 56px 24px 96px; }
+  .eyebrow { color: var(--gold); font-size: 13px; letter-spacing: 0.2em; margin-bottom: 16px; }
+  .eyebrow a { color: var(--gold); text-decoration: none; }
+  h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .updated { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+  h2 { font-size: 20px; color: var(--gold); margin: 40px 0 12px; font-weight: 600; }
+  h3 { font-size: 16px; color: var(--cream); margin: 24px 0 8px; font-weight: 600; }
+  p, li { color: var(--secondary); font-size: 15.5px; margin-bottom: 12px; }
+  ul { padding-left: 22px; margin-bottom: 16px; }
+  li { margin-bottom: 8px; }
+  strong { color: var(--cream); font-weight: 600; }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .note { background: var(--elevated); border: 1px solid var(--surface); border-left: 3px solid var(--gold); border-radius: 12px; padding: 18px 20px; margin: 20px 0; }
+  .note p { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--surface); color: var(--secondary); vertical-align: top; }
+  th { color: var(--cream); font-weight: 600; }
+  footer { margin-top: 64px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><a href="index.html">dhikry</a></div>
+  <h1>privacy policy</h1>
+  <p class="updated">last updated: june 11, 2026</p>
+
+  <p>dhikry is a social dhikr (remembrance) app. your spiritual practice is an amanah — a sacred trust. this policy describes exactly what data the app handles, what stays on your device, and what is stored on our servers. we collect the minimum needed to make circles work, and nothing else.</p>
+
+  <h2>what we collect and why</h2>
+  <table>
+    <tr><th>data</th><th>where it lives</th><th>why</th></tr>
+    <tr><td><strong>your name</strong> (from Sign in with Apple, or as Apple shares it)</td><td>our servers (Supabase)</td><td>shown to your circle members ("salmun prayed for you")</td></tr>
+    <tr><td><strong>apple sign-in identity</strong> (including the email apple shares — you may use apple's private relay to hide it)</td><td>our servers (Supabase Auth)</td><td>account sign-in only; never shown to other users, never used for marketing</td></tr>
+    <tr><td><strong>prayer sessions &amp; streaks</strong> (session type, completion time, tap counts)</td><td>your device + our servers</td><td>your streak, and so your circle can see you prayed today</td></tr>
+    <tr><td><strong>duas</strong> (dua requests you write, duas you send, sender names)</td><td>our servers</td><td>duas in dhikry are by name — when someone prays for you, you see who</td></tr>
+    <tr><td><strong>circle membership</strong> (circle name, invite code, members)</td><td>our servers</td><td>the core social feature</td></tr>
+    <tr><td><strong>timezone &amp; notification preferences</strong></td><td>our servers</td><td>so reminders and circle nudges arrive at a respectful local hour</td></tr>
+    <tr><td><strong>push notification token</strong></td><td>our servers</td><td>to deliver notifications you opted into; deleted when you sign out</td></tr>
+    <tr><td><strong>usage analytics</strong> (events like "session completed", keyed to a random device id)</td><td>our servers</td><td>to understand which features work; the device id is randomly generated and not linked to your name or apple identity</td></tr>
+    <tr><td><strong>crash reports</strong> (stack traces, device model, os version — via Sentry, only in production builds where crash reporting is configured)</td><td>Sentry</td><td>to fix crashes; configured to never include personal information or request contents</td></tr>
+  </table>
+
+  <h2>what never leaves your device</h2>
+  <ul>
+    <li><strong>your location.</strong> if you grant location access, your GPS coordinates are used to calculate prayer times and are stored only on your device. coordinates are never sent to our servers. (only your timezone name, e.g. "Europe/London", is stored server-side for notification timing.)</li>
+    <li><strong>your contacts.</strong> if you grant contacts access, dhikry reads first names and phone numbers on-device to suggest people to pray for and invite. your contact list is never uploaded anywhere. invites are sent by you, from your own Messages app or share sheet — we only pre-fill the message text.</li>
+    <li><strong>share cards.</strong> milestone images are rendered on-device and saved to your photo library only when you ask.</li>
+  </ul>
+
+  <h2>what we do not do</h2>
+  <ul>
+    <li>we do not sell, rent, or share your data with anyone</li>
+    <li>we do not show ads or use advertising trackers</li>
+    <li>we do not track you across other apps or websites</li>
+    <li>we do not upload your contacts or your location</li>
+    <li>we do not collect health data</li>
+    <li>there are no third-party analytics SDKs — analytics are our own minimal event counts</li>
+  </ul>
+
+  <h2>guest mode</h2>
+  <p>you can use dhikry without an account ("skip · save later"). in guest mode your streak and session data live only on your device, alongside the anonymous usage analytics described above. social features (circles, duas) require an account.</p>
+
+  <h2>where your data is stored</h2>
+  <p>account and circle data are stored with <a href="https://supabase.com" rel="noopener">Supabase</a> (our database and authentication provider), protected by row-level security so users can only read what they are meant to see. crash reports, when enabled, go to <a href="https://sentry.io" rel="noopener">Sentry</a>. both act as data processors on our behalf.</p>
+
+  <h2>notifications</h2>
+  <p>notifications are opt-in. daily reminders are scheduled on your device; circle notifications (e.g. a gentle nudge from a circle member) are delivered through apple's push service using your push token. you can turn any of this off in settings or in iOS settings at any time.</p>
+
+  <h2>children</h2>
+  <p>dhikry is not directed at children under 13, and we do not knowingly collect data from them. if you believe a child has created an account, contact us and we will delete it.</p>
+
+  <h2>your rights &amp; deleting your data</h2>
+  <p>you can sign out at any time (this removes your push token from our servers). to delete your account and all associated server data — profile, sessions, streaks, duas, circle memberships, and analytics tied to your device — email us and we will complete the deletion within 30 days:</p>
+  <div class="note"><p><a href="mailto:sakib@withsignal.io">sakib@withsignal.io</a> — subject "delete my dhikry account"</p></div>
+  <p>depending on where you live, you may also have rights to access, correct, or export your data (e.g. under GDPR or CCPA). email us and we will help.</p>
+
+  <h2>changes to this policy</h2>
+  <p>if we change what we collect, we will update this page and the "last updated" date before the change takes effect.</p>
+
+  <h2>contact</h2>
+  <p>questions about privacy: <a href="mailto:sakib@withsignal.io">sakib@withsignal.io</a></p>
+
+  <footer>© 2026 dhikry · <a href="index.html">home</a> · <a href="support.html">support</a></footer>
+</div>
+</body>
+</html>
