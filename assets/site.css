@@ -407,6 +407,19 @@ html.locked { overflow: hidden; }
   transition: color var(--swift) ease;
 }
 .foot .hint:hover { color: var(--ink); }
+/* a key is a key wherever it appears. prose used to mark these with the
+   highlighter, which is the component for emphasis, not for hardware. */
+kbd {
+  font-family: var(--sans);
+  font-size: 0.86em;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.08rem 0.32rem;
+  white-space: nowrap;
+  color: var(--ink-2);
+}
+
 .foot .hint kbd {
   font-family: var(--sans);
   font-size: 0.72rem;
@@ -1187,8 +1200,6 @@ html.locked { overflow: hidden; }
 
 /* the page follows your thumb, then settles */
 .page { will-change: auto; }
-.swiping .page { transition: none; }
-.settling .page { transition: transform 260ms var(--out); }
 
 /* ---------- swipe: where you're heading, and which way the page leaves ---------- */
 .peek {

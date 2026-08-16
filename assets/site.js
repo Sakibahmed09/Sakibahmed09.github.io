@@ -435,7 +435,6 @@
       if (shown >= data.length) {
         done = true;
         endEl.textContent = "That\u2019s all of it. " + data.length + " posts.";
-        endEl.classList.add("spent");
       }
     };
 
