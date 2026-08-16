@@ -301,6 +301,11 @@ def main():
                     misses.append((slug, needle))
                     continue
                 used.add(key_of(p))
+                # if the post carried a photo, show it: an image-led post with
+                # the image missing is just a headline with nothing under it
+                if not img and p.get("media"):
+                    img = p["media"][0]
+                    alt = alt or "Photo from the post."
                 out.append(card(p, i, stage_image(img) if img else None, alt))
                 i += 1
             out.append('  </div>')

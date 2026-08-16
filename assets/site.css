@@ -304,6 +304,7 @@ html.locked { overflow: hidden; }
 }
 .foot .clock { font-variant-numeric: normal; }
 .foot .links { display: flex; gap: 1.05rem; margin-left: auto; }
+.foot .quiet-link { font-size: 0.78rem; color: var(--ink-3); }
 .foot .hint {
   color: var(--ink-3);
   background: none;

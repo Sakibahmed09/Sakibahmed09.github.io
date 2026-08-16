@@ -30,6 +30,21 @@ VENTURES = {
 }
 
 
+def media_index():
+    """tweet id -> its image files in the archive"""
+    import collections
+    dirs = glob.glob(os.path.expanduser("~/Downloads/twitter-*/data/tweets_media"))
+    idx = collections.defaultdict(list)
+    if dirs:
+        for f in os.listdir(dirs[0]):
+            if f.lower().endswith((".jpg", ".png")):
+                idx[f.split("-")[0]].append(f)
+    return idx
+
+
+MEDIA = media_index()
+
+
 def load_tweets():
     raw = open(ARCHIVE, encoding="utf-8").read()
     raw = raw[raw.index("["):]
@@ -45,6 +60,7 @@ def load_tweets():
             if t.get("in_reply_to_user_id_str") != "355236713":
                 continue
         out.append({
+            "media": sorted(MEDIA.get(t["id_str"], []))[:1],
             "id": t["id_str"],
             "date": t["created_at"],
             "text": txt,
