@@ -303,15 +303,18 @@
       var el = document.createElement("article");
       el.className = "post " + (isX ? "x" : "li");
       el.innerHTML =
-        '<header><img class="pfp" src="' + media + 'avatar.jpg" alt="" loading="lazy">' +
-        '<span class="who">' + who + '</span>' +
-        '<span class="mark" aria-hidden="true">' + (isX ? "\ud835\udd4f" : "in") + '</span></header>' +
-        '<div class="body"><p>' + esc(txt) + '</p>' +
-        (p.m ? '<img class="shot" src="' + media + p.m + '" alt="Photo from the post." loading="lazy">' : '') +
-        '</div>' +
-        '<footer><time>' + pretty(p.d) + '</time>' +
-        '<span class="stats">' + bits.join(" \u00b7 ") + '</span>' +
-        '<a class="open" data-out href="' + p.u + '">Open</a></footer>';
+        '<img class="pfp" src="' + media + 'avatar.jpg" alt="" loading="lazy">' +
+        '<div class="col">' +
+          '<header><span class="name">' + (isX ? "sakib" : "Sakib Ahmed") + '</span>' +
+          '<span class="handle">' + (isX ? "@mertesakib" : "Draper") + '</span>' +
+          '<span class="sep">\u00b7</span><time>' + pretty(p.d) + '</time>' +
+          '<span class="mark" aria-hidden="true">' + (isX ? "\ud835\udd4f" : "in") + '</span></header>' +
+          '<div class="body"><p>' + esc(txt) + '</p>' +
+          (p.m ? '<img class="shot" src="' + media + p.m + '" alt="Photo from the post." loading="lazy">' : '') +
+          '</div>' +
+          '<footer><span class="stats">' + bits.join(" \u00b7 ") + '</span>' +
+          '<a class="open" data-out href="' + p.u + '">Open</a></footer>' +
+        '</div>';
       return el;
     };
 

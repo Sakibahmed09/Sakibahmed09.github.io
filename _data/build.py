@@ -203,24 +203,31 @@ def card(p, i, img=None, alt=""):
         who = ('<span class="name">Sakib Ahmed</span>'
                '<span class="handle">Co-founder of Draper · Own your distribution</span>')
         mark = "in"
+    if src == "x":
+        name, handle, mark = "sakib", "@mertesakib", "\U0001D54F"
+    else:
+        name, handle, mark = "Sakib Ahmed", "Draper", "in"
     return """    <article class="post {kind}">
-      <header>
-        <img class="pfp" src="../../assets/media/avatar.jpg" alt="" loading="lazy" decoding="async">
-        <span class="who">{who}</span>
-        <span class="mark" aria-hidden="true">{mark}</span>
-      </header>
-      <div class="body">
-        <p>{txt}</p>{shot}
+      <img class="pfp" src="../../assets/media/avatar.jpg" alt="" loading="lazy" decoding="async">
+      <div class="col">
+        <header>
+          <span class="name">{name}</span>
+          <span class="handle">{handle}</span>
+          <span class="sep">&#183;</span>
+          <time>{date}</time>
+          <span class="mark" aria-hidden="true">{mark}</span>
+        </header>
+        <div class="body">
+          <p>{txt}</p>{shot}
+        </div>
+        <footer>
+          <span class="stats">{num}</span>
+          <a class="open" data-out href="{url}">Open</a>
+        </footer>
       </div>
-      <footer>
-        <time>{date}</time>
-        <span class="stats">{num}</span>
-        <a class="open" data-out href="{url}">{where}</a>
-      </footer>
-    </article>""".format(kind=src, who=who, mark=mark, txt=html.escape(txt),
-                         shot=shot, date=pretty(p["date"]),
-                         num=" · ".join(bits), url=p.get("url", "#"),
-                         where="Open" if src == "x" else "Open")
+    </article>""".format(kind=src, name=name, handle=handle, mark=mark,
+                         txt=html.escape(txt), shot=shot, date=pretty(p["date"]),
+                         num=" &#183; ".join(bits), url=p.get("url", "#"))
 
 
 def lane_row(p, label=None):
