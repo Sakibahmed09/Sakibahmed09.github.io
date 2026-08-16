@@ -375,19 +375,21 @@ html.locked { overflow: hidden; }
   padding-top: var(--s4);
   border-top: 1px solid var(--line-soft);
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  /* the clock takes the slack. it changes length through the day and with
+     the reader's timezone, so anything else in 1fr gets squeezed by it. */
+  grid-template-columns: 1fr auto auto auto;
   align-items: center;
   gap: 0.75rem 1.15rem;
   color: var(--ink-3);
   font-size: var(--t-s);
 }
-.foot .clock  { grid-column: 1; grid-row: 1; }
+.foot .clock  { grid-column: 1; grid-row: 1; min-width: 0; }
 
 /* Bilal's actual insight: a prayer time only matters when it is nearly time
    to move. Inside half an hour the clock stops reporting and starts nudging. */
 .clock.soon { color: var(--seal); }
 .foot .tasbih { grid-column: 2; grid-row: 1; }
-.foot .links  { grid-column: 3; grid-row: 1; justify-self: end; }
+.foot .links  { grid-column: 3; grid-row: 1; justify-self: end; flex-wrap: nowrap; }
 .foot .moon   { grid-column: 4; grid-row: 1; justify-self: end; }
 .foot .player { grid-column: 1 / -1; grid-row: 2; }
 .foot .colophon-line { grid-column: 1 / -1; grid-row: 3; }
@@ -1289,17 +1291,31 @@ kbd {
     gap: 0.85rem 1rem;
     margin-top: var(--s8);
   }
-  .foot { grid-template-columns: 1fr auto; }
-  .foot .clock  { grid-column: 1; grid-row: 1; }
-  .foot .tasbih { grid-column: 2; grid-row: 1; justify-self: end; }
-  .foot .links  { grid-column: 1; grid-row: 2; gap: var(--s5); }
-  .foot .moon   { grid-column: 2; grid-row: 2; justify-self: end; }
+  /* the clock is a sentence now, so it gets its own line instead of fighting
+     the tasbih for one. the three controls share the row beneath it. */
+  .foot { grid-template-columns: auto 1fr auto; }
+  .foot .clock  { grid-column: 1 / -1; grid-row: 1; }
+  .foot .tasbih { grid-column: 1; grid-row: 2; justify-self: start; }
+  .foot .links  { grid-column: 2; grid-row: 2; justify-self: center; gap: var(--s4); }
+  .foot .moon   { grid-column: 3; grid-row: 2; justify-self: end; }
   .foot .player { grid-column: 1 / -1; grid-row: 3; }
   .foot .colophon-line { grid-column: 1 / -1; grid-row: 4; margin-top: 0; }
   .foot .hint { display: none; }
   .lane-wrap { margin-top: var(--s8); }
 }
 
+
+/* Below about 360px three controls will not share a row without the links
+   breaking up. Give them their own line rather than letting them stack
+   raggedly against the tasbih. */
+@media (max-width: 360px) {
+  .foot { grid-template-columns: 1fr auto; }
+  .foot .tasbih { grid-column: 1; grid-row: 2; justify-self: start; }
+  .foot .moon   { grid-column: 2; grid-row: 2; justify-self: end; }
+  .foot .links  { grid-column: 1 / -1; grid-row: 3; justify-self: start; gap: var(--s4); }
+  .foot .player { grid-column: 1 / -1; grid-row: 4; }
+  .foot .colophon-line { grid-column: 1 / -1; grid-row: 5; }
+}
 
 /* ---------- print: paper wants the words, not the furniture ---------- */
 @media print {

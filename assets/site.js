@@ -119,7 +119,7 @@
       clock.classList.toggle("soon", gap <= 30);
       clock.textContent = gap <= 30
         ? name + " in " + Math.max(1, Math.round(gap)) + " min" + (Math.round(gap) === 1 ? "" : "s") + "."
-        : "It\u2019s " + t + " in " + here + ". " + name + " at " + atTxt + ".";
+        : here + ", " + t + ". " + name + " at " + atTxt + ".";
       clock.title = tz + " \u00b7 worked out on your device, nothing sent anywhere";
     };
     tick();
