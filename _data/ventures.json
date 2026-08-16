@@ -191,7 +191,11 @@
         "posts": [
           "I'm building @PSK_UKI because I want to bring some new flavours",
           "Proud to announce our newest food brand"
-        ]
+        ],
+        "note": {
+          "txt": "ai slop, i know. we just didn’t have pictures yet",
+          "pin": "36rem"
+        }
       },
       {
         "say": "Two months between the first box and the one we launched with. That gap is the job.",
@@ -202,7 +206,11 @@
             "img": "1966130785418916280-G0kZhNiWUAEsC5p.jpg",
             "alt": "The first Peruvian Street Kitchen box, chicken and rice under green sauce."
           }
-        ]
+        ],
+        "note": {
+          "txt": "until we did. and it tasted as good as it looked",
+          "pin": "24.5rem"
+        }
       },
       {
         "say": "We ran a stealth test before opening properly. Someone spent £100 trying to sabotage it, which I took as a compliment. A dad tried to buy from us five times in one week and we were shut every time.",

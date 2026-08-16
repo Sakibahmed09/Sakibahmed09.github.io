@@ -411,7 +411,11 @@ def main():
                            proof=proof, link=link, lede=lede, clients=client_block(v))]
         i = 0
         for beat in v["beats"]:
-            out.append('\n  <div class="beat">')
+            # a beat can carry a scribble in the margin. the whole beat is the
+            # anchor so --pin can drop the note down beside a photo rather than
+            # pinning it to the first line of prose.
+            note = beat.get("note")
+            out.append('\n  <div class="beat%s">' % (" anchored" if note else ""))
             out.append('    <p class="say">%s</p>' % beat["say"])
             for entry in beat.get("posts", []):
                 # a post is either a match string, or a dict that also opts
@@ -432,6 +436,13 @@ def main():
                     alt = alt or "Photo from the post."
                 out.append(card(p, i, stage_image(img) if img else None, alt))
                 i += 1
+            if note:
+                out.append(
+                    '    <aside class="pen-note" style="--pin:%s">\n'
+                    '      <svg class="stroke" width="52" height="30" viewBox="0 0 52 30" aria-hidden="true">'
+                    '<path d="M50 25 C40 26, 16 24, 5 12"/><path d="M5 12 L14 13"/><path d="M5 12 L9 20"/></svg>\n'
+                    '      <span class="txt">%s</span>\n'
+                    '    </aside>' % (note.get("pin", "6rem"), clean(note["txt"])))
             out.append('  </div>')
 
         # the self-updating lane: everything not already in the spine
