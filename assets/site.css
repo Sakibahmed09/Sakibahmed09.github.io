@@ -949,6 +949,20 @@ html.locked { overflow: hidden; }
   color: var(--ink-3);
   font-size: 0.82rem;
 }
+.feed-more {
+  display: inline-block;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font: inherit;
+  font-size: 0.84rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color var(--swift) ease, color var(--swift) ease;
+}
+.feed-more:hover { border-color: var(--seal); color: var(--ink); }
+
 .feed-end.spent { padding-top: 0.6rem; border-top: 1px solid var(--line-soft); }
 
 /* ---------- the lane: the part that refreshes itself ---------- */

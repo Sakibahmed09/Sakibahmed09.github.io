@@ -329,12 +329,33 @@
       }
     };
 
+    /* Auto-load a few batches, then hand control back with a button.
+       Endless auto-loading pushes the footer away forever and the tasbih and
+       theme toggle become unreachable. */
+    var autoLeft = 3;
+    var button = null;
+    var offerButton = function () {
+      if (button || done) return;
+      button = document.createElement("button");
+      button.className = "feed-more";
+      button.textContent = "Keep going";
+      button.addEventListener("click", function () {
+        autoLeft = 3;
+        button.remove(); button = null;
+        more();
+      });
+      endEl.appendChild(button);
+    };
+    var step = function () {
+      if (autoLeft > 0) { autoLeft -= 1; more(); if (!done && autoLeft === 0) offerButton(); }
+    };
+
     var io = new IntersectionObserver(function (es) {
-      if (!es[0].isIntersecting || loading || done) return;
-      if (data) { more(); return; }
+      if (!es[0].isIntersecting || loading || done || button) return;
+      if (data) { step(); return; }
       loading = true;
       fetch(url).then(function (r) { return r.json(); }).then(function (j) {
-        data = j; loading = false; more();
+        data = j; loading = false; step();
       }).catch(function () {
         loading = false; done = true;
         endEl.textContent = "Could not load the rest.";

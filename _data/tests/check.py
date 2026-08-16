@@ -93,6 +93,8 @@ with sync_playwright() as pw:
     # ---- tasbih + theme ----
     pg = b.new_page()
     pg.goto(BASE + "/", wait_until="networkidle")
+    pg.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    pg.wait_for_timeout(400)
     for _ in range(5):
         pg.click("#tasbih")
     check("tasbih counts", pg.text_content("#tasbih-count").startswith("5/33"))
