@@ -20,7 +20,7 @@ HEAD = """<!doctype html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{stand_plain}">
 <meta property="og:type" content="article">
-<meta property="og:image" content="../../assets/og.png">
+<meta property="og:image" content="https://sakib.lol/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
@@ -340,7 +340,7 @@ def find(bucket, needle):
 def write_site_files(feed):
     """sitemap, robots and a real RSS feed — the marks of a site that is kept."""
     import xml.sax.saxutils as sx
-    BASE = "https://sakibahmed09.github.io"
+    BASE = "https://sakib.lol"
     paths = ["/", "/chapters/", "/craft/", "/ventures/"]
     paths += ["/ventures/%s/" % k for k in SPEC.keys()]
     today = max(p["d"] for p in feed) if feed else "2026-08-16"

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sakibahmed09.github.io/sitemap.xml
+Sitemap: https://sakib.lol/sitemap.xml
