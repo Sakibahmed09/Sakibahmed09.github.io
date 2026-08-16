@@ -277,6 +277,19 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   transition: color var(--swift) ease;
 }
 
+/* Hovering the list makes the whole list recede and brings back only the row
+   under the pointer. Years stay legible so you can still scan the dates. */
+@media (hover: hover) and (pointer: fine) {
+  .ledger a .what,
+  .ledger a .meta { transition: opacity var(--swift) ease, color var(--swift) ease; }
+  .ledger:hover a .what,
+  .ledger:hover a .meta { opacity: 0.34; }
+  .ledger a:hover .what,
+  .ledger a:hover .meta { opacity: 1; }
+  .ledger:hover a .yr { opacity: 0.55; transition: opacity var(--swift) ease; }
+  .ledger a:hover .yr { opacity: 1; }
+}
+
 /* row hover: the arrow leans in */
 .ledger a .what::after {
   content: "\2192";
