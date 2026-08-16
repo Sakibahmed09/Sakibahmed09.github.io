@@ -938,6 +938,19 @@ html.locked { overflow: hidden; }
 }
 .player .mine.show { opacity: 1; transform: none; }
 
+/* ---------- the feed ---------- */
+.feed-wrap { margin-top: 3.4rem; }
+.feed { margin-top: 0.9rem; }
+.feed .post { margin-left: 0; max-width: 31rem; }
+.feed .post + .post { margin-left: 0; margin-top: 0.9rem; }
+.feed-end {
+  min-height: 2.5rem;
+  margin-top: 1.2rem;
+  color: var(--ink-3);
+  font-size: 0.82rem;
+}
+.feed-end.spent { padding-top: 0.6rem; border-top: 1px solid var(--line-soft); }
+
 /* ---------- the lane: the part that refreshes itself ---------- */
 .lane-wrap { margin-top: 3.4rem; }
 .lane { list-style: none; margin-top: 0.45rem; }

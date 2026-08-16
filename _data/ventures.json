@@ -32,14 +32,14 @@
         ]
       },
       {
-        "say": "I was eighteen and had no idea what I was doing, so I just kept showing it to people until something happened. It went international well before it went anywhere near profitable.",
+        "say": "I was eighteen and had no idea what I was doing, so I kept showing it to people.",
         "posts": [
           "never I thought I’d read minideed praise in another language",
           "Having a lot of fun presenting @MiniDeed"
         ]
       },
       {
-        "say": "The best thing about it was never the money. People started using it to talk about things they were struggling with, and it turned into a place I did not design.",
+        "say": "People started using it to talk about what they were struggling with. I did not design that.",
         "posts": [
           "MiniDeed is really precious tonight"
         ]
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "say": "Here is the part I got wrong. We removed follower counts because we thought they were toxic. People churned, because we had taken away the thing they came for. You cannot opt out of the attention economy by pretending it is not there. That mistake cost me three years and it is the foundation of everything I do at Draper now.",
+        "say": "Here is what I got wrong. We removed follower counts because they felt toxic, and people churned because we had taken away the thing they came for. You cannot opt out of the attention economy by pretending it is not there.",
         "posts": [
           "We raised £26,000 for charity through an app where every like"
         ]
@@ -93,27 +93,27 @@
     ],
     "beats": [
       {
-        "say": "We did not plan any of this. The pandemic shut my dad's Italian restaurant, my parents were stranded in Bangladesh, and me and my brother were left with a kitchen and nothing to cook in it.",
+        "say": "We did not plan any of this. The pandemic shut my dad's restaurant, my parents were stranded in Bangladesh, and me and my brother had a kitchen and nothing to cook in it.",
         "posts": [
           "I didn’t plan to build Simply Smashed",
           "We sold burgers from the back of a flower shop"
         ]
       },
       {
-        "say": "Everything early was held together with whatever happened to be nearby. A £100 grill, a projector borrowed off a mate, my mum's recipes. None of it looked like a plan at the time and all of it turned out to be one.",
+        "say": "A £100 grill, a borrowed projector, my mum's recipes.",
         "posts": [
           "Three years ago, we borrowed a projector"
         ]
       },
       {
-        "say": "The operational stuff is what I am actually proud of, and it is the stuff nobody claps for. Fifty minutes down to eight. Me on a bank holiday morning learning structured cabling off ChatGPT because the alternative was paying someone £2k.",
+        "say": "The part nobody claps for is the part I am proudest of. Fifty minutes down to eight.",
         "posts": [
           "We went from 50-minute order times to 8 minutes",
           "8am on a bank holiday Monday"
         ]
       },
       {
-        "say": "We kept making decisions that looked commercially stupid on paper. Closing for the first week of Ramadan at 30% of monthly revenue. Banning men on Sisters' Nights. Building a prayer space instead of more covers. Every one of them paid us back.",
+        "say": "We kept making decisions that looked commercially stupid. Closing the first week of Ramadan at 30% of monthly revenue. Building a prayer space instead of more covers. Every one paid us back.",
         "posts": [
           "Why we're closing our restaurant for the first week of Ramadan",
           "The UK has a prayer space problem",
@@ -127,14 +127,14 @@
         ]
       },
       {
-        "say": "We were vocal about Palestine and got review bombed for it. Lost a thousand reviews in a week and dropped from 4.9 to 4.8. We doubled down, and eight months of interrogation later a customer walked in and called me the Palestinian burger guy, which is when I knew it had worked.",
+        "say": "We were vocal about Palestine and got review bombed for it. We doubled down.",
         "posts": [
           "We got review bombed for supporting Palestine",
           "\"You're the Palestinian burger guy, right?\""
         ]
       },
       {
-        "say": "The community stuff went further than the shop. A boarding school funded out of burger profits, and two brothers who recited the entire Qur'an from memory in nine hours, finishing two seconds apart.",
+        "say": "Two brothers recited the entire Qur'an from memory in nine hours, two seconds apart.",
         "posts": [
           "These teenage brothers just recited the entire Quran from memory",
           "This weekend, I’ve been building something I’ve dreamed about for years"
@@ -194,7 +194,7 @@
         ]
       },
       {
-        "say": "Two months of obsession between the first box and the one we actually launched with. That gap is the whole job and nobody sees it.",
+        "say": "Two months between the first box and the one we launched with. That gap is the job.",
         "posts": [
           "Left photo: Our first PSK box",
           {
@@ -250,7 +250,7 @@
         ]
       },
       {
-        "say": "People keep asking why I left food for this. Honestly, the restaurant taught me more about building than anything else I have done, and then I wanted to build the thing that scaled it.",
+        "say": "The restaurant taught me more about building than anything else I have done. Then I wanted to build the thing that scaled it.",
         "posts": [
           "I built the highest rated burger joint in London. 4.9 stars, 3000+ reviews. Those two years",
           "I was building an AI company between burger orders"
@@ -415,7 +415,7 @@
     ]
   },
   "simply-clo": {
-    "title": "Simply Clo",
+    "title": "SIMPLYCLO",
     "years": "2023 – 2024",
     "kind": "side",
     "bucket": "simplyclo",

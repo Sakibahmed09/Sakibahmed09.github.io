@@ -51,13 +51,14 @@ HEAD = """<!doctype html>
 """
 
 LANE_HEAD = """
-  <section class="section lane-wrap">
+  <section class="section feed-wrap" data-feed="{feed}">
     <h2>Lately</h2>
-    <p class="menu-note">Everything else I&#8217;ve posted about it, newest first. This part updates itself.</p>
-    <ul class="lane">
+    <p class="menu-note">{note}</p>
+    <div class="feed">
 """
 
-LANE_FOOT = """    </ul>
+LANE_FOOT = """    </div>
+    <div class="feed-end" aria-hidden="true"></div>
   </section>
 """
 
@@ -131,6 +132,7 @@ def clean(t):
 MEDIA_SRC = glob.glob(os.path.expanduser(
     "~/Downloads/twitter-*/data/tweets_media"))
 MEDIA_OUT = os.path.join(ROOT, "assets", "media")
+FEED_OUT = os.path.join(ROOT, "assets", "feed")
 
 
 def stage_image(fname):
@@ -313,8 +315,22 @@ def main():
         # the self-updating lane: everything not already in the spine
         rest = dedupe([p for p in bucket if key_of(p) not in used])
         if rest:
-            out.append(LANE_HEAD)
-            out.extend(lane_row(p) for p in rest[:8])
+            os.makedirs(FEED_OUT, exist_ok=True)
+            feed = [{"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
+                     "u": r.get("url", ""), "f": r.get("fav", 0),
+                     "r": r.get("rt", 0),
+                     "m": stage_image(r["media"][0]) if r.get("media") else None}
+                    for r in rest]
+            with open(os.path.join(FEED_OUT, slug + ".json"), "w") as fh:
+                json.dump(feed, fh)
+            out.append(LANE_HEAD.format(
+                feed="../../assets/feed/" + slug + ".json",
+                note="Everything else I&#8217;ve posted about it, newest first. "
+                     "Keeps going as you scroll."))
+            for n, r in enumerate(rest[:6]):
+                out.append(card(r, n,
+                                stage_image(r["media"][0]) if r.get("media") else None,
+                                "Photo from the post."))
             out.append(LANE_FOOT)
             freshest[slug] = (v["title"], rest[:6])
         # walkable in order, and the swipe uses these as its targets
@@ -341,41 +357,41 @@ def main():
         open(os.path.join(d, "index.html"), "w").write("\n".join(out))
         print("built ventures/%s (%d clippings)" % (slug, i))
 
-    # Front page lane: simply what he has posted most recently, from the whole
-    # corpus. Deliberately not tagged by venture — the keyword buckets are
-    # loose enough that a personal post can land in a venture bucket, and a
-    # wrong label is worse than no label.
+    # Front page: his own feed, newest first, streamed on scroll
     newest = dedupe(BUCKETS.get("_all", []))
-    seen, block = set(), []
-    for p in newest:
-        k = key_of(p)
-        if k in seen or not clean(p["text"]):
+    os.makedirs(FEED_OUT, exist_ok=True)
+    seen, feed = set(), []
+    for r in newest:
+        k = key_of(r)
+        if k in seen or not clean(r["text"]):
             continue
         seen.add(k)
-        block.append(lane_row(p))
-        if len(block) == 6:
+        feed.append({"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
+                     "u": r.get("url", ""), "f": r.get("fav", 0),
+                     "r": r.get("rt", 0),
+                     "m": stage_image(r["media"][0]) if r.get("media") else None})
+        if len(feed) >= 400:
             break
+    with open(os.path.join(FEED_OUT, "all.json"), "w") as fh:
+        json.dump(feed, fh)
 
     home = os.path.join(ROOT, "index.html")
-    s = open(home).read()
-    start, end = "<!-- LATELY:START -->", "<!-- LATELY:END -->"
-    if start in s and end in s:
-        fresh = (start + """
-  <section class="section rise" style="--i:11">
-    <h2>Lately</h2>
-    <p class="menu-note">What I&#8217;ve been posting, newest first. This updates itself.</p>
-    <ul class="lane">
-""" + "\n".join(block) + """
-    </ul>
-  </section>
-  """ + end)
-        s = re.sub(re.escape(start) + ".*?" + re.escape(end), lambda m: fresh,
-                   s, flags=re.S)
-        open(home, "w").write(s)
-        print("front page lane: %d posts, newest %s"
-              % (len(block), newest[0]["date"] if newest else "n/a"))
-    else:
-        print("!! index.html has no LATELY markers, front lane skipped")
+    html_s = open(home).read()
+    cards = []
+    for n, r in enumerate(newest[:6]):
+        cards.append(card(r, n,
+                          stage_image(r["media"][0]) if r.get("media") else None,
+                          "Photo from the post.")
+                     .replace("../../assets/", "assets/"))
+    block = ('\n  <section class="section feed-wrap" data-feed="assets/feed/all.json"'
+             ' style="--i:11">\n    <h2>Lately</h2>\n'
+             '    <p class="menu-note">Everything I post, in one place. Keeps going as you scroll.</p>\n'
+             '    <div class="feed">\n' + "\n".join(cards) +
+             '\n    </div>\n    <div class="feed-end" aria-hidden="true"></div>\n  </section>\n')
+    a, b_ = "<!-- LATELY:START -->", "<!-- LATELY:END -->"
+    html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
+    open(home, "w").write(html_s)
+    print("front page feed: %d posts, newest %s" % (len(feed), feed[0]["d"]))
 
     if misses:
         print("\n!! COULD NOT MATCH:")

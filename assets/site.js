@@ -264,6 +264,85 @@
     page.addEventListener("touchcancel", finish, { passive: true });
   })();
 
+  /* ---------- the feed: his own posts, streamed as you scroll ---------- */
+  (function () {
+    var wrap = $(".feed-wrap");
+    if (!wrap) return;
+    var list = $(".feed", wrap), endEl = $(".feed-end", wrap);
+    var url = wrap.getAttribute("data-feed");
+    if (!list || !endEl || !url) return;
+
+    var BATCH = 6;
+    var shown = list.children.length;   // the ones rendered at build time
+    var data = null, loading = false, done = false;
+
+    var esc = function (t) {
+      return String(t).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;",
+                 '"': "&quot;", "'": "&#39;" }[c];
+      });
+    };
+    var MON = ["Jan","Feb","Mar","Apr","May","Jun",
+               "Jul","Aug","Sep","Oct","Nov","Dec"];
+    var pretty = function (d) {
+      var b = d.split("-");
+      return (+b[2]) + " " + MON[+b[1] - 1] + " " + b[0];
+    };
+    var media = url.indexOf("../") === 0 ? "../../assets/media/" : "assets/media/";
+
+    var render = function (p) {
+      var isX = p.s === "x";
+      var txt = p.t.length > 300
+        ? p.t.slice(0, p.t.slice(0, 300).lastIndexOf(" ")) + "\u2026" : p.t;
+      var bits = [];
+      if (p.f) bits.push(p.f.toLocaleString() + (isX ? " likes" : " reactions"));
+      if (p.r) bits.push(p.r.toLocaleString() + " reposts");
+      var who = isX
+        ? '<span class="name">sakib</span><span class="handle">@mertesakib</span>'
+        : '<span class="name">Sakib Ahmed</span><span class="handle">Co-founder of Draper \u00b7 Own your distribution</span>';
+      var el = document.createElement("article");
+      el.className = "post " + (isX ? "x" : "li");
+      el.innerHTML =
+        '<header><img class="pfp" src="' + media + 'avatar.jpg" alt="" loading="lazy">' +
+        '<span class="who">' + who + '</span>' +
+        '<span class="mark" aria-hidden="true">' + (isX ? "\ud835\udd4f" : "in") + '</span></header>' +
+        '<div class="body"><p>' + esc(txt) + '</p>' +
+        (p.m ? '<img class="shot" src="' + media + p.m + '" alt="Photo from the post." loading="lazy">' : '') +
+        '</div>' +
+        '<footer><time>' + pretty(p.d) + '</time>' +
+        '<span class="stats">' + bits.join(" \u00b7 ") + '</span>' +
+        '<a class="open" data-out href="' + p.u + '">Open</a></footer>';
+      return el;
+    };
+
+    var more = function () {
+      if (done || !data) return;
+      var frag = document.createDocumentFragment();
+      var next = data.slice(shown, shown + BATCH);
+      next.forEach(function (p) { frag.appendChild(render(p)); });
+      list.appendChild(frag);
+      shown += next.length;
+      if (shown >= data.length) {
+        done = true;
+        endEl.textContent = "That\u2019s all of it. " + data.length + " posts.";
+        endEl.classList.add("spent");
+      }
+    };
+
+    var io = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting || loading || done) return;
+      if (data) { more(); return; }
+      loading = true;
+      fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+        data = j; loading = false; more();
+      }).catch(function () {
+        loading = false; done = true;
+        endEl.textContent = "Could not load the rest.";
+      });
+    }, { rootMargin: "600px 0px" });
+    io.observe(endEl);
+  })();
+
   /* ---------- command palette ---------- */
   var veil = $("#veil"), input = $("#palette-input"), list = $("#palette-list");
   if (veil && input && list) {
