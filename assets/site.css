@@ -870,6 +870,70 @@ html.locked { overflow: hidden; }
 }
 .side-list .meta { color: var(--ink-3); font-size: 0.84rem; text-align: right; }
 
+/* ---------- the beats: one quiet line, never plays on its own ---------- */
+.player {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.15rem;
+  color: var(--ink-3);
+  font-size: 0.82rem;
+}
+.player .pp {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0.45rem;
+  margin: -0.45rem;
+  color: var(--ink-3);
+  display: inline-flex;
+  transition: color var(--swift) ease, transform var(--settle) var(--nudge);
+  touch-action: manipulation;
+}
+.player .pp:hover { color: var(--ink); }
+.player .pp:active { transform: scale(0.9); }
+.player .tri {
+  width: 0; height: 0;
+  border-left: 8px solid currentColor;
+  border-top: 5.5px solid transparent;
+  border-bottom: 5.5px solid transparent;
+  transition: border-left-color var(--swift) ease;
+}
+/* the triangle becomes two bars when it is running */
+.player.on .tri {
+  width: 8px; height: 11px;
+  border: 0;
+  background: linear-gradient(currentColor, currentColor) left / 3px 100% no-repeat,
+              linear-gradient(currentColor, currentColor) right / 3px 100% no-repeat;
+}
+.player .track { transition: color var(--swift) ease; }
+.player.on .track { color: var(--ink-2); }
+.player .bar {
+  flex: 1;
+  max-width: 7rem;
+  height: 1px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.player .bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--seal);
+  transition: width 240ms linear;
+}
+.player .mine {
+  color: var(--seal);
+  font-family: var(--pen);
+  font-size: 1.15rem;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity var(--settle) ease, transform var(--settle) var(--out);
+}
+.player .mine.show { opacity: 1; transform: none; }
+
 /* ---------- the lane: the part that refreshes itself ---------- */
 .lane-wrap { margin-top: 3.4rem; }
 .lane { list-style: none; margin-top: 0.45rem; }
