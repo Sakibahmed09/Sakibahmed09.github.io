@@ -131,6 +131,27 @@ def pretty(d):
     return "%d %s %s" % (int(dd), MONTHS[int(m) - 1], y)
 
 
+def drop_near_dupes(posts):
+    """He reposts a tweet with a word changed and the archive keeps both.
+    Printed side by side they read as a mistake, so keep the one that did
+    better and drop the twin."""
+    keep = []
+    for p in sorted(posts, key=lambda x: -(x.get("fav") or 0)):
+        words = set(flat(p["text"]).split())
+        if not words:
+            keep.append(p); continue
+        twin = False
+        for k in keep:
+            kw = set(flat(k["text"]).split())
+            if not kw: continue
+            small = words if len(words) < len(kw) else kw
+            if len(words & kw) / len(small) > 0.8:
+                twin = True; break
+        if not twin: keep.append(p)
+    order = {id(x): i for i, x in enumerate(posts)}
+    return sorted(keep, key=lambda x: order[id(x)])
+
+
 def clean(t):
     """Strip the t.co noise, keep the line breaks."""
     t = re.sub(r"https://t\.co/\w+", "", t)
@@ -195,9 +216,9 @@ def card(p, i, img=None, alt=""):
     metric = "reactions" if src == "li" else "likes"
     bits = []
     if n:
-        bits.append("%s %s" % ("{:,}".format(n), metric))
+        bits.append("%s %s" % ("{:,}".format(n), metric if n != 1 else metric[:-1]))
     if p.get("rt"):
-        bits.append("%s reposts" % "{:,}".format(p["rt"]))
+        bits.append("%s repost%s" % ("{:,}".format(p["rt"]), "" if p["rt"] == 1 else "s"))
     shot = ""
     if img:
         shot = ('\n        <img class="shot" src="../../assets/media/%s" alt="%s" '
@@ -351,6 +372,7 @@ def main():
     freshest = {}
     for slug, v in SPEC.items():
         bucket = BUCKETS.get(v.get("bucket") or BUCKET_ALIAS.get(slug, slug), [])
+        bucket = drop_near_dupes(bucket)
         used = set()
         proof = "\n".join(
             '    <li><b>%s</b><span>%s</span></li>' % (a, b) for a, b in v["proof"])
