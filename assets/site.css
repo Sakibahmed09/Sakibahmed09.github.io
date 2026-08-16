@@ -421,6 +421,9 @@ html.locked { overflow: hidden; }
   line-height: 1.02;
   color: var(--seal);
   transform: rotate(-1.6deg);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
 }
 
 @media (min-width: 1180px) {
@@ -436,10 +439,11 @@ html.locked { overflow: hidden; }
     position: absolute;
     left: 100%;
     top: var(--pin, 0);
-    margin-left: 3.2rem;
-    width: 11.5rem;
+    margin-left: 1.1rem;
+    width: 15rem;
   }
-  aside.pen-note .stroke { display: block; margin-bottom: 0.1rem; }
+  /* the arrow sits in the gap and points back at the paragraph */
+  aside.pen-note .stroke { flex: none; margin-top: 0.35rem; }
 }
 @media (max-width: 1179.9px) {
   aside.pen-note {
@@ -450,19 +454,18 @@ html.locked { overflow: hidden; }
   aside.pen-note .stroke { display: none; }
 }
 
-/* the hand-drawn stroke draws itself in */
+/* the hand-drawn arrow draws itself in: shaft first, then the barbs */
 .pen-note .stroke path {
   fill: none;
   stroke: var(--seal);
   stroke-width: 1.4;
   stroke-linecap: round;
-  stroke-dasharray: var(--len, 60);
-  stroke-dashoffset: var(--len, 60);
+  stroke-linejoin: round;
 }
-.pen-note .txt { opacity: 0; transition: opacity 420ms ease 260ms; }
+.pen-note .txt { opacity: 0; transition: opacity 420ms ease 420ms; }
 .pen-note.drawn .txt { opacity: 1; }
 .pen-note.drawn .stroke path {
-  animation: draw 640ms var(--out) forwards;
+  animation: draw 460ms var(--out) forwards;
 }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
@@ -789,6 +792,17 @@ html.locked { overflow: hidden; }
   font-size: 0.78rem;
   color: var(--ink-3);
 }
+
+/* a photo, only where the sentence above already named the thing */
+.clip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 0.7rem;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+}
+.clip.has-shot { max-width: 22rem; }
 
 /* the second clipping in a beat tucks in slightly */
 .clip + .clip { margin-left: 1.6rem; }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate the venture pages: retrospective spine + pasted-in real posts."""
-import json, os, re, html, datetime
+import json, os, re, html, glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -116,7 +116,40 @@ def clean(t):
     return t.strip()
 
 
-def card(p, i):
+MEDIA_SRC = glob.glob(os.path.expanduser(
+    "~/Downloads/twitter-*/data/tweets_media"))
+MEDIA_OUT = os.path.join(ROOT, "assets", "media")
+
+
+def stage_image(fname):
+    """Copy a photo out of the archive, downscaled for the web.
+    Returns the site-relative filename, or None if it isn't there."""
+    if not MEDIA_SRC:
+        return None
+    src = os.path.join(MEDIA_SRC[0], fname)
+    if not os.path.exists(src):
+        print("   !! missing photo: %s" % fname)
+        return None
+    os.makedirs(MEDIA_OUT, exist_ok=True)
+    out_name = fname.split("-")[0] + ".jpg"
+    dst = os.path.join(MEDIA_OUT, out_name)
+    if not os.path.exists(dst):
+        try:
+            from PIL import Image
+            im = Image.open(src)
+            im = im.convert("RGB")
+            w = 760
+            if im.width > w:
+                im = im.resize((w, round(im.height * w / im.width)),
+                               Image.LANCZOS)
+            im.save(dst, quality=82, optimize=True, progressive=True)
+        except Exception as e:
+            print("   !! could not stage %s (%s)" % (fname, e))
+            return None
+    return out_name
+
+
+def card(p, i, img=None, alt=""):
     src = p.get("src", "x")
     glyph = "𝕏" if src == "x" else "in"
     where = "X" if src == "x" else "LinkedIn"
@@ -135,16 +168,21 @@ def card(p, i):
     if p.get("rt"):
         bits.append("%s reposts" % "{:,}".format(p["rt"]))
     tilt = (i % 3) - 1  # -1, 0, 1
-    return """    <figure class="clip" style="--tilt:{tilt}">
+    shot = ""
+    if img:
+        shot = ('\n      <img src="../../assets/media/%s" alt="%s" '
+                'loading="lazy" decoding="async">' % (img, html.escape(alt)))
+    return """    <figure class="clip{has}" style="--tilt:{tilt}">
       <figcaption>
         <span class="src" aria-hidden="true">{glyph}</span>
         <time>{date}</time>
         <span class="num">{num}</span>
       </figcaption>
-      <p>{txt}</p>
+      <p>{txt}</p>{shot}
       <a class="u out" data-out href="{url}">Read on {where}</a>
-    </figure>""".format(tilt=tilt * 0.35, glyph=glyph, date=pretty(p["date"]),
-                        num=" · ".join(bits), txt=html.escape(txt),
+    </figure>""".format(has=" has-shot" if img else "", tilt=tilt * 0.35,
+                        glyph=glyph, date=pretty(p["date"]),
+                        num=" · ".join(bits), txt=html.escape(txt), shot=shot,
                         url=p.get("url", "#"), where=where)
 
 
@@ -220,13 +258,19 @@ def main():
         for beat in v["beats"]:
             out.append('\n  <div class="beat">')
             out.append('    <p class="say">%s</p>' % beat["say"])
-            for needle in beat.get("posts", []):
+            for entry in beat.get("posts", []):
+                # a post is either a match string, or a dict that also opts
+                # this one clipping into showing its photo
+                if isinstance(entry, dict):
+                    needle, img, alt = entry["m"], entry.get("img"), entry.get("alt", "")
+                else:
+                    needle, img, alt = entry, None, ""
                 p = find(bucket, needle)
                 if not p:
                     misses.append((slug, needle))
                     continue
                 used.add(key_of(p))
-                out.append(card(p, i))
+                out.append(card(p, i, stage_image(img) if img else None, alt))
                 i += 1
             out.append('  </div>')
 

@@ -85,11 +85,14 @@
   var notes = $$(".pen-note");
   if (notes.length) {
     notes.forEach(function (n) {
-      var p = $(".stroke path", n);
-      if (p) {
+      /* Each stroke measures itself, so the shaft draws first and the two
+         arrowhead barbs follow, the way you'd actually draw one. */
+      $$(".stroke path", n).forEach(function (p, idx) {
         var len = Math.ceil(p.getTotalLength()) + 2;
-        n.style.setProperty("--len", len);
-      }
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        p.style.animationDelay = (idx === 0 ? 0 : 300 + idx * 55) + "ms";
+      });
     });
     if (REDUCED) {
       notes.forEach(function (n) { n.classList.add("drawn"); });
@@ -155,7 +158,22 @@
       { t: "LinkedIn ↗",    g: "in", k: "linkedin", go: "https://www.linkedin.com/in/mertesakib" },
       { t: "Draper ↗",      g: "D",  k: "work agency draperhq", go: "https://draperhq.com" }
     ];
-    var open = false, sel = 0, shown = [];
+    var open = false, sel = 0, shown = [], items = [];
+
+    /* Move the highlight without touching the DOM structure. Rebuilding the
+       list on hover destroys the element under the cursor between mousedown
+       and mouseup, so clicks never land. */
+    var paintSel = function (scroll) {
+      items.forEach(function (li, i) {
+        if (i === sel) {
+          li.setAttribute("aria-selected", "true");
+          input.setAttribute("aria-activedescendant", li.id);
+          if (scroll && li.scrollIntoView) li.scrollIntoView({ block: "nearest" });
+        } else {
+          li.removeAttribute("aria-selected");
+        }
+      });
+    };
 
     var render = function (q) {
       q = (q || "").trim().toLowerCase();
@@ -164,26 +182,28 @@
       });
       sel = Math.min(sel, Math.max(shown.length - 1, 0));
       list.innerHTML = "";
+      items = [];
       if (!shown.length) {
-        var li = document.createElement("li");
-        li.className = "none";
-        li.textContent = "nothing here. try ‘chapters’";
-        list.appendChild(li);
+        var none = document.createElement("li");
+        none.className = "none";
+        none.textContent = "nothing here. try ‘chapters’";
+        list.appendChild(none);
+        input.removeAttribute("aria-activedescendant");
         return;
       }
       shown.forEach(function (a, i) {
         var li = document.createElement("li");
         li.setAttribute("role", "option");
         li.id = "opt-" + i;
-        if (i === sel) {
-          li.setAttribute("aria-selected", "true");
-          input.setAttribute("aria-activedescendant", li.id);
-        }
         li.innerHTML = "<span class='glyph'>" + a.g + "</span><span>" + a.t + "</span>";
-        li.addEventListener("mouseenter", function () { sel = i; render(input.value); });
+        li.addEventListener("mouseenter", function () { sel = i; paintSel(false); });
+        /* keep focus in the input so typing still filters after a hover */
+        li.addEventListener("mousedown", function (e) { e.preventDefault(); });
         li.addEventListener("click", function () { run(a); });
+        items.push(li);
         list.appendChild(li);
       });
+      paintSel(false);
     };
     var run = function (a) {
       close();
@@ -215,10 +235,10 @@
         open ? close() : openPalette();
       } else if (open && e.key === "Escape") {
         close();
-      } else if (open && e.key === "ArrowDown") {
-        e.preventDefault(); sel = (sel + 1) % shown.length; render(input.value);
-      } else if (open && e.key === "ArrowUp") {
-        e.preventDefault(); sel = (sel - 1 + shown.length) % shown.length; render(input.value);
+      } else if (open && e.key === "ArrowDown" && shown.length) {
+        e.preventDefault(); sel = (sel + 1) % shown.length; paintSel(true);
+      } else if (open && e.key === "ArrowUp" && shown.length) {
+        e.preventDefault(); sel = (sel - 1 + shown.length) % shown.length; paintSel(true);
       } else if (open && e.key === "Enter" && shown[sel]) {
         e.preventDefault(); run(shown[sel]);
       }
