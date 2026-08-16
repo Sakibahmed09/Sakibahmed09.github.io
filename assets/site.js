@@ -150,8 +150,8 @@
                      .match(/\/[^/]+(?=\/)/g) || []).length;
       var root2 = depth2 ? new Array(depth2 + 1).join("../") : "./";
       var TRACKS = [
-        { src: root2 + "assets/audio/study.mp3", name: "study" },
-        { src: root2 + "assets/audio/gratitude.mp3", name: "gratitude" }
+        { src: root2 + "assets/audio/open-road.mp3", name: "Open Road" },
+        { src: root2 + "assets/audio/quiet-current.mp3", name: "Quiet Current" }
       ];
       var at = 0, audio = null;
       var ppBtn = $("#pp"), label = $("#track"), bar = $("#bar");
