@@ -785,6 +785,136 @@ kbd {
   opacity: 1;
   transform: translateX(1px) scale(1.07);
 }
+
+/* Hover motion, in the spirit of lucide-animated (MIT) but written as CSS
+   because that library is React and this site has no framework to hang it on.
+   Only the icons where movement means something get it: the equaliser plays,
+   the dhikr ring turns, the bowl steams, the heart beats. Everything else
+   keeps the 1px lean it already had. Durations sit in the site's own gears. */
+@media (prefers-reduced-motion: no-preference) {
+  .palette li:hover svg.glyph,
+  .palette li[aria-selected="true"] svg.glyph { animation-fill-mode: both; }
+
+  /* vibenasheeds: the bars play, left to right */
+  .palette li:hover svg[data-i="waves"] path,
+  .palette li[aria-selected="true"] svg[data-i="waves"] path {
+    animation: eq var(--grand) var(--out) infinite alternate;
+    transform-origin: center;
+  }
+  .palette li:hover svg[data-i="waves"] path:nth-child(2),
+  .palette li[aria-selected="true"] svg[data-i="waves"] path:nth-child(2) { animation-delay: 80ms; }
+  .palette li:hover svg[data-i="waves"] path:nth-child(3),
+  .palette li[aria-selected="true"] svg[data-i="waves"] path:nth-child(3) { animation-delay: 160ms; }
+  .palette li:hover svg[data-i="waves"] path:nth-child(4),
+  .palette li[aria-selected="true"] svg[data-i="waves"] path:nth-child(4) { animation-delay: 240ms; }
+  .palette li:hover svg[data-i="waves"] path:nth-child(5),
+  .palette li[aria-selected="true"] svg[data-i="waves"] path:nth-child(5) { animation-delay: 320ms; }
+  @keyframes eq { from { transform: scaleY(0.55); } to { transform: scaleY(1); } }
+
+  /* dhikry: the ring turns the way beads do */
+  .palette li:hover svg[data-i="beads"] circle:first-child,
+  .palette li[aria-selected="true"] svg[data-i="beads"] circle:first-child {
+    animation: turn 4s linear infinite;
+    transform-origin: 12px 12px;
+  }
+  @keyframes turn { to { transform: rotate(360deg); } }
+
+  /* psk: steam off the bowl */
+  .palette li:hover svg[data-i="bowl"] .steam,
+  .palette li[aria-selected="true"] svg[data-i="bowl"] .steam {
+    animation: steam 1.6s ease-in-out infinite;
+  }
+  .palette li:hover svg[data-i="bowl"] .steam:nth-of-type(3),
+  .palette li[aria-selected="true"] svg[data-i="bowl"] .steam:nth-of-type(3) { animation-delay: 200ms; }
+  .palette li:hover svg[data-i="bowl"] .steam:nth-of-type(4),
+  .palette li[aria-selected="true"] svg[data-i="bowl"] .steam:nth-of-type(4) { animation-delay: 400ms; }
+  @keyframes steam {
+    0%   { opacity: 0.35; transform: translateY(1.5px); }
+    50%  { opacity: 1;    transform: translateY(-1px); }
+    100% { opacity: 0.35; transform: translateY(1.5px); }
+  }
+
+  /* minideed: one beat, not a throb */
+  .palette li:hover svg[data-i="heart"],
+  .palette li[aria-selected="true"] svg[data-i="heart"] {
+    animation: beat 1.4s var(--out) infinite;
+    transform-origin: center;
+  }
+  @keyframes beat {
+    0%, 70%, 100% { transform: scale(1.07); }
+    12%           { transform: scale(1.22); }
+    26%           { transform: scale(1.07); }
+  }
+
+  /* the tasbih bead is the one thing on this site allowed to bounce */
+  .palette li:hover svg[data-i="dot"] circle:last-child,
+  .palette li[aria-selected="true"] svg[data-i="dot"] circle:last-child {
+    animation: bead 1.1s var(--nudge) infinite;
+    transform-origin: 12px 12px;
+  }
+  @keyframes bead { 0%, 100% { transform: scale(1); } 45% { transform: scale(1.5); } }
+
+  /* the moon's rays, turning slowly */
+  .palette li:hover svg[data-i="moon"],
+  .palette li[aria-selected="true"] svg[data-i="moon"] {
+    animation: turn 9s linear infinite;
+    transform-origin: center;
+  }
+
+  /* bilal: the screen wakes */
+  .palette li:hover svg[data-i="tv"],
+  .palette li[aria-selected="true"] svg[data-i="tv"] {
+    animation: wake var(--grand) var(--out);
+    transform-origin: center;
+  }
+  @keyframes wake { from { transform: scale(0.9); opacity: 0.5; } to { transform: scale(1.07); opacity: 1; } }
+
+  /* draper: the nib angles into the stroke */
+  .palette li:hover svg[data-i="pen"],
+  .palette li[aria-selected="true"] svg[data-i="pen"],
+  .palette li:hover svg[data-i="pencil"],
+  .palette li[aria-selected="true"] svg[data-i="pencil"] {
+    animation: write var(--settle) var(--out) forwards;
+    transform-origin: 70% 70%;
+  }
+  @keyframes write { to { transform: rotate(-9deg) translateX(1px) scale(1.07); } }
+
+  /* lofi muslim: a head tilt */
+  .palette li:hover svg[data-i="phones"],
+  .palette li[aria-selected="true"] svg[data-i="phones"] {
+    animation: tilt var(--settle) var(--out) forwards;
+    transform-origin: center;
+  }
+  @keyframes tilt { to { transform: rotate(-7deg) scale(1.07); } }
+
+  /* simply clo: the shirt sways on the hanger */
+  .palette li:hover svg[data-i="shirt"],
+  .palette li[aria-selected="true"] svg[data-i="shirt"] {
+    animation: sway 1.8s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  @keyframes sway { 0%, 100% { transform: rotate(-3.5deg); } 50% { transform: rotate(3.5deg); } }
+
+  /* ventures: the cells come up in order */
+  .palette li:hover svg[data-i="grid"] rect,
+  .palette li[aria-selected="true"] svg[data-i="grid"] rect {
+    animation: cell var(--settle) var(--out) both;
+  }
+  .palette li:hover svg[data-i="grid"] rect:nth-child(2),
+  .palette li[aria-selected="true"] svg[data-i="grid"] rect:nth-child(2) { animation-delay: 60ms; }
+  .palette li:hover svg[data-i="grid"] rect:nth-child(3),
+  .palette li[aria-selected="true"] svg[data-i="grid"] rect:nth-child(3) { animation-delay: 120ms; }
+  .palette li:hover svg[data-i="grid"] rect:nth-child(4),
+  .palette li[aria-selected="true"] svg[data-i="grid"] rect:nth-child(4) { animation-delay: 180ms; }
+  @keyframes cell { from { opacity: 0.25; } to { opacity: 1; } }
+
+  /* home: it lifts, the way a door opens */
+  .palette li:hover svg[data-i="home"],
+  .palette li[aria-selected="true"] svg[data-i="home"] {
+    animation: lift var(--settle) var(--out) forwards;
+  }
+  @keyframes lift { to { transform: translateY(-1.5px) scale(1.07); } }
+}
 .palette .none {
   padding: var(--s4);
   color: var(--ink-3);

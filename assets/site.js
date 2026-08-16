@@ -626,11 +626,11 @@
       grid:   '<rect x="3" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.2"/>',
       heart:  '<path d="M19 13.6c1.4-1.4 2-3.1 2-4.8a4.8 4.8 0 0 0-9-2.3 4.8 4.8 0 0 0-9 2.3c0 1.7.6 3.4 2 4.8l7 6.9z"/>',
       burger: '<path d="M4 8.5a8 8 0 0 1 16 0z"/><path d="M3.5 12.5h17"/><path d="M4 16h16a4 4 0 0 1-4 3H8a4 4 0 0 1-4-3z"/>',
-      bowl:   '<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 4.5V7M12 3.5V7M15 4.5V7"/>',
+      bowl:   '<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path class="steam" d="M9 4.5V7"/><path class="steam" d="M12 3.5V7"/><path class="steam" d="M15 4.5V7"/>',
       pen:    '<path d="M20.5 3.5 10 14"/><path d="M20.5 3.5c0 7-5.2 12-11.5 12H5l3.2-3.2"/>',
       beads:  '<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.2 3.4"/><circle cx="12" cy="3.5" r="1.6" fill="currentColor" stroke="none"/>',
       tv:     '<rect x="2.5" y="7" width="19" height="12.5" rx="1.8"/><path d="M7.5 3 12 6.5 16.5 3"/>',
-      waves:  '<path d="M2.5 12h1.4M7 8.5v7M11.5 5.5v13M16 9.5v5M20.5 12h1"/>',
+      waves:  '<path d="M2.5 12h1.4"/><path d="M7 8.5v7"/><path d="M11.5 5.5v13"/><path d="M16 9.5v5"/><path d="M20.5 12h1"/>',
       phones: '<path d="M3.5 14v-1.5a8.5 8.5 0 0 1 17 0V14"/><path d="M3.5 14a1.8 1.8 0 0 1 1.8-1.8H7v6.6H5.3A1.8 1.8 0 0 1 3.5 17z"/><path d="M20.5 14a1.8 1.8 0 0 0-1.8-1.8H17v6.6h1.7A1.8 1.8 0 0 0 20.5 17z"/>',
       shirt:  '<path d="M15.5 3 12 4.8 8.5 3 3.5 5.8l2 4.2 2-1V21h9V9l2 1 2-4.2z"/>',
       book:   '<path d="M12 7.5v13"/><path d="M12 7.5A4 4 0 0 0 8 4.5H3.5v13H8a4 4 0 0 1 4 3"/><path d="M12 7.5a4 4 0 0 1 4-3h4.5v13H16a4 4 0 0 0-4 3"/>',
@@ -642,7 +642,7 @@
     };
     function svg(k) {
       return k && ICON[k]
-        ? '<svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[k] + '</svg>'
+        ? '<svg class="glyph" data-i="' + k + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[k] + '</svg>'
         : '';
     }
 
