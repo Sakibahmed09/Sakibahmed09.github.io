@@ -28,7 +28,10 @@ Each one shows **what I say about it now** next to **what I was actually posting
 Data comes from two places already on disk:
 
 - X archive: `~/Downloads/twitter-*/data/tweets.js`
-- LinkedIn cache: `~/.linkedin-cache/posts.db`, handle `sakib-ahmed1`
+- LinkedIn cache: `~/.linkedin-cache/posts.db`. Current handle `mertesakib`; posts from
+  before Aug 2026 are filed under the old `sakib-ahmed1` handle, and `mine.py` reads both.
+  Existing post URLs keep the old slug on purpose: LinkedIn pins a post URL to the handle
+  you had when you posted it, and rewriting them to the new slug 404s (verified).
 
 Three files in `_data/` drive it:
 
@@ -36,7 +39,12 @@ Three files in `_data/` drive it:
 | --- | --- |
 | `mine.py` | Reads both sources, buckets posts per venture, writes `buckets.json` |
 | `ventures.json` | The curated spine. My retrospective text, and which posts sit under each beat |
-| `build.py` | Matches each beat to a real post and writes the pages |
+| `build.py` | Matches each beat to a real post, writes the pages, and builds the self-updating lanes |
+
+Each venture page ends with **Lately**: everything in that bucket not used in the spine,
+newest first. The front page has its own **Lately** drawn from the whole corpus, injected
+between the `LATELY:START/END` markers in `index.html`. Cross-posts (same story on X and
+LinkedIn) collapse to whichever version travelled further.
 
 To rebuild after editing `ventures.json`:
 

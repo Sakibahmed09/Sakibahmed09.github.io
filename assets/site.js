@@ -152,7 +152,7 @@
           navigator.clipboard.writeText("sakib@withsignal.io").then(function () { toast("Copied. Say salaam."); });
         } },
       { t: "X ↗",           g: "𝕏", k: "twitter mertesakib", go: "https://x.com/mertesakib" },
-      { t: "LinkedIn ↗",    g: "in", k: "linkedin", go: "https://www.linkedin.com/in/sakibahmed09" },
+      { t: "LinkedIn ↗",    g: "in", k: "linkedin", go: "https://www.linkedin.com/in/mertesakib" },
       { t: "Draper ↗",      g: "D",  k: "work agency draperhq", go: "https://draperhq.com" }
     ];
     var open = false, sel = 0, shown = [];

@@ -820,6 +820,57 @@ html.locked { overflow: hidden; }
 }
 .side-list .meta { color: var(--ink-3); font-size: 0.84rem; text-align: right; }
 
+/* ---------- the lane: the part that refreshes itself ---------- */
+.lane-wrap { margin-top: 3.4rem; }
+.lane { list-style: none; margin-top: 0.45rem; }
+.lane li { border-top: 1px solid var(--line-soft); }
+.lane li:last-child { border-bottom: 1px solid var(--line-soft); }
+
+.lane a {
+  display: grid;
+  grid-template-columns: 7.4rem 1fr 3.1rem;
+  column-gap: 1rem;
+  align-items: baseline;
+  padding-block: 0.6rem;
+}
+.lane .when {
+  color: var(--ink-3);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+.lane .src {
+  display: inline-block;
+  width: 1.35em;
+  color: var(--ink-3);
+}
+.lane .txt {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  transition: color var(--swift) ease;
+}
+.lane .tag {
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
+.lane .num {
+  color: var(--ink-3);
+  font-size: 0.82rem;
+  text-align: right;
+  font-variant-numeric: normal;
+}
+.lane a:hover .txt { color: var(--ink); }
+.lane a:hover .tag { color: var(--seal); }
+.lane a[data-out]::after { content: none; }
+
+@media (max-width: 640px) {
+  .lane a { grid-template-columns: 1fr auto; column-gap: 0.6rem; }
+  .lane .when { grid-column: 1; }
+  .lane .num { grid-column: 2; }
+  .lane .txt { grid-column: 1 / -1; margin-top: 0.1rem; }
+}
+
 /* ---------- lost page ---------- */
 .lost { text-align: left; }
 .lost .big {

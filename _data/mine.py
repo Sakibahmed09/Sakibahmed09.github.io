@@ -72,9 +72,11 @@ def main():
     if os.path.exists(LI_DB):
         con = sqlite3.connect(LI_DB)
         con.row_factory = sqlite3.Row
+        # He renamed his LinkedIn vanity to mertesakib in Aug 2026. Older rows
+        # are still filed under the old handle, so read both and dedupe.
         for r in con.execute(
                 "select posted_at, reactions, comments, reposts, url, text "
-                "from posts where username='sakib-ahmed1' "
+                "from posts where username in ('sakib-ahmed1','mertesakib') "
                 "and author_name='Sakib Ahmed' and text != '' order by posted_at"):
             li.append({
                 "date": r["posted_at"][:10],
@@ -83,6 +85,13 @@ def main():
                 "rt": r["reposts"], "url": r["url"], "src": "li",
             })
         con.close()
+        seen, uniq = set(), []
+        for p in li:
+            k = p["url"] or (p["date"] + p["text"][:60])
+            if k not in seen:
+                seen.add(k)
+                uniq.append(p)
+        li = uniq
     print("linkedin posts:", len(li))
 
     buckets = {}

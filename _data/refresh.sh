@@ -11,9 +11,12 @@ LOG="$DATA/refresh.log"
 exec >> "$LOG" 2>&1
 echo "--- $(date '+%Y-%m-%d %H:%M') refresh starting"
 
-# 1. top up the LinkedIn cache (cache-first, only calls Apify when stale)
+# 1. top up the LinkedIn cache (cache-first, only calls Apify when stale).
+# Current vanity is mertesakib; sakib-ahmed1 is the pre-Aug-2026 handle that
+# older cached rows are filed under. mine.py reads both.
 if [ -x "$HOME/scripts/scrape-linkedin.sh" ]; then
-  "$HOME/scripts/scrape-linkedin.sh" sakib-ahmed1 --limit 40 --max-age-days 6 \
+  "$HOME/scripts/scrape-linkedin.sh" mertesakib --limit 40 --max-age-days 6 \
+    || "$HOME/scripts/scrape-linkedin.sh" sakib-ahmed1 --limit 40 --max-age-days 6 \
     || echo "warn: linkedin scrape failed, carrying on with cache"
 else
   echo "warn: scrape-linkedin.sh missing, using cache only"
