@@ -512,24 +512,52 @@
     var depth = (location.pathname.replace(/\/index\.html$/, "/")
                   .match(/\/[^/]+(?=\/)/g) || []).length;
     var HOME = depth ? new Array(depth + 1).join("../") : "./";
+        /* Icons drawn inline in Lucide's idiom (24x24, 2px stroke, round caps).
+       Hand-authored rather than imported so the site keeps its promise of
+       asking no other origin for anything. */
+    var ICON = {
+      home:   '<path d="M3 10.5 12 3.5l9 7V20a1 1 0 0 1-1 1h-5v-6.5H9V21H4a1 1 0 0 1-1-1z"/>',
+      grid:   '<rect x="3" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.2"/>',
+      heart:  '<path d="M19 13.6c1.4-1.4 2-3.1 2-4.8a4.8 4.8 0 0 0-9-2.3 4.8 4.8 0 0 0-9 2.3c0 1.7.6 3.4 2 4.8l7 6.9z"/>',
+      burger: '<path d="M4 8.5a8 8 0 0 1 16 0z"/><path d="M3.5 12.5h17"/><path d="M4 16h16a4 4 0 0 1-4 3H8a4 4 0 0 1-4-3z"/>',
+      bowl:   '<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 4.5V7M12 3.5V7M15 4.5V7"/>',
+      pen:    '<path d="M20.5 3.5 10 14"/><path d="M20.5 3.5c0 7-5.2 12-11.5 12H5l3.2-3.2"/>',
+      beads:  '<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.2 3.4"/><circle cx="12" cy="3.5" r="1.6" fill="currentColor" stroke="none"/>',
+      tv:     '<rect x="2.5" y="7" width="19" height="12.5" rx="1.8"/><path d="M7.5 3 12 6.5 16.5 3"/>',
+      waves:  '<path d="M2.5 12h1.4M7 8.5v7M11.5 5.5v13M16 9.5v5M20.5 12h1"/>',
+      phones: '<path d="M3.5 14v-1.5a8.5 8.5 0 0 1 17 0V14"/><path d="M3.5 14a1.8 1.8 0 0 1 1.8-1.8H7v6.6H5.3A1.8 1.8 0 0 1 3.5 17z"/><path d="M20.5 14a1.8 1.8 0 0 0-1.8-1.8H17v6.6h1.7A1.8 1.8 0 0 0 20.5 17z"/>',
+      shirt:  '<path d="M15.5 3 12 4.8 8.5 3 3.5 5.8l2 4.2 2-1V21h9V9l2 1 2-4.2z"/>',
+      book:   '<path d="M12 7.5v13"/><path d="M12 7.5A4 4 0 0 0 8 4.5H3.5v13H8a4 4 0 0 1 4 3"/><path d="M12 7.5a4 4 0 0 1 4-3h4.5v13H16a4 4 0 0 0-4 3"/>',
+      scroll: '<path d="M5.5 4.5h11a1.8 1.8 0 0 1 1.8 1.8v11.4a1.8 1.8 0 0 0 1.8 1.8H8.5a1.8 1.8 0 0 1-1.8-1.8V6.3"/><path d="M9 8.5h6.5M9 12h6.5"/>',
+      pencil: '<path d="m12.5 19.5 7-7-4-4-7 7-1.2 5.2z"/><path d="M15 7 18 10"/>',
+      moon:   '<path d="M20.8 13.2A8.7 8.7 0 1 1 11 3.4a6.8 6.8 0 0 0 9.8 9.8z"/>',
+      dot:    '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/>',
+      at:     '<circle cx="12" cy="12" r="3.8"/><path d="M15.8 12v1.6a2.6 2.6 0 0 0 5.2 0V12a9 9 0 1 0-3.8 7.3"/>'
+    };
+    function svg(k) {
+      return k && ICON[k]
+        ? '<svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[k] + '</svg>'
+        : '';
+    }
+
     var ACTIONS = [
-      { t: "Home",               g: "⌂", k: "sakib start", go: HOME },
-      { t: "Ventures",           g: "▦", k: "mains sides projects built", go: HOME + "ventures/" },
-      { t: "MiniDeed",           g: "·", k: "charity app likes pennies main", go: HOME + "ventures/minideed/" },
-      { t: "Simply Smashed",     g: "·", k: "burger joint main food", go: HOME + "ventures/simply-smashed/" },
-      { t: "Peruvian Street Kitchen", g: "·", k: "psk chicken rice green sauce main", go: HOME + "ventures/psk/" },
-      { t: "Draper",             g: "·", k: "founders authorities content main work", go: HOME + "ventures/draper/" },
-      { t: "dhikry",             g: "·", k: "side dhikr circle invite ios", go: HOME + "ventures/dhikry/" },
-      { t: "Bilal",              g: "·", k: "side athan masjid times tv", go: HOME + "ventures/bilal/" },
-      { t: "vibenasheeds",       g: "·", k: "side halal music nasheed ai", go: HOME + "ventures/vibenasheeds/" },
-      { t: "Lofi Muslim",        g: "·", k: "side beats youtube vocals", go: HOME + "ventures/lofi-muslim/" },
-      { t: "Simply Clo",         g: "·", k: "side hoodie palestine clothing", go: HOME + "ventures/simply-clo/" },
-      { t: "Simply Foundation",  g: "·", k: "side school huffadh charity", go: HOME + "ventures/simply-foundation/" },
-      { t: "Chapters",           g: "§", k: "story writing timeline", go: HOME + "chapters/" },
-      { t: "How this site works", g: "✎", k: "craft colophon design type", go: HOME + "craft/" },
-      { t: "Toggle dark mode",   g: "☾", k: "theme light night maghrib", fn: toggleTheme },
-      { t: "Count tasbih",       g: "●", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
-      { t: "Copy email",         g: "@",      k: "contact mail", fn: function () {
+      { t: "Home",               i: "home", k: "sakib start", go: HOME },
+      { t: "Ventures",           i: "grid", k: "mains sides projects built", go: HOME + "ventures/" },
+      { t: "MiniDeed",           i: "heart", k: "charity app likes pennies main", go: HOME + "ventures/minideed/" },
+      { t: "Simply Smashed",     i: "burger", k: "burger joint main food", go: HOME + "ventures/simply-smashed/" },
+      { t: "Peruvian Street Kitchen", i: "bowl", k: "psk chicken rice green sauce main", go: HOME + "ventures/psk/" },
+      { t: "Draper",             i: "pen", k: "founders authorities content main work", go: HOME + "ventures/draper/" },
+      { t: "dhikry",             i: "beads", k: "side dhikr circle invite ios", go: HOME + "ventures/dhikry/" },
+      { t: "Bilal",              i: "tv", k: "side athan masjid times tv", go: HOME + "ventures/bilal/" },
+      { t: "vibenasheeds",       i: "waves", k: "side halal music nasheed ai", go: HOME + "ventures/vibenasheeds/" },
+      { t: "Lofi Muslim",        i: "phones", k: "side beats youtube vocals", go: HOME + "ventures/lofi-muslim/" },
+      { t: "Simply Clo",         i: "shirt", k: "side hoodie palestine clothing", go: HOME + "ventures/simply-clo/" },
+      { t: "Simply Foundation",  i: "book", k: "side school huffadh charity", go: HOME + "ventures/simply-foundation/" },
+      { t: "Chapters",           i: "scroll", k: "story writing timeline", go: HOME + "chapters/" },
+      { t: "How this site works", i: "pencil", k: "craft colophon design type", go: HOME + "craft/" },
+      { t: "Toggle dark mode",   i: "moon", k: "theme light night maghrib", fn: toggleTheme },
+      { t: "Count tasbih",       i: "dot", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
+      { t: "Copy email",         i: "at",      k: "contact mail", fn: function () {
           navigator.clipboard.writeText("sakib@withsignal.io").then(function () { toast("Copied. Say salaam."); });
         } },
       { t: "X ↗",           g: "𝕏", k: "twitter mertesakib", go: "https://x.com/mertesakib" },
@@ -573,7 +601,7 @@
         var li = document.createElement("li");
         li.setAttribute("role", "option");
         li.id = "opt-" + i;
-        li.innerHTML = "<span class='glyph'>" + a.g + "</span><span>" + a.t + "</span>";
+        li.innerHTML = (a.i ? svg(a.i) : "<span class='glyph'>" + (a.g || "") + "</span>") + "<span>" + a.t + "</span>";
         li.addEventListener("mouseenter", function () { sel = i; paintSel(false); });
         /* keep focus in the input so typing still filters after a hover */
         li.addEventListener("mousedown", function (e) { e.preventDefault(); });

@@ -756,6 +756,14 @@ kbd {
   color: var(--ink-3);
   font-size: var(--t-m);
 }
+/* the drawn icons: hairline, same ink as the text glyphs they replaced */
+.palette li svg.glyph {
+  height: 1.05rem;
+  flex: 0 0 auto;
+  opacity: 0.9;
+  stroke-width: 1.75;
+  transition: color var(--swift) ease, opacity var(--swift) ease, transform var(--swift) var(--out);
+}
 .palette li .kbd {
   margin-left: auto;
   color: var(--ink-3);
@@ -766,6 +774,11 @@ kbd {
   color: var(--ink);
 }
 .palette li[aria-selected="true"] .glyph { color: var(--seal); }
+/* the row you are on: the icon takes the biro and leans in a hair */
+.palette li[aria-selected="true"] svg.glyph {
+  opacity: 1;
+  transform: translateX(1px) scale(1.07);
+}
 .palette .none {
   padding: var(--s4);
   color: var(--ink-3);
