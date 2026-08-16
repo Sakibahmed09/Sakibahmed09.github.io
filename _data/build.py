@@ -20,7 +20,7 @@ HEAD = """<!doctype html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{stand_plain}">
 <meta property="og:type" content="article">
-<meta property="og:image" content="https://sakib.lol/assets/og.png">
+<meta property="og:image" content="https://sakib.lol/assets/og-v2.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
