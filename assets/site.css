@@ -186,6 +186,7 @@ button, a, summary, [role="button"] {
 a { color: inherit; text-decoration: none; }
 
 .u {
+  white-space: nowrap;
   text-decoration: underline;
   text-decoration-color: color-mix(in oklab, var(--ink) 30%, transparent);
   text-decoration-thickness: 1px;
