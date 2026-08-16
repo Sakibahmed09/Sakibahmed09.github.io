@@ -16,6 +16,7 @@
 <script>
   /* set theme before first paint */
   (function () {
+    document.documentElement.classList.add("js");
     var t = new URLSearchParams(location.search).get("theme") || localStorage.getItem("theme");
     if (t === "dark" || t === "light") document.documentElement.dataset.theme = t;
   })();
