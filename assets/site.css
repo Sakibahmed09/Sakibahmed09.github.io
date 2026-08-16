@@ -116,6 +116,22 @@ button, a, summary, [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* the one a11y affordance a keyboard user actually reaches for */
+.skip {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 1002;
+  background: var(--paper-high);
+  color: var(--ink);
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  box-shadow: var(--raised);
+  font-size: 0.85rem;
+  transition: top var(--settle) var(--out);
+}
+.skip:focus { top: 0.75rem; }
+
 ::selection { background: var(--select-bg); color: var(--ink); }
 
 :focus-visible {
@@ -264,12 +280,13 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 /* the red dot: something new lives here */
 .dot {
   display: inline-block;
-  width: 0.44em;
-  height: 0.44em;
-  border-radius: 50%;
-  background: var(--seal);
+  font-family: var(--pen);
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--seal);
   margin-left: 0.5em;
-  vertical-align: 0.12em;
+  vertical-align: 0.02em;
+  transform-origin: left center;
   animation: dot-in var(--grand) var(--nudge) both;
   animation-delay: 900ms;
 }

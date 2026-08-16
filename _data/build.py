@@ -287,6 +287,57 @@ def find(bucket, needle):
     return None
 
 
+def write_site_files(feed):
+    """sitemap, robots and a real RSS feed — the marks of a site that is kept."""
+    import xml.sax.saxutils as sx
+    BASE = "https://sakibahmed09.github.io"
+    paths = ["/", "/chapters/", "/craft/", "/ventures/"]
+    paths += ["/ventures/%s/" % k for k in SPEC.keys()]
+    today = max(p["d"] for p in feed) if feed else "2026-08-16"
+
+    open(os.path.join(ROOT, "sitemap.xml"), "w").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join('  <url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n'
+                  % (BASE, p, today) for p in paths)
+        + "</urlset>\n")
+
+    open(os.path.join(ROOT, "robots.txt"), "w").write(
+        "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % BASE)
+
+    MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    def rfc(d):
+        y, m, dd = d.split("-")
+        return "%s, %s %s %s 09:00:00 +0000" % ("Mon", dd, MON[int(m) - 1], y)
+
+    items = []
+    for p in feed[:40]:
+        title = re.sub(r"\s+", " ", p["t"])[:90]
+        if len(re.sub(r"\s+", " ", p["t"])) > 90:
+            title += "\u2026"
+        items.append(
+            "  <item>\n"
+            "    <title>%s</title>\n"
+            "    <link>%s</link>\n"
+            "    <guid isPermaLink=\"true\">%s</guid>\n"
+            "    <pubDate>%s</pubDate>\n"
+            "    <description>%s</description>\n"
+            "  </item>\n" % (sx.escape(title), sx.escape(p["u"]),
+                             sx.escape(p["u"]), rfc(p["d"]),
+                             sx.escape(p["t"])))
+    open(os.path.join(ROOT, "feed.xml"), "w").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n'
+        '  <title>Sakib Ahmed</title>\n'
+        '  <link>%s/</link>\n'
+        '  <atom:link href="%s/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        '  <description>Everything I post, in one place.</description>\n'
+        '  <language>en-gb</language>\n%s</channel>\n</rss>\n'
+        % (BASE, BASE, "".join(items)))
+    print("wrote sitemap.xml, robots.txt and feed.xml (%d items)" % len(items))
+
+
 def main():
     misses = []
     freshest = {}
@@ -408,6 +459,7 @@ def main():
     html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
     open(home, "w").write(html_s)
     print("front page feed: %d posts, newest %s" % (len(feed), feed[0]["d"]))
+    write_site_files(feed)
 
     if misses:
         print("\n!! COULD NOT MATCH:")
