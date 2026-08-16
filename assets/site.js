@@ -157,6 +157,23 @@
       var ppBtn = $("#pp"), label = $("#track"), bar = $("#bar");
       player.hidden = false;
 
+      /* Carry the beats across pages. Browsers will not always let a fresh
+         document start audio on its own, so if resume is refused we keep the
+         position and the next press picks up exactly where it left off. */
+      var KEEP = "lofi";
+      var remember = function () {
+        if (!audio) return;
+        try {
+          sessionStorage.setItem(KEEP, JSON.stringify({
+            i: at, t: audio.currentTime, on: !audio.paused
+          }));
+        } catch (e) {}
+      };
+      window.addEventListener("pagehide", remember);
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden") remember();
+      });
+
       var paint = function () {
         label.textContent = "Lofi Muslim \u00b7 " + TRACKS[at].name;
       };
@@ -193,6 +210,32 @@
       ppBtn.addEventListener("click", toggle);
       paint();
 
+      (function resume() {
+        var raw;
+        try { raw = sessionStorage.getItem(KEEP); } catch (e) { return; }
+        if (!raw) return;
+        var st;
+        try { st = JSON.parse(raw); } catch (e) { return; }
+        if (typeof st.i !== "number" || !TRACKS[st.i]) return;
+        at = st.i;
+        paint();
+        load();
+        var seek = function () {
+          try { audio.currentTime = st.t || 0; } catch (e) {}
+          tick();
+        };
+        if (audio.readyState >= 1) seek();
+        else audio.addEventListener("loadedmetadata", seek, { once: true });
+        if (st.on) {
+          audio.play().then(function () {
+            player.classList.add("on");
+            ppBtn.setAttribute("aria-label", "Pause the beats");
+          }).catch(function () {
+            /* blocked on a fresh document; position is kept for the next press */
+          });
+        }
+      })();
+
       /* on the Lofi Muslim page the player owns up to itself */
       if (/lofi-muslim/.test(location.pathname)) {
         var mine = document.createElement("span");
@@ -208,57 +251,101 @@
   })();
 
   /* ---------- swipe between ventures ----------
-     Only ever acts on a clearly horizontal drag, so vertical scrolling is
-     never fought. Falls back to the visible prev/next links. */
+     Native-feeling drag: resistance is asymptotic so it never runs out of
+     road, commit is velocity-aware so a flick works, and the release is a
+     spring rather than a fixed slide. */
   (function () {
     if (REDUCED) return;
     var page = $(".page");
     var prevA = $(".prevnext .prev"), nextA = $(".prevnext .next");
     if (!page || (!prevA && !nextA)) return;
 
-    var x0 = 0, y0 = 0, dx = 0, locked = null, tracking = false;
-    var LIMIT = 0.32;      // how far the page may follow the thumb
-    var TRIGGER = 64;      // px before it counts as a swipe
+    var LIMIT = 96;        // px the page can travel, asymptotically
+    var COMMIT = 62;       // px of real travel to commit on a slow drag
+    var FLICK = 0.45;      // px/ms that counts as a flick
+    var x0 = 0, y0 = 0, raw = 0, shown = 0, locked = null;
+    var tracking = false, lastX = 0, lastT = 0, vel = 0, armed = false;
 
-    var reset = function (animate) {
-      if (animate) {
-        root.classList.add("settling");
-        setTimeout(function () { root.classList.remove("settling"); }, 280);
-      }
+    /* a quiet label of where you are heading */
+    var peek = document.createElement("div");
+    peek.className = "peek";
+    peek.innerHTML = '<span></span>';
+    document.body.appendChild(peek);
+    var peekText = peek.firstChild;
+
+    var resist = function (d) {
+      // asymptotic: the further you pull, the less it gives
+      var sign = d < 0 ? -1 : 1;
+      return sign * LIMIT * (1 - Math.exp(-Math.abs(d) / LIMIT));
+    };
+    var target = function () { return raw < 0 ? nextA : prevA; };
+
+    var settle = function () {
+      page.style.transition = "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)";
       page.style.transform = "";
-      root.classList.remove("swiping");
+      peek.classList.remove("show", "ready");
+      setTimeout(function () { page.style.transition = ""; }, 440);
+    };
+
+    var go = function (a) {
+      var dir = a === nextA ? "next" : "prev";
+      root.dataset.nav = dir;
+      page.style.transition = "transform 220ms cubic-bezier(0.32, 0, 0.67, 0)";
+      page.style.transform = "translate3d(" + (dir === "next" ? -1 : 1) * 42 + "px,0,0)";
+      page.style.opacity = "0.65";
+      setTimeout(function () { location.href = a.getAttribute("href"); }, 120);
     };
 
     page.addEventListener("touchstart", function (e) {
       if (e.touches.length !== 1) return;
-      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
-      dx = 0; locked = null; tracking = true;
+      x0 = lastX = e.touches[0].clientX;
+      y0 = e.touches[0].clientY;
+      lastT = e.timeStamp;
+      raw = shown = vel = 0; locked = null; tracking = true; armed = false;
+      page.style.transition = "";
     }, { passive: true });
 
     page.addEventListener("touchmove", function (e) {
       if (!tracking || e.touches.length !== 1) return;
-      var mx = e.touches[0].clientX - x0;
-      var my = e.touches[0].clientY - y0;
+      var x = e.touches[0].clientX, y = e.touches[0].clientY;
+      var mx = x - x0, my = y - y0;
       if (locked === null) {
-        if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
-        locked = Math.abs(mx) > Math.abs(my) * 1.4 ? "x" : "y";
-        if (locked === "x") root.classList.add("swiping");
+        if (Math.abs(mx) < 9 && Math.abs(my) < 9) return;
+        locked = Math.abs(mx) > Math.abs(my) * 1.3 ? "x" : "y";
       }
       if (locked !== "x") return;
-      // nothing to go to in that direction: heavy resistance
-      var target = mx < 0 ? nextA : prevA;
-      dx = mx * (target ? LIMIT : LIMIT * 0.25);
-      page.style.transform = "translate3d(" + dx.toFixed(1) + "px,0,0)";
+
+      var dt = e.timeStamp - lastT;
+      if (dt > 0) vel = (x - lastX) / dt;
+      lastX = x; lastT = e.timeStamp;
+
+      raw = mx;
+      var t = target();
+      shown = resist(mx) * (t ? 1 : 0.28);   // heavy resistance into a dead end
+      page.style.transform = "translate3d(" + shown.toFixed(2) + "px,0,0)";
+
+      if (t) {
+        peekText.textContent = t.querySelector(".t").textContent;
+        peek.classList.add("show");
+        peek.classList.toggle("left", raw > 0);
+        var ready = Math.abs(shown) >= COMMIT * 0.72;
+        if (ready && !armed) {           // one tick as it arms, like a real control
+          armed = true;
+          if (navigator.vibrate) { try { navigator.vibrate(7); } catch (err) {} }
+        } else if (!ready) { armed = false; }
+        peek.classList.toggle("ready", ready);
+      }
     }, { passive: true });
 
     var finish = function () {
       if (!tracking) return;
       tracking = false;
-      if (locked !== "x") { reset(false); return; }
-      var went = dx / LIMIT;
-      if (went <= -TRIGGER && nextA) { location.href = nextA.getAttribute("href"); return; }
-      if (went >= TRIGGER && prevA) { location.href = prevA.getAttribute("href"); return; }
-      reset(true);
+      if (locked !== "x") { settle(); return; }
+      var t = target();
+      var flick = Math.abs(vel) > FLICK && Math.abs(shown) > 16 &&
+                  ((vel < 0 && t === nextA) || (vel > 0 && t === prevA));
+      if (t && (Math.abs(shown) >= COMMIT || flick)) { go(t); return; }
+      settle();
     };
     page.addEventListener("touchend", finish, { passive: true });
     page.addEventListener("touchcancel", finish, { passive: true });

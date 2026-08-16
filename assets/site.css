@@ -1091,6 +1091,49 @@ html.locked { overflow: hidden; }
 .swiping .page { transition: none; }
 .settling .page { transition: transform 260ms var(--out); }
 
+/* ---------- swipe: where you're heading, and which way the page leaves ---------- */
+.peek {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translate(100%, -50%);
+  z-index: 900;
+  pointer-events: none;
+  background: var(--paper-high);
+  color: var(--ink-3);
+  font-size: 0.82rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px 0 0 999px;
+  box-shadow: var(--raised);
+  opacity: 0;
+  transition: transform 220ms var(--out), opacity 180ms ease, color 160ms ease;
+  max-width: 62vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.peek.left {
+  right: auto; left: 0;
+  transform: translate(-100%, -50%);
+  border-radius: 0 999px 999px 0;
+}
+.peek.show { opacity: 1; transform: translate(0, -50%); }
+.peek.ready { color: var(--seal); }
+
+@media (prefers-reduced-motion: reduce) { .peek { display: none; } }
+
+/* the page leaves in the direction you sent it */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-nav="next"]::view-transition-old(root) { animation: slide-out-left 200ms both; }
+  :root[data-nav="next"]::view-transition-new(root) { animation: slide-in-right 260ms both; }
+  :root[data-nav="prev"]::view-transition-old(root) { animation: slide-out-right 200ms both; }
+  :root[data-nav="prev"]::view-transition-new(root) { animation: slide-in-left 260ms both; }
+}
+@keyframes slide-out-left  { to { transform: translateX(-26px); opacity: 0; } }
+@keyframes slide-in-right  { from { transform: translateX(26px); opacity: 0; } }
+@keyframes slide-out-right { to { transform: translateX(26px); opacity: 0; } }
+@keyframes slide-in-left   { from { transform: translateX(-26px); opacity: 0; } }
+
 /* ---------- lost page ---------- */
 .lost { text-align: left; }
 .lost .big {
