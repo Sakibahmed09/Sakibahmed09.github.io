@@ -141,6 +141,17 @@ button, a, summary, [role="button"] {
 }
 .skip:focus { top: 0.75rem; }
 
+/* Short things get balanced so a heading never drops one lonely word;
+   prose gets pretty so paragraphs never end on a widow. */
+h1, h2, h3,
+.stand, .menu-note, .lede, .article-head .when,
+.ledger .what, .peek, .feed-end { text-wrap: balance; }
+
+.prose p, .article p, .beat .say, .post .body p { text-wrap: pretty; }
+
+/* a long unbroken handle or link must never push the column sideways */
+.post .body p, .lane .txt, .clip p { overflow-wrap: anywhere; }
+
 ::selection { background: var(--select-bg); color: var(--ink); }
 
 :focus-visible {
