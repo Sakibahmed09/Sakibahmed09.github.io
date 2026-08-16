@@ -938,14 +938,35 @@ html.locked { overflow: hidden; }
 }
 .player .mine.show { opacity: 1; transform: none; }
 
-/* ---------- the feed ---------- */
+/* ---------- the feed: a window onto the posts, not a longer page ---------- */
 .feed-wrap { margin-top: 3.4rem; }
-.feed { margin-top: 0.9rem; }
-.feed .post { margin-left: 0; max-width: 31rem; }
+.feed {
+  margin-top: 0.9rem;
+  max-height: min(72vh, 40rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.15rem 0.9rem 0.5rem 0;
+  scrollbar-width: thin;
+  /* fade the top and bottom edges so it reads as a window */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18px,
+                      #000 calc(100% - 26px), transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 18px,
+                      #000 calc(100% - 26px), transparent 100%);
+}
+.feed::-webkit-scrollbar { width: 10px; }
+.feed::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--ink) 13%, transparent);
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+.feed .post { margin-left: 0; max-width: 30rem; }
 .feed .post + .post { margin-left: 0; margin-top: 0.9rem; }
+
 .feed-end {
-  min-height: 2.5rem;
-  margin-top: 1.2rem;
+  min-height: 2rem;
+  padding: 1rem 0 0.4rem;
   color: var(--ink-3);
   font-size: 0.82rem;
 }
@@ -959,11 +980,14 @@ html.locked { overflow: hidden; }
   font-size: 0.84rem;
   color: var(--ink-2);
   cursor: pointer;
+  touch-action: manipulation;
   transition: border-color var(--swift) ease, color var(--swift) ease;
 }
 .feed-more:hover { border-color: var(--seal); color: var(--ink); }
 
-.feed-end.spent { padding-top: 0.6rem; border-top: 1px solid var(--line-soft); }
+@media (max-width: 640px) {
+  .feed { max-height: 68vh; padding-right: 0.4rem; }
+}
 
 /* ---------- the lane: the part that refreshes itself ---------- */
 .lane-wrap { margin-top: 3.4rem; }

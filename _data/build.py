@@ -57,8 +57,8 @@ LANE_HEAD = """
     <div class="feed">
 """
 
-LANE_FOOT = """    </div>
-    <div class="feed-end" aria-hidden="true"></div>
+LANE_FOOT = """      <div class="feed-end"></div>
+    </div>
   </section>
 """
 
@@ -124,9 +124,18 @@ def pretty(d):
 
 
 def clean(t):
+    """Strip the t.co noise, keep the line breaks."""
     t = re.sub(r"https://t\.co/\w+", "", t)
-    t = re.sub(r"\s+", " ", t)
+    t = t.replace("\r\n", "\n").replace("\r", "\n")
+    t = re.sub(r"[ \t]+", " ", t)
+    t = re.sub(r" *\n *", "\n", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
     return t.strip()
+
+
+def flat(t):
+    """One-line version, for matching and for meta tags."""
+    return re.sub(r"\s+", " ", clean(t)).strip()
 
 
 MEDIA_SRC = glob.glob(os.path.expanduser(
@@ -216,7 +225,7 @@ def card(p, i, img=None, alt=""):
 
 def lane_row(p, label=None):
     """A compact row for the self-updating lane."""
-    txt = clean(p["text"])
+    txt = flat(p["text"])
     if len(txt) > 132:
         cut = txt[:132]
         txt = cut[:cut.rfind(" ")] + "…"
@@ -241,7 +250,7 @@ def key_of(p):
 def crosspost_key(p):
     """He posts the same thing to X and LinkedIn. Same day, same opening
     words, means one story told twice."""
-    words = re.sub(r"[^a-z0-9 ]", "", clean(p["text"]).lower()).split()
+    words = re.sub(r"[^a-z0-9 ]", "", flat(p["text"]).lower()).split()
     return (p["date"], " ".join(words[:7]))
 
 
@@ -258,11 +267,11 @@ def dedupe(rows):
 def find(bucket, needle):
     """Search the venture bucket first, then the whole corpus: some of the
     best posts never mention the venture by name."""
-    key = clean(needle).lower()[:60]
+    key = flat(needle).lower()[:60]
     for pool in (bucket, BUCKETS.get("_all", [])):
         best = None
         for p in pool:
-            if key in clean(p["text"]).lower():
+            if key in flat(p["text"]).lower():
                 # prefer the version with more engagement (LI/X duplicates)
                 if best is None or p.get("fav", 0) > best.get("fav", 0):
                     best = p
@@ -363,7 +372,7 @@ def main():
     seen, feed = set(), []
     for r in newest:
         k = key_of(r)
-        if k in seen or not clean(r["text"]):
+        if k in seen or not flat(r["text"]):
             continue
         seen.add(k)
         feed.append({"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
@@ -387,7 +396,7 @@ def main():
              ' style="--i:11">\n    <h2>Lately</h2>\n'
              '    <p class="menu-note">Everything I post, in one place. Keeps going as you scroll.</p>\n'
              '    <div class="feed">\n' + "\n".join(cards) +
-             '\n    </div>\n    <div class="feed-end" aria-hidden="true"></div>\n  </section>\n')
+             '\n      <div class="feed-end"></div>\n    </div>\n  </section>\n')
     a, b_ = "<!-- LATELY:START -->", "<!-- LATELY:END -->"
     html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
     open(home, "w").write(html_s)

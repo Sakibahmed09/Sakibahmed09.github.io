@@ -30,6 +30,16 @@ VENTURES = {
 }
 
 
+def tidy(t):
+    """Collapse runs of spaces but KEEP the line breaks: the shape of a post
+    is part of what he wrote."""
+    t = t.replace("\r\n", "\n").replace("\r", "\n")
+    t = re.sub(r"[ \t]+", " ", t)
+    t = re.sub(r" *\n *", "\n", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def media_index():
     """tweet id -> its image files in the archive"""
     import collections
@@ -96,7 +106,7 @@ def main():
                 "and author_name='Sakib Ahmed' and text != '' order by posted_at"):
             li.append({
                 "date": r["posted_at"][:10],
-                "text": " ".join((r["text"] or "").split()),
+                "text": tidy(r["text"] or ""),
                 "fav": r["reactions"], "comments": r["comments"],
                 "rt": r["reposts"], "url": r["url"], "src": "li",
             })

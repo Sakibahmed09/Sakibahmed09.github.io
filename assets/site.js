@@ -360,7 +360,7 @@
         loading = false; done = true;
         endEl.textContent = "Could not load the rest.";
       });
-    }, { rootMargin: "600px 0px" });
+    }, { root: list, rootMargin: "400px 0px" });
     io.observe(endEl);
   })();
 
