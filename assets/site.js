@@ -627,9 +627,9 @@
       heart:  '<path d="M19 13.6c1.4-1.4 2-3.1 2-4.8a4.8 4.8 0 0 0-9-2.3 4.8 4.8 0 0 0-9 2.3c0 1.7.6 3.4 2 4.8l7 6.9z"/>',
       burger: '<path d="M4 8.5a8 8 0 0 1 16 0z"/><path d="M3.5 12.5h17"/><path d="M4 16h16a4 4 0 0 1-4 3H8a4 4 0 0 1-4-3z"/>',
       bowl:   '<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path class="steam" d="M9 4.5V7"/><path class="steam" d="M12 3.5V7"/><path class="steam" d="M15 4.5V7"/>',
-      /* quote marks, not a nib: Draper is what a founder says out loud, and a
-         feather at 16px reads as a leaf */
-      pen:    '<circle cx="8" cy="10" r="3"/><path d="M11 10c0 3.2-1.4 5.4-4 6.7"/><circle cx="17" cy="10" r="3"/><path d="M20 10c0 3.2-1.4 5.4-4 6.7"/>',
+      /* a speech bubble. a feather read as a leaf at 16px and quote marks
+         read as the number 99, so this says 'what he said' and nothing else. */
+      pen:    '<path d="M20.5 14.5a2 2 0 0 1-2 2H8l-4.5 4V5.5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',
       beads:  '<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.2 3.4"/><circle cx="12" cy="3.5" r="1.6" fill="currentColor" stroke="none"/>',
       tv:     '<rect x="2.5" y="7" width="19" height="12.5" rx="1.8"/><path d="M7.5 3 12 6.5 16.5 3"/>',
       waves:  '<path d="M2.5 12h1.4"/><path d="M7 8.5v7"/><path d="M11.5 5.5v13"/><path d="M16 9.5v5"/><path d="M20.5 12h1"/>',

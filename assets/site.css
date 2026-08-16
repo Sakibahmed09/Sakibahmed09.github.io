@@ -869,21 +869,16 @@ kbd {
   }
   @keyframes wake { from { transform: scale(0.9); opacity: 0.5; } to { transform: scale(1.07); opacity: 1; } }
 
-  /* draper: the quote marks open, the way a sentence starts */
-  .palette li:hover svg[data-i="pen"] > :nth-child(1),
-  .palette li:hover svg[data-i="pen"] > :nth-child(2),
-  .palette li[aria-selected="true"] svg[data-i="pen"] > :nth-child(1),
-  .palette li[aria-selected="true"] svg[data-i="pen"] > :nth-child(2) {
-    animation: openL var(--settle) var(--out) forwards;
+  /* draper: the bubble arrives, the way a message does */
+  .palette li:hover svg[data-i="pen"],
+  .palette li[aria-selected="true"] svg[data-i="pen"] {
+    animation: said var(--settle) var(--out) forwards;
+    transform-origin: 20% 85%;
   }
-  .palette li:hover svg[data-i="pen"] > :nth-child(3),
-  .palette li:hover svg[data-i="pen"] > :nth-child(4),
-  .palette li[aria-selected="true"] svg[data-i="pen"] > :nth-child(3),
-  .palette li[aria-selected="true"] svg[data-i="pen"] > :nth-child(4) {
-    animation: openR var(--settle) var(--out) forwards;
+  @keyframes said {
+    from { transform: scale(0.86) translateY(1.5px); }
+    to   { transform: scale(1.07) translateY(0); }
   }
-  @keyframes openL { to { transform: translateX(-1.2px); } }
-  @keyframes openR { to { transform: translateX(1.2px); } }
 
   /* the craft page's pencil still writes */
   .palette li:hover svg[data-i="pencil"],
