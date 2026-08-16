@@ -58,8 +58,14 @@
       fill.style.strokeDashoffset = String(100 - (count / 33) * 100);
       label.textContent = count + "/33" + (rounds ? " ×" + (rounds + 1) : "");
     };
+    /* Android Chrome supports this; iOS Safari does not, so treat it as a
+       bonus rather than the mechanism. */
+    var buzz = function (pattern) {
+      if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
+    };
     var bump = function () {
       count += 1;
+      buzz(count >= 33 ? [14, 45, 14] : 8);
       if (count >= 33) {
         phraseEl.textContent = PHRASES[rounds % 3];
         tasbih.classList.add("done");
@@ -199,6 +205,63 @@
         io2.observe(player);
       }
     }
+  })();
+
+  /* ---------- swipe between ventures ----------
+     Only ever acts on a clearly horizontal drag, so vertical scrolling is
+     never fought. Falls back to the visible prev/next links. */
+  (function () {
+    if (REDUCED) return;
+    var page = $(".page");
+    var prevA = $(".prevnext .prev"), nextA = $(".prevnext .next");
+    if (!page || (!prevA && !nextA)) return;
+
+    var x0 = 0, y0 = 0, dx = 0, locked = null, tracking = false;
+    var LIMIT = 0.32;      // how far the page may follow the thumb
+    var TRIGGER = 64;      // px before it counts as a swipe
+
+    var reset = function (animate) {
+      if (animate) {
+        root.classList.add("settling");
+        setTimeout(function () { root.classList.remove("settling"); }, 280);
+      }
+      page.style.transform = "";
+      root.classList.remove("swiping");
+    };
+
+    page.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) return;
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+      dx = 0; locked = null; tracking = true;
+    }, { passive: true });
+
+    page.addEventListener("touchmove", function (e) {
+      if (!tracking || e.touches.length !== 1) return;
+      var mx = e.touches[0].clientX - x0;
+      var my = e.touches[0].clientY - y0;
+      if (locked === null) {
+        if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+        locked = Math.abs(mx) > Math.abs(my) * 1.4 ? "x" : "y";
+        if (locked === "x") root.classList.add("swiping");
+      }
+      if (locked !== "x") return;
+      // nothing to go to in that direction: heavy resistance
+      var target = mx < 0 ? nextA : prevA;
+      dx = mx * (target ? LIMIT : LIMIT * 0.25);
+      page.style.transform = "translate3d(" + dx.toFixed(1) + "px,0,0)";
+    }, { passive: true });
+
+    var finish = function () {
+      if (!tracking) return;
+      tracking = false;
+      if (locked !== "x") { reset(false); return; }
+      var went = dx / LIMIT;
+      if (went <= -TRIGGER && nextA) { location.href = nextA.getAttribute("href"); return; }
+      if (went >= TRIGGER && prevA) { location.href = prevA.getAttribute("href"); return; }
+      reset(true);
+    };
+    page.addEventListener("touchend", finish, { passive: true });
+    page.addEventListener("touchcancel", finish, { passive: true });
   })();
 
   /* ---------- command palette ---------- */

@@ -60,6 +60,12 @@ LANE_FOOT = """    </ul>
   </section>
 """
 
+PREVNEXT = """
+  <nav class="prevnext" aria-label="Other ventures">
+{links}
+  </nav>
+"""
+
 FOOT = """
   <footer class="foot">
     <span class="clock" id="clock" title="Europe/London">&nbsp;</span>
@@ -305,6 +311,24 @@ def main():
             out.extend(lane_row(p) for p in rest[:8])
             out.append(LANE_FOOT)
             freshest[slug] = (v["title"], rest[:6])
+        # walkable in order, and the swipe uses these as its targets
+        order = list(SPEC.keys())
+        i_here = order.index(slug)
+        pn = []
+        if i_here > 0:
+            prev = order[i_here - 1]
+            pn.append('    <a class="prev" rel="prev" href="../%s/">'
+                      '<span class="dir">Previous</span>'
+                      '<span class="t">%s</span></a>'
+                      % (prev, SPEC[prev]["title"]))
+        if i_here < len(order) - 1:
+            nxt = order[i_here + 1]
+            pn.append('    <a class="next" rel="next" href="../%s/">'
+                      '<span class="dir">Next</span>'
+                      '<span class="t">%s</span></a>'
+                      % (nxt, SPEC[nxt]["title"]))
+        if pn:
+            out.append(PREVNEXT.format(links="\n".join(pn)))
         out.append(FOOT)
         d = os.path.join(ROOT, "ventures", slug)
         os.makedirs(d, exist_ok=True)
