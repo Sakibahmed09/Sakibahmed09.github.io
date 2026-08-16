@@ -1,0 +1,213 @@
+/* sakib.page — one script, no dependencies */
+(function () {
+  "use strict";
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var root = document.documentElement;
+  var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- the clock: always London ---------- */
+  var clock = $("#clock");
+  if (clock) {
+    var fmt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London", hour: "numeric", minute: "2-digit", hour12: true
+    });
+    var tick = function () {
+      var t = fmt.format(new Date()).replace(/\s/g, "").replace("am", "am").replace("pm", "pm");
+      clock.textContent = "It’s " + t + " in London E1.";
+    };
+    tick();
+    setInterval(tick, 10000);
+  }
+
+  /* ---------- theme: the sun sets properly ---------- */
+  var moon = $("#moon");
+  var isDark = function () {
+    var t = root.dataset.theme;
+    if (t === "dark") return true;
+    if (t === "light") return false;
+    return matchMedia("(prefers-color-scheme: dark)").matches;
+  };
+  var paintMoon = function () {
+    if (moon) moon.setAttribute("aria-pressed", String(isDark()));
+  };
+  var setTheme = function (mode) {
+    root.dataset.theme = mode;
+    localStorage.setItem("theme", mode);
+    paintMoon();
+  };
+  var toggleTheme = function () { setTheme(isDark() ? "light" : "dark"); };
+  if (moon) {
+    moon.addEventListener("click", toggleTheme);
+    paintMoon();
+  }
+
+  /* ---------- tasbih: thirty-three, then again ---------- */
+  var tasbih = $("#tasbih");
+  if (tasbih) {
+    var count = 0, rounds = 0;
+    var fill = $(".fill", tasbih);
+    var label = $("#tasbih-count");
+    var phraseEl = $("#tasbih-phrase");
+    var PHRASES = ["سبحان الله",           /* subhanAllah */
+                   "الحمد لله",                  /* alhamdulillah */
+                   "الله أكبر"];                 /* Allahu akbar */
+    var paint = function () {
+      fill.style.strokeDashoffset = String(100 - (count / 33) * 100);
+      label.textContent = count + "/33" + (rounds ? " ×" + (rounds + 1) : "");
+    };
+    var bump = function () {
+      count += 1;
+      if (count >= 33) {
+        phraseEl.textContent = PHRASES[rounds % 3];
+        tasbih.classList.add("done");
+        count = 0;
+        rounds += 1;
+        setTimeout(function () { tasbih.classList.remove("done"); paint(); }, 2400);
+        paint();
+        fill.style.strokeDashoffset = "0";
+      } else {
+        tasbih.classList.remove("done");
+        paint();
+      }
+    };
+    tasbih.addEventListener("click", bump);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "t" && !e.metaKey && !e.ctrlKey && !e.altKey &&
+          !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) bump();
+    });
+    paint();
+  }
+
+  /* ---------- pen notes draw themselves in ---------- */
+  var notes = $$(".pen-note");
+  if (notes.length) {
+    notes.forEach(function (n) {
+      var p = $(".stroke path", n);
+      if (p) {
+        var len = Math.ceil(p.getTotalLength()) + 2;
+        n.style.setProperty("--len", len);
+      }
+    });
+    if (REDUCED) {
+      notes.forEach(function (n) { n.classList.add("drawn"); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("drawn"); io.unobserve(en.target); }
+        });
+      }, { rootMargin: "0px 0px -12% 0px" });
+      notes.forEach(function (n) { io.observe(n); });
+    }
+  }
+
+  /* ---------- table of contents scrollspy ---------- */
+  var tocLinks = $$(".toc a");
+  if (tocLinks.length) {
+    var byId = {};
+    tocLinks.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+    var current = null;
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          if (current) current.removeAttribute("aria-current");
+          current = byId[en.target.id];
+          if (current) current.setAttribute("aria-current", "true");
+        }
+      });
+    }, { rootMargin: "-8% 0px -78% 0px" });
+    $$(".article h2[id]").forEach(function (h) { spy.observe(h); });
+  }
+
+  /* ---------- toast ---------- */
+  var toastEl = $("#toast"), toastTimer;
+  var toast = function (msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 1800);
+  };
+
+  /* ---------- command palette ---------- */
+  var veil = $("#veil"), input = $("#palette-input"), list = $("#palette-list");
+  if (veil && input && list) {
+    var HOME = /\/(chapters|craft)\//.test(location.pathname) ? "../" : "./";
+    var ACTIONS = [
+      { t: "Home",               g: "⌂", k: "sakib start", go: HOME },
+      { t: "Chapters",           g: "§", k: "story writing timeline", go: HOME + "chapters/" },
+      { t: "How this site works", g: "✎", k: "craft colophon design", go: HOME + "craft/" },
+      { t: "Toggle dark mode",   g: "☾", k: "theme light night maghrib", fn: toggleTheme },
+      { t: "Count tasbih",       g: "●", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
+      { t: "Copy email",         g: "@",      k: "contact mail", fn: function () {
+          navigator.clipboard.writeText("sakib@withsignal.io").then(function () { toast("Copied. Say salaam."); });
+        } },
+      { t: "X ↗",           g: "𝕏", k: "twitter mertesakib", go: "https://x.com/mertesakib" },
+      { t: "LinkedIn ↗",    g: "in", k: "linkedin", go: "https://www.linkedin.com/in/sakibahmed09" },
+      { t: "Draper ↗",      g: "D",  k: "work agency draperhq", go: "https://draperhq.com" }
+    ];
+    var open = false, sel = 0, shown = [];
+
+    var render = function (q) {
+      q = (q || "").trim().toLowerCase();
+      shown = ACTIONS.filter(function (a) {
+        return !q || (a.t + " " + a.k).toLowerCase().indexOf(q) !== -1;
+      });
+      sel = Math.min(sel, Math.max(shown.length - 1, 0));
+      list.innerHTML = "";
+      if (!shown.length) {
+        var li = document.createElement("li");
+        li.className = "none";
+        li.textContent = "nothing here. try ‘chapters’";
+        list.appendChild(li);
+        return;
+      }
+      shown.forEach(function (a, i) {
+        var li = document.createElement("li");
+        li.setAttribute("role", "option");
+        if (i === sel) li.setAttribute("aria-selected", "true");
+        li.innerHTML = "<span class='glyph'>" + a.g + "</span><span>" + a.t + "</span>";
+        li.addEventListener("mouseenter", function () { sel = i; render(input.value); });
+        li.addEventListener("click", function () { run(a); });
+        list.appendChild(li);
+      });
+    };
+    var run = function (a) {
+      close();
+      if (a.go) { location.href = a.go; }
+      else if (a.fn) { a.fn(); }
+    };
+    var openPalette = function () {
+      open = true;
+      veil.hidden = false;
+      requestAnimationFrame(function () { veil.classList.add("open"); });
+      input.value = "";
+      sel = 0;
+      render("");
+      input.focus();
+    };
+    var close = function () {
+      open = false;
+      veil.classList.remove("open");
+      setTimeout(function () { if (!open) veil.hidden = true; }, 260);
+    };
+
+    document.addEventListener("keydown", function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        open ? close() : openPalette();
+      } else if (open && e.key === "Escape") {
+        close();
+      } else if (open && e.key === "ArrowDown") {
+        e.preventDefault(); sel = (sel + 1) % shown.length; render(input.value);
+      } else if (open && e.key === "ArrowUp") {
+        e.preventDefault(); sel = (sel - 1 + shown.length) % shown.length; render(input.value);
+      } else if (open && e.key === "Enter" && shown[sel]) {
+        e.preventDefault(); run(shown[sel]);
+      }
+    });
+    input.addEventListener("input", function () { sel = 0; render(input.value); });
+    veil.addEventListener("click", function (e) { if (e.target === veil) close(); });
+    if (location.hash === "#k") openPalette();
+  }
+})();

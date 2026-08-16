@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this site works · Sakib Ahmed</title>
+<meta name="description" content="Paper, ink, one red biro. The type, colour and motion decisions behind this site.">
+<meta property="og:title" content="How this site works">
+<meta property="og:description" content="Paper, ink, one red biro. The type, colour and motion decisions behind this site.">
+<meta name="theme-color" content="#f8f5ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23bf3a2a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' fill='%23faf7f0' text-anchor='middle'%3E%D8%B3%3C/text%3E%3C/svg%3E">
+<script>(function(){var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;})();</script>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@450,500,560,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,400..500&family=Nanum+Pen+Script&family=Amiri&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+
+<main class="page article">
+
+  <a class="crumb rise" style="--i:0" href="../"><span class="back">←</span> Sakib Ahmed</a>
+
+  <header class="article-head rise" style="--i:1">
+    <h1>How this site works</h1>
+    <p class="when"><time datetime="2026-08-16">16 August 2026</time></p>
+    <p class="stand">I saw <a class="u" data-out href="https://benji.org">benji.org</a> and couldn&#8217;t leave it alone. This is my version of that discipline, rebuilt from a blank file: paper, ink, and one red biro.</p>
+  </header>
+
+  <nav class="toc" aria-label="Index">
+    <a href="#type">Type</a>
+    <a href="#colour">Colour</a>
+    <a href="#motion">Motion</a>
+    <a href="#details">Small details</a>
+    <a href="#colophon">Colophon</a>
+  </nav>
+
+  <h2 id="type" class="rise" style="--i:2"><span class="chno">01</span> Type</h2>
+  <p class="rise" style="--i:3">Four voices, each with one job. The rule is that no voice does another voice&#8217;s job, which is also how we run Draper.</p>
+  <div class="demo rise" style="--i:4">
+    <div class="specimen">
+      <p class="s1">General Sans carries the prose.</p>
+      <small>the speaking voice, 450–560</small>
+      <p class="s2">Fraunces leans in for the words that matter.</p>
+      <small>the inflection, italic only</small>
+      <p class="s3">and the biro argues in the margins</p>
+      <small>Nanum Pen Script, seal red only</small>
+      <p class="s4" lang="ar" dir="rtl">والأميري يفتتح الصفحة</p>
+      <small>Amiri opens the page</small>
+    </div>
+  </div>
+
+  <h2 id="colour"><span class="chno">02</span> Colour</h2>
+  <div class="anchored">
+    <p>Warm paper, warm ink, and a single seal red spent like money. If everything is highlighted, nothing is. The only gold in the house appears when you select text, so go on, <span class="accent">select this sentence</span>.</p>
+    <aside class="pen-note" style="--pin:1.2rem">
+      <svg class="stroke" width="34" height="40" viewBox="0 0 34 40" aria-hidden="true"><path d="M30 3 C12 8, 8 22, 14 37"/></svg>
+      <span class="txt">one accent, spent carefully</span>
+    </aside>
+  </div>
+  <div class="demo">
+    <div class="swatches">
+      <figure><i style="background:var(--paper)"></i><figcaption>paper</figcaption></figure>
+      <figure><i style="background:var(--ink)"></i><figcaption>ink</figcaption></figure>
+      <figure><i style="background:var(--ink-3)"></i><figcaption>pencil</figcaption></figure>
+      <figure><i style="background:var(--seal)"></i><figcaption>seal</figcaption></figure>
+      <figure><i style="background:var(--select-bg)"></i><figcaption>gold, selection only</figcaption></figure>
+    </div>
+  </div>
+  <p>Dark mode is called <em>after Maghrib</em> in the stylesheet. The moon in the footer is the same sun with its rays folded away, and the site remembers which one you left on.</p>
+
+  <h2 id="motion"><span class="chno">03</span> Motion</h2>
+  <p>Three speeds, named like gears. <em>Swift</em> at 160ms for feedback, <em>settle</em> at 340ms for state, <em>grand</em> at 760ms for entrances. Everything decelerates like a real object and nothing bounces, except the tasbih bead, which has earned it.</p>
+  <div class="demo">
+    <div class="label">tap to race the three gears</div>
+    <div class="race" id="race" role="button" tabindex="0" aria-label="Play easing demo">
+      <div class="lane"><span>swift 160</span><div class="track"><div class="ball b1"></div></div></div>
+      <div class="lane"><span>settle 340</span><div class="track"><div class="ball b2"></div></div></div>
+      <div class="lane"><span>grand 760</span><div class="track"><div class="ball b3"></div></div></div>
+    </div>
+  </div>
+  <p class="quiet">If your system asks for reduced motion, this site sits still. That includes the race you just ran.</p>
+
+  <h2 id="details"><span class="chno">04</span> Small details</h2>
+  <div class="anchored">
+    <p>The clock in the footer keeps London time wherever you read this from, because that&#8217;s where the kettle is. Press <span class="highlight">⌘K</span> anywhere for the command palette. Press <span class="highlight">t</span> for the tasbih: thirty-three counts complete the ring, and the phrase changes each round, the way it should.</p>
+    <aside class="pen-note" style="--pin:1.8rem">
+      <svg class="stroke" width="34" height="40" viewBox="0 0 34 40" aria-hidden="true"><path d="M30 3 C12 8, 8 22, 14 37"/></svg>
+      <span class="txt">try t. go on.</span>
+    </aside>
+  </div>
+  <p>The favicon is a seal: <span lang="ar">س</span> stamped in red, the first letter of my name. The margin notes draw themselves in as you reach them, ink first, words after, the way notes actually get written. Text you select turns gold. Links underline in hairline ink and only commit to red when you hover, which is roughly my approach to commitment in general (ask Mustafa).</p>
+
+  <h2 id="colophon"><span class="chno">05</span> Colophon</h2>
+  <p>No framework, no build step, no analytics. Four HTML files, one stylesheet, one script, hosted as static files. The whole site weighs less than one LinkedIn selfie.</p>
+  <p>Written and built with Claude Code in one long sitting, art directed by me. The format owes a debt to <a class="u" data-out href="https://benji.org">Benji Taylor</a>, the taste bar he set, and the hour I spent reading his CSS like tafsir.</p>
+  <p class="sign">If you want one of these for yourself, you know where the <a class="u" data-out href="https://draperhq.com">agency</a> is.</p>
+
+  <footer class="foot">
+    <span class="clock" id="clock" title="Europe/London">&nbsp;</span>
+    <button class="tasbih" id="tasbih" aria-label="Tasbih counter" title="Count with me">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <circle class="ring" cx="11" cy="11" r="9"></circle>
+        <circle class="fill" cx="11" cy="11" r="9" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"></circle>
+        <circle class="bead" cx="11" cy="11" r="3"></circle>
+      </svg>
+      <span class="count" id="tasbih-count" aria-live="polite">0/33</span>
+      <span class="phrase" id="tasbih-phrase" lang="ar">سبحان الله</span>
+    </button>
+    <nav class="links" aria-label="Elsewhere">
+      <a class="u" href="../">Home</a>
+      <a class="u" href="../chapters/">Chapters</a>
+    </nav>
+    <button class="moon" id="moon" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <g class="rays">
+          <line class="ray" x1="11" y1="1.5" x2="11" y2="4"></line>
+          <line class="ray" x1="11" y1="18" x2="11" y2="20.5"></line>
+          <line class="ray" x1="1.5" y1="11" x2="4" y2="11"></line>
+          <line class="ray" x1="18" y1="11" x2="20.5" y2="11"></line>
+          <line class="ray" x1="4.3" y1="4.3" x2="6.1" y2="6.1"></line>
+          <line class="ray" x1="15.9" y1="15.9" x2="17.7" y2="17.7"></line>
+          <line class="ray" x1="4.3" y1="17.7" x2="6.1" y2="15.9"></line>
+          <line class="ray" x1="15.9" y1="6.1" x2="17.7" y2="4.3"></line>
+        </g>
+        <mask id="bite-mask">
+          <rect width="22" height="22" fill="white"></rect>
+          <circle class="bite" cx="11" cy="11" r="5.5" fill="black"></circle>
+        </mask>
+        <circle class="core" cx="11" cy="11" r="4.5" mask="url(#bite-mask)"></circle>
+      </svg>
+    </button>
+  </footer>
+
+</main>
+
+<div class="veil" id="veil" hidden>
+  <div class="palette" role="dialog" aria-label="Command palette">
+    <input id="palette-input" type="text" placeholder="Where to?" autocomplete="off" spellcheck="false">
+    <ul id="palette-list" role="listbox"></ul>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../assets/site.js" defer></script>
+<script>
+  /* the race: three gears, one tap */
+  (function () {
+    var race = document.getElementById("race");
+    if (!race) return;
+    var go = function () {
+      var w = race.querySelector(".track").offsetWidth - 12;
+      race.style.setProperty("--tx", w + "px");
+      race.classList.remove("go");
+      void race.offsetWidth;
+      race.classList.add("go");
+    };
+    race.addEventListener("click", go);
+    race.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,721 @@
+/* ============================================================
+   sakib.page — a well-kept notebook
+   paper + ink + one red biro. no framework, no build step.
+   ============================================================ */
+
+/* ---------- tokens ---------- */
+:root {
+  color-scheme: light;
+
+  /* paper + ink (warm, never pure) */
+  --paper:      oklch(97.4% 0.011 90);
+  --paper-high: oklch(99.2% 0.006 90);
+  --ink:        oklch(24% 0.014 85);
+  --ink-2:      oklch(44% 0.014 85);
+  --ink-3:      oklch(62% 0.016 85);
+  --line:       color-mix(in oklab, var(--ink) 11%, transparent);
+  --line-soft:  color-mix(in oklab, var(--ink) 6%, transparent);
+
+  /* the one accent: seal red (a teacher's biro) */
+  --seal:       oklch(53% 0.19 30);
+  --seal-soft:  color-mix(in oklab, var(--seal) 12%, transparent);
+
+  /* selection is the only gold in the house */
+  --select-bg:  oklch(90% 0.06 85);
+
+  /* motion: three speeds, named like gears */
+  --swift:  160ms;   /* feedback */
+  --settle: 340ms;   /* state change */
+  --grand:  760ms;   /* entrances */
+  --out:    cubic-bezier(0.19, 1, 0.22, 1);
+  --nudge:  cubic-bezier(0.34, 1.36, 0.44, 1);
+
+  /* type */
+  --sans:   "General Sans", "Helvetica Neue", Arial, sans-serif;
+  --serif:  "Fraunces", Georgia, "Times New Roman", serif;
+  --pen:    "Nanum Pen Script", "Segoe Script", cursive;
+  --arabic: "Amiri", "Geeza Pro", serif;
+  --mono:   ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* layered shadow, warm not grey */
+  --raised:
+    0 0 0 1px color-mix(in oklab, var(--ink) 7%, transparent),
+    0 1px 2px   color-mix(in oklab, var(--ink) 4%, transparent),
+    0 4px 8px   color-mix(in oklab, var(--ink) 5%, transparent),
+    0 12px 24px color-mix(in oklab, var(--ink) 6%, transparent),
+    0 28px 56px color-mix(in oklab, var(--ink) 7%, transparent);
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  :root { --seal: color(display-p3 0.72 0.23 0.15); }
+}
+
+/* after maghrib */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper:      oklch(20% 0.008 80);
+    --paper-high: oklch(24% 0.009 80);
+    --ink:        oklch(90% 0.012 85);
+    --ink-2:      oklch(72% 0.012 85);
+    --ink-3:      oklch(56% 0.012 85);
+    --seal:       oklch(64% 0.17 32);
+    --select-bg:  oklch(38% 0.05 85);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:      oklch(20% 0.008 80);
+  --paper-high: oklch(24% 0.009 80);
+  --ink:        oklch(90% 0.012 85);
+  --ink-2:      oklch(72% 0.012 85);
+  --ink-3:      oklch(56% 0.012 85);
+  --seal:       oklch(64% 0.17 32);
+  --select-bg:  oklch(38% 0.05 85);
+}
+
+/* ---------- ground ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  line-height: 1.68;
+  font-weight: 450;
+  letter-spacing: 0.001em;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: oldstyle-nums;
+  min-height: 100svh;
+}
+
+/* faint paper grain, both themes */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection { background: var(--select-bg); color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: 4px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+:hover::-webkit-scrollbar-thumb { background-color: color-mix(in oklab, var(--ink) 16%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* cross-page fades where supported */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation-duration: 120ms; }
+::view-transition-new(root) { animation-duration: 200ms; }
+
+/* ---------- page grid ----------
+   one narrow column of ink; margins are for the pen. */
+.page {
+  display: grid;
+  grid-template-columns:
+    [full-start gutter-start] minmax(1.25rem, 1fr)
+    [main-start] min(38.5rem, calc(100% - 2.5rem)) [main-end]
+    minmax(1.25rem, 1fr) [gutter-end full-end];
+  padding-block: clamp(3.5rem, 11vh, 7.5rem) clamp(4rem, 10vh, 7rem);
+  row-gap: 0;
+}
+.page > * { grid-column: main; }
+
+/* ---------- masthead ---------- */
+.basmala {
+  font-family: var(--arabic);
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  margin-bottom: 2.1rem;
+  user-select: none;
+}
+
+.masthead h1 {
+  font-size: 1rem;
+  font-weight: 560;
+  letter-spacing: 0.002em;
+}
+.masthead .updated {
+  color: var(--ink-3);
+  font-size: 0.84rem;
+  margin-top: 0.15rem;
+}
+
+/* ---------- prose ---------- */
+.prose { margin-top: 2.2rem; }
+.prose p + p { margin-top: 1.05em; }
+
+.prose em, .accent {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 430;
+  font-size: 1.06em;
+  letter-spacing: 0.004em;
+}
+
+/* links: quiet ink, a hairline under, red on approach */
+a { color: inherit; text-decoration: none; }
+
+.u {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--ink) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2.6px;
+  transition: text-decoration-color var(--swift) ease, color var(--swift) ease;
+}
+.u:hover { text-decoration-color: var(--seal); color: color-mix(in oklab, var(--ink) 82%, var(--seal)); }
+
+a[data-out]::after {
+  content: "\2197";
+  font-size: 0.72em;
+  color: var(--ink-3);
+  margin-left: 0.14em;
+  display: inline-block;
+  transition: transform var(--settle) var(--nudge), color var(--swift) ease;
+}
+a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--seal); }
+
+/* ---------- section label + ledger tables ---------- */
+.section { margin-top: 3.4rem; }
+.section > h2 {
+  font-size: 0.84rem;
+  font-weight: 480;
+  color: var(--ink-3);
+  margin-bottom: 0.45rem;
+}
+
+.ledger { list-style: none; }
+.ledger li { border-top: 1px solid var(--line-soft); }
+.ledger li:last-child { border-bottom: 1px solid var(--line-soft); }
+
+.ledger a, .ledger .row {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr auto;
+  align-items: baseline;
+  column-gap: 1rem;
+  padding-block: 0.58rem;
+}
+
+.ledger .yr {
+  color: var(--ink-3);
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+.ledger .what { font-weight: 500; font-size: 0.95rem; }
+.ledger .what small {
+  display: block;
+  font-size: 0.855rem;
+  font-weight: 450;
+  color: var(--ink-2);
+}
+.ledger .meta {
+  color: var(--ink-3);
+  font-size: 0.84rem;
+  text-align: right;
+  transition: color var(--swift) ease;
+}
+
+/* row hover: the arrow leans in */
+.ledger a .what::after {
+  content: "\2192";
+  display: inline-block;
+  margin-left: 0.45em;
+  opacity: 0;
+  color: var(--seal);
+  transform: translateX(-0.35em);
+  transition: opacity var(--swift) ease, transform var(--settle) var(--nudge);
+}
+.ledger a:hover .what::after { opacity: 1; transform: translateX(0); }
+.ledger a:hover .meta { color: var(--ink-2); }
+
+/* the red dot: something new lives here */
+.dot {
+  display: inline-block;
+  width: 0.44em;
+  height: 0.44em;
+  border-radius: 50%;
+  background: var(--seal);
+  margin-left: 0.5em;
+  vertical-align: 0.12em;
+  animation: dot-in var(--grand) var(--nudge) both;
+  animation-delay: 900ms;
+}
+@keyframes dot-in {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+/* ---------- entrances: rise with the page ---------- */
+.rise {
+  opacity: 0;
+  transform: translateY(9px);
+  animation: rise var(--grand) var(--out) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+@keyframes rise {
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- footer ---------- */
+.foot {
+  margin-top: 4.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.15rem;
+  color: var(--ink-3);
+  font-size: 0.84rem;
+}
+.foot .clock { font-variant-numeric: tabular-nums; }
+.foot .links { display: flex; gap: 1.05rem; margin-left: auto; }
+.foot .hint { color: var(--ink-3); }
+.foot .hint kbd {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  margin-left: 0.15rem;
+}
+.colophon-line {
+  width: 100%;
+  margin-top: 0.35rem;
+  color: var(--ink-3);
+}
+
+/* ---------- tasbih ---------- */
+.tasbih {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-3);
+  font: inherit;
+  padding: 0.15rem 0;
+}
+.tasbih svg { display: block; overflow: visible; }
+.tasbih .ring {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+.tasbih .fill {
+  fill: none;
+  stroke: var(--seal);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset var(--settle) var(--out);
+}
+.tasbih .bead {
+  fill: var(--ink-3);
+  transition: fill var(--swift) ease, transform var(--settle) var(--nudge);
+  transform-origin: center;
+}
+.tasbih:active .bead { transform: scale(1.45); fill: var(--seal); }
+.tasbih .count {
+  font-variant-numeric: tabular-nums;
+  min-width: 3.4ch;
+  text-align: left;
+}
+.tasbih .phrase {
+  font-family: var(--arabic);
+  font-size: 1rem;
+  color: var(--seal);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity var(--settle) ease, transform var(--settle) var(--out);
+}
+.tasbih.done .phrase { opacity: 1; transform: none; }
+
+/* ---------- theme toggle: the sun sets properly ---------- */
+.moon {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0.3rem;
+  margin: -0.3rem;
+  color: var(--ink-3);
+  display: inline-flex;
+  border-radius: 50%;
+  transition: color var(--swift) ease, transform var(--settle) var(--nudge);
+}
+.moon:hover { color: var(--ink); }
+.moon:active { transform: scale(0.88); }
+.moon svg { display: block; overflow: visible; }
+.moon .core {
+  fill: currentColor;
+  transition: r var(--settle) var(--out);
+}
+.moon .ray {
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transform-origin: 11px 11px;
+  transition: transform var(--settle) var(--nudge), opacity var(--settle) ease;
+}
+.moon .bite {
+  fill: var(--paper);
+  transition: transform var(--settle) var(--out);
+  transform: translate(8px, -9px);
+}
+:root[data-theme="dark"] .moon .core,
+:root:not([data-theme="light"]) .moon .core { }
+.moon[aria-pressed="true"] .ray { transform: scale(0); opacity: 0; }
+.moon[aria-pressed="true"] .bite { transform: translate(2.5px, -2.5px); }
+
+/* ---------- pen: margin annotations ---------- */
+.pen-note {
+  font-family: var(--pen);
+  font-size: 1.18rem;
+  line-height: 1.15;
+  color: var(--seal);
+  transform: rotate(-1.6deg);
+}
+
+@media (min-width: 1180px) {
+  aside.pen-note {
+    grid-column: gutter-end;
+    grid-row: auto;
+    position: absolute;
+    width: 12rem;
+    margin-left: 2.2rem;
+  }
+  .anchored { position: relative; }
+  .anchored > aside.pen-note {
+    position: absolute;
+    left: 100%;
+    top: var(--pin, 0);
+    margin-left: 3.2rem;
+    width: 11.5rem;
+  }
+  aside.pen-note .stroke { display: block; margin-bottom: 0.1rem; }
+}
+@media (max-width: 1179.9px) {
+  aside.pen-note {
+    display: block;
+    margin: 1.1rem 0 0.2rem;
+    font-size: 1.12rem;
+  }
+  aside.pen-note .stroke { display: none; }
+}
+
+/* the hand-drawn stroke draws itself in */
+.pen-note .stroke path {
+  fill: none;
+  stroke: var(--seal);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: var(--len, 60);
+  stroke-dashoffset: var(--len, 60);
+}
+.pen-note .txt { opacity: 0; transition: opacity 420ms ease 260ms; }
+.pen-note.drawn .txt { opacity: 1; }
+.pen-note.drawn .stroke path {
+  animation: draw 640ms var(--out) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* ---------- article pages ---------- */
+.crumb {
+  font-size: 0.84rem;
+  color: var(--ink-3);
+  margin-bottom: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.crumb .back {
+  display: inline-block;
+  transition: transform var(--settle) var(--nudge);
+}
+.crumb:hover .back { transform: translateX(-0.22em); }
+.crumb:hover { color: var(--ink); }
+
+.article-head h1 { font-size: 1.35rem; font-weight: 560; letter-spacing: -0.004em; }
+.article-head .when { color: var(--ink-3); font-size: 0.84rem; margin-top: 0.2rem; }
+.article-head .stand {
+  margin-top: 1.15rem;
+  color: var(--ink-2);
+}
+
+.article h2 {
+  font-size: 0.95rem;
+  font-weight: 560;
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  scroll-margin-top: 2.5rem;
+}
+.article h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+.article h2 .chno {
+  color: var(--ink-3);
+  font-weight: 450;
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+.article h2 + p, .article h2 + .anchored { margin-top: 1rem; }
+.article p + p, .article p + .anchored, .article .anchored + p, .article .anchored + .anchored { margin-top: 1.05em; }
+
+.article .highlight {
+  background: linear-gradient(transparent 42%, var(--select-bg) 42% 88%, transparent 88%);
+  padding-inline: 0.1em;
+  margin-inline: -0.1em;
+}
+
+.article .quiet { color: var(--ink-2); }
+
+.article .sign {
+  margin-top: 3rem;
+  color: var(--ink-2);
+}
+
+/* sticky index in the left gutter */
+@media (min-width: 1180px) {
+  .toc {
+    grid-column: gutter-start;
+    grid-row: 3 / span 40;
+    justify-self: end;
+    margin-right: 3.2rem;
+    align-self: start;
+    position: sticky;
+    top: 5.5rem;
+    width: 11rem;
+    text-align: right;
+    font-size: 0.82rem;
+  }
+  .toc a {
+    display: block;
+    padding-block: 0.18rem;
+    color: var(--ink-3);
+    transition: color var(--swift) ease;
+  }
+  .toc a:hover { color: var(--ink); }
+  .toc a[aria-current] { color: var(--ink); }
+  .toc a[aria-current]::after {
+    content: "";
+    display: inline-block;
+    width: 0.32em; height: 0.32em;
+    border-radius: 50%;
+    background: var(--seal);
+    margin-left: 0.5em;
+    vertical-align: 0.14em;
+  }
+}
+@media (max-width: 1179.9px) { .toc { display: none; } }
+
+/* ---------- command palette ---------- */
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: color-mix(in oklab, var(--paper) 55%, transparent);
+  backdrop-filter: blur(9px) saturate(1.1);
+  -webkit-backdrop-filter: blur(9px) saturate(1.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--settle) ease;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding-top: min(18vh, 11rem);
+}
+.veil.open { opacity: 1; pointer-events: auto; }
+
+.palette {
+  width: min(33rem, calc(100vw - 2.5rem));
+  background: var(--paper-high);
+  border-radius: 14px;
+  box-shadow: var(--raised);
+  overflow: hidden;
+  transform: translateY(8px) scale(0.985);
+  transition: transform var(--settle) var(--nudge);
+}
+.veil.open .palette { transform: none; }
+
+.palette input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--ink);
+  padding: 0.95rem 1.1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.palette input::placeholder { color: var(--ink-3); }
+
+.palette ul {
+  list-style: none;
+  max-height: 17rem;
+  overflow-y: auto;
+  padding: 0.45rem;
+}
+.palette li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.52rem 0.68rem;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  cursor: pointer;
+  color: var(--ink-2);
+}
+.palette li .glyph {
+  width: 1.15rem;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 0.88rem;
+}
+.palette li .kbd {
+  margin-left: auto;
+  color: var(--ink-3);
+  font-size: 0.76rem;
+}
+.palette li[aria-selected="true"] {
+  background: color-mix(in oklab, var(--ink) 5.5%, transparent);
+  color: var(--ink);
+}
+.palette li[aria-selected="true"] .glyph { color: var(--seal); }
+.palette .none {
+  padding: 1rem;
+  color: var(--ink-3);
+  font-size: 0.9rem;
+  font-family: var(--pen);
+  font-size: 1.15rem;
+  transform: rotate(-1.2deg);
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translate(-50%, 12px);
+  background: var(--paper-high);
+  color: var(--ink);
+  font-size: 0.88rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: var(--raised);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--settle) ease, transform var(--settle) var(--nudge);
+  z-index: 1001;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- craft page demos ---------- */
+.demo {
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  padding: 1.2rem 1.3rem;
+  margin-top: 1.2rem;
+  background: color-mix(in oklab, var(--paper-high) 55%, transparent);
+}
+.demo .label {
+  font-size: 0.78rem;
+  color: var(--ink-3);
+  margin-bottom: 0.85rem;
+}
+
+.race { display: grid; gap: 0.85rem; cursor: pointer; }
+.race .lane {
+  display: grid;
+  grid-template-columns: 4.4rem 1fr;
+  align-items: center;
+  gap: 0.9rem;
+}
+.race .lane span { font-size: 0.8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.race .track { position: relative; height: 14px; border-bottom: 1px dashed var(--line); }
+.race .ball {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--seal);
+}
+.race.go .b1 { transition: transform var(--swift) var(--out); transform: translateX(var(--tx)); }
+.race.go .b2 { transition: transform var(--settle) var(--out); transform: translateX(var(--tx)); }
+.race.go .b3 { transition: transform var(--grand) var(--out); transform: translateX(var(--tx)); }
+
+.swatches { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+.swatches figure { display: flex; align-items: center; gap: 0.55rem; }
+.swatches i {
+  width: 1.05rem; height: 1.05rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: inline-block;
+}
+.swatches figcaption { font-size: 0.82rem; color: var(--ink-2); }
+
+.specimen { display: grid; gap: 0.5rem; }
+.specimen .s1 { font-weight: 560; }
+.specimen .s2 { font-family: var(--serif); font-style: italic; font-size: 1.14rem; }
+.specimen .s3 { font-family: var(--pen); font-size: 1.35rem; color: var(--seal); transform: rotate(-1.4deg); }
+.specimen .s4 { font-family: var(--arabic); font-size: 1.15rem; }
+.specimen small { color: var(--ink-3); font-size: 0.78rem; display: block; margin-top: -0.35rem; }
+
+/* ---------- lost page ---------- */
+.lost { text-align: left; }
+.lost .big {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.6rem;
+  font-weight: 430;
+  margin-top: 3rem;
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+  .ledger a, .ledger .row { grid-template-columns: 2.6rem 1fr auto; column-gap: 0.7rem; }
+  .foot { flex-direction: column; align-items: flex-start; gap: 0.55rem; }
+  .foot .links { margin-left: 0; }
+  .foot .hint { display: none; }
+}
