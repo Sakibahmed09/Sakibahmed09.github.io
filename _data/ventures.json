@@ -382,11 +382,15 @@
     "years": "2025 – 2026",
     "kind": "side",
     "bucket": "lofi",
-    "stand": "Vocal-only beats, made as a hobby and released on YouTube. Closed in January 2026.",
+    "stand": "Vocals and daf, no melodic instruments. Made as a hobby, released on YouTube, closed in January 2026. You can hear it below.",
     "proof": [
       [
+        "3",
+        "of them here to play"
+      ],
+      [
         "0",
-        "instruments"
+        "melodic instruments"
       ],
       [
         "1",
@@ -410,8 +414,34 @@
       }
     ],
     "link": [
-      "https://www.youtube.com/@LofiMuslimBeats",
-      "the beats on YouTube"
+      "https://lofimuslim.com",
+      "lofimuslim.com"
+    ],
+    "tracks": [
+      {
+        "f": "open-road",
+        "t": "Open Road",
+        "n": "Expansive, clean forward motion.",
+        "art": "cover-open-road.jpg"
+      },
+      {
+        "f": "steady-heart",
+        "t": "Steady Heart",
+        "n": "Grounded, understated, communal.",
+        "art": "cover-steady-heart.jpg"
+      },
+      {
+        "f": "quiet-current",
+        "t": "Quiet Current",
+        "n": "For when you need the room to settle.",
+        "art": null
+      }
+    ],
+    "extra_links": [
+      [
+        "https://www.youtube.com/@LofiMuslimBeats",
+        "the whole channel on YouTube"
+      ]
     ]
   },
   "simply-clo": {

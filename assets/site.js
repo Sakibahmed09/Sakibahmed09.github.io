@@ -454,6 +454,33 @@
     io.observe(endEl);
   })();
 
+  /* ---------- tracks: press a row, hear the thing ---------- */
+  (function () {
+    var rows = $$(".track");
+    if (!rows.length || !window.Audio) return;
+    var current = null, playing = null;
+    rows.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (playing === btn) {
+          current.pause();
+          btn.classList.remove("on");
+          playing = null;
+          return;
+        }
+        if (current) { current.pause(); }
+        rows.forEach(function (r) { r.classList.remove("on"); });
+        current = new Audio(btn.getAttribute("data-src"));
+        current.volume = 0.85;
+        current.addEventListener("ended", function () {
+          btn.classList.remove("on"); playing = null;
+        });
+        current.play().then(function () {
+          btn.classList.add("on"); playing = btn;
+        }).catch(function () { playing = null; });
+      });
+    });
+  })();
+
   /* ---------- command palette ---------- */
   var veil = $("#veil"), input = $("#palette-input"), list = $("#palette-list");
   if (veil && input && list) {

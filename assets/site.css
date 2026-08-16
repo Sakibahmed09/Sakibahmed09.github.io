@@ -612,6 +612,20 @@ html.locked { overflow: hidden; }
   color: var(--ink-2);
 }
 
+/* Arriving somewhere should be confirmed. Follow a link to a section and the
+   heading lights in the same gold the selection uses, then lets go. */
+.article h2:target,
+.section:target > h2 {
+  animation: arrived 1.6s var(--out) 1;
+}
+@keyframes arrived {
+  0%, 22% { background: var(--select-bg); box-shadow: -0.4rem 0 0 var(--select-bg), 0.4rem 0 0 var(--select-bg); }
+  100%    { background: transparent; box-shadow: -0.4rem 0 0 transparent, 0.4rem 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .article h2:target, .section:target > h2 { animation: none; background: var(--select-bg); }
+}
+
 /* sticky index in the left gutter */
 @media (min-width: 1180px) {
   .toc {
@@ -1009,6 +1023,56 @@ html.locked { overflow: hidden; }
   transition: opacity var(--settle) ease, transform var(--settle) var(--out);
 }
 .player .mine.show { opacity: 1; transform: none; }
+
+/* ---------- listen: a music project you can actually hear ---------- */
+.tracks-wrap { margin-top: var(--s10); }
+.tracks { list-style: none; margin-top: var(--s3); counter-reset: t; }
+.tracks li { border-top: 1px solid var(--line-soft); }
+.tracks li:last-child { border-bottom: 1px solid var(--line-soft); }
+
+.track {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.6rem 1fr auto;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) 0;
+  background: none; border: 0; cursor: pointer;
+  font: inherit; color: inherit; text-align: left;
+  touch-action: manipulation;
+  transition: opacity var(--swift) ease;
+}
+.tracks:hover .track { opacity: 0.45; }
+.tracks .track:hover, .tracks .track.on { opacity: 1; }
+
+.track .art {
+  width: 2.6rem; height: 2.6rem; border-radius: 5px; object-fit: cover;
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
+.track .no-art {
+  display: block;
+  background:
+    linear-gradient(var(--seal), var(--seal)) center/0.5rem 0.5rem no-repeat,
+    color-mix(in oklab, var(--ink) 7%, transparent);
+  border-radius: 5px;
+}
+.track .meta { min-width: 0; }
+.track .t { display: block; font-weight: 500; font-size: 0.95rem; }
+.track .n { display: block; font-size: 0.84rem; color: var(--ink-3); letter-spacing: 0; }
+
+.track .play {
+  width: 0; height: 0;
+  border-left: 9px solid var(--ink-3);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transition: border-left-color var(--swift) ease;
+}
+.track:hover .play { border-left-color: var(--ink); }
+.track.on .play {
+  width: 9px; height: 12px; border: 0;
+  background: linear-gradient(var(--seal), var(--seal)) left/3px 100% no-repeat,
+              linear-gradient(var(--seal), var(--seal)) right/3px 100% no-repeat;
+}
 
 /* ---------- the feed: a window onto the posts, not a longer page ---------- */
 .feed-wrap { margin-top: var(--s10); }

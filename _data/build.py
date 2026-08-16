@@ -45,7 +45,7 @@ HEAD = """<!doctype html>
 {proof}
   </ul>
 
-  <p class="lede rise" style="--i:3">What I say about it now, and what I was actually posting at the time.</p>
+  <p class="lede rise" style="--i:3">{lede}</p>
 """
 
 LANE_HEAD = """
@@ -57,6 +57,16 @@ LANE_HEAD = """
 
 LANE_FOOT = """      <div class="feed-end"></div>
     </div>
+  </section>
+"""
+
+TRACKLIST = """
+  <section class="section tracks-wrap">
+    <h2>Listen</h2>
+    <p class="menu-note">{note}</p>
+    <ol class="tracks">
+{rows}
+    </ol>
   </section>
 """
 
@@ -349,9 +359,13 @@ def main():
             href, label = v["link"]
             link = ('\n    <p class="live"><a class="u" data-out href="%s">%s</a></p>'
                     % (href, label))
+        has_posts = any(b.get("posts") for b in v["beats"])
+        lede = ("What I say about it now, and what I was actually posting at the time."
+                if has_posts else
+                "No posts to show against this one, which is the whole point of it.")
         out = [HEAD.format(title=v["title"], years=v["years"], stand=v["stand"],
                            stand_plain=re.sub("<[^>]+>", "", v["stand"]),
-                           proof=proof, link=link)]
+                           proof=proof, link=link, lede=lede)]
         i = 0
         for beat in v["beats"]:
             out.append('\n  <div class="beat">')
@@ -398,6 +412,25 @@ def main():
                                 "Photo from the post."))
             out.append(LANE_FOOT)
             freshest[slug] = (v["title"], rest[:6])
+        # a music project whose page you cannot hear is a page that failed
+        if v.get("tracks"):
+            rows = []
+            for t in v["tracks"]:
+                art = ('<img class="art" src="../../assets/media/%s" alt="" loading="lazy">'
+                       % t["art"]) if t.get("art") else '<span class="art no-art" aria-hidden="true"></span>'
+                rows.append(
+                    '      <li><button class="track" data-src="../../assets/audio/%s.mp3" '
+                    'data-title="%s">%s<span class="meta"><span class="t">%s</span>'
+                    '<span class="n">%s</span></span><span class="play" aria-hidden="true"></span>'
+                    '</button></li>' % (t["f"], html.escape(t["t"]), art,
+                                        html.escape(t["t"]), html.escape(t["n"])))
+            extra = ""
+            for href, label in v.get("extra_links", []):
+                extra = ' There is <a class="u" data-out href="%s">%s</a>.' % (href, label)
+            out.append(TRACKLIST.format(
+                note="Vocals and daf only, no melodic instruments." + extra,
+                rows="\n".join(rows)))
+
         # walkable in order, and the swipe uses these as its targets
         order = list(SPEC.keys())
         i_here = order.index(slug)
