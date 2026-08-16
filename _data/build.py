@@ -235,7 +235,9 @@ def card(p, i, img=None, alt=""):
     if src == "x":
         name, handle, mark = "sakib", "@mertesakib", "\U0001D54F"
     else:
-        name, handle, mark = "Sakib Ahmed", "Draper", "in"
+        # the same headline the venture cards and the scrolled-in cards use,
+        # otherwise one feed shows two different handles
+        name, handle, mark = "Sakib Ahmed", "Co-founder of Draper · Own your distribution", "in"
     return """    <article class="post {kind}">
       <img class="pfp" src="../../assets/media/avatar.jpg" alt="" loading="lazy" decoding="async">
       <div class="col">

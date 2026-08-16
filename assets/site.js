@@ -13,7 +13,7 @@
       timeZone: "Europe/London", hour: "numeric", minute: "2-digit", hour12: true
     });
     var tick = function () {
-      var t = fmt.format(new Date()).replace(/\s/g, "").replace("am", "am").replace("pm", "pm");
+      var t = fmt.format(new Date()).replace(/\s/g, "");
       clock.textContent = "It’s " + t + " in London E1.";
     };
     tick();
@@ -402,8 +402,9 @@
       var txt = p.t.length > 300
         ? p.t.slice(0, p.t.slice(0, 300).lastIndexOf(" ")) + "\u2026" : p.t;
       var bits = [];
-      if (p.f) bits.push(p.f.toLocaleString() + (isX ? " likes" : " reactions"));
-      if (p.r) bits.push(p.r.toLocaleString() + " reposts");
+      if (p.f) bits.push(p.f.toLocaleString() +
+        (isX ? (p.f === 1 ? " like" : " likes") : (p.f === 1 ? " reaction" : " reactions")));
+      if (p.r) bits.push(p.r.toLocaleString() + (p.r === 1 ? " repost" : " reposts"));
       var who = isX
         ? '<span class="name">sakib</span><span class="handle">@mertesakib</span>'
         : '<span class="name">Sakib Ahmed</span><span class="handle">Co-founder of Draper \u00b7 Own your distribution</span>';
@@ -412,8 +413,7 @@
       el.innerHTML =
         '<img class="pfp" src="' + media + 'avatar.jpg" alt="" loading="lazy">' +
         '<div class="col">' +
-          '<header><span class="name">' + (isX ? "sakib" : "Sakib Ahmed") + '</span>' +
-          '<span class="handle">' + (isX ? "@mertesakib" : "Draper") + '</span>' +
+          '<header>' + who +
           '<span class="sep">\u00b7</span><time>' + pretty(p.d) + '</time>' +
           '<span class="mark" aria-hidden="true">' + (isX ? "\ud835\udd4f" : "in") + '</span></header>' +
           '<div class="body"><p>' + esc(txt) + '</p>' +

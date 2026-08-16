@@ -157,7 +157,7 @@ h1, h2, h3,
 .prose p, .article p, .beat .say, .post .body p { text-wrap: pretty; }
 
 /* a long unbroken handle or link must never push the column sideways */
-.post .body p, .lane .txt, .clip p { overflow-wrap: anywhere; }
+.post .body p { overflow-wrap: anywhere; }
 
 ::selection { background: var(--select-bg); color: var(--ink); }
 
@@ -496,8 +496,6 @@ html.locked { overflow: hidden; }
   transition: transform var(--settle) var(--out);
   transform: translate(8px, -9px);
 }
-:root[data-theme="dark"] .moon .core,
-:root:not([data-theme="light"]) .moon .core { }
 .moon[aria-pressed="true"] .ray { transform: scale(0); opacity: 0; }
 .moon[aria-pressed="true"] .bite { transform: translate(2.5px, -2.5px); }
 
@@ -742,7 +740,6 @@ html.locked { overflow: hidden; }
 .palette .none {
   padding: var(--s4);
   color: var(--ink-3);
-  font-size: 0.9rem;
   font-family: var(--pen);
   font-size: 1.35rem;
   transform: rotate(-1.2deg);
@@ -1042,7 +1039,9 @@ html.locked { overflow: hidden; }
 .tracks li { border-top: 1px solid var(--line-soft); }
 .tracks li:last-child { border-bottom: 1px solid var(--line-soft); }
 
-.track {
+/* scoped on purpose: a bare .track also matched the footer player's
+   label, which turned it into a grid and squashed it to five lines. */
+.tracks .track {
   width: 100%;
   display: grid;
   grid-template-columns: 2.6rem 1fr auto;
@@ -1057,30 +1056,30 @@ html.locked { overflow: hidden; }
 .tracks:hover .track { opacity: 0.45; }
 .tracks .track:hover, .tracks .track.on { opacity: 1; }
 
-.track .art {
+.tracks .track .art {
   width: 2.6rem; height: 2.6rem; border-radius: 5px; object-fit: cover;
   background: color-mix(in oklab, var(--ink) 7%, transparent);
 }
-.track .no-art {
+.tracks .track .no-art {
   display: block;
   background:
     linear-gradient(var(--seal), var(--seal)) center/0.5rem 0.5rem no-repeat,
     color-mix(in oklab, var(--ink) 7%, transparent);
   border-radius: 5px;
 }
-.track .meta { min-width: 0; }
-.track .t { display: block; font-weight: 500; font-size: 0.95rem; }
-.track .n { display: block; font-size: 0.84rem; color: var(--ink-3); letter-spacing: 0; }
+.tracks .track .meta { min-width: 0; }
+.tracks .track .t { display: block; font-weight: 500; font-size: 0.95rem; }
+.tracks .track .n { display: block; font-size: 0.84rem; color: var(--ink-3); letter-spacing: 0; }
 
-.track .play {
+.tracks .track .play {
   width: 0; height: 0;
   border-left: 9px solid var(--ink-3);
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
   transition: border-left-color var(--swift) ease;
 }
-.track:hover .play { border-left-color: var(--ink); }
-.track.on .play {
+.tracks .track:hover .play { border-left-color: var(--ink); }
+.tracks .track.on .play {
   width: 9px; height: 12px; border: 0;
   background: linear-gradient(var(--seal), var(--seal)) left/3px 100% no-repeat,
               linear-gradient(var(--seal), var(--seal)) right/3px 100% no-repeat;
@@ -1144,57 +1143,6 @@ html.locked { overflow: hidden; }
 
 @media (max-width: 640px) {
   .feed { max-height: 68vh; padding-right: 0.4rem; }
-}
-
-/* ---------- the lane: the part that refreshes itself ---------- */
-.lane-wrap { margin-top: var(--s10); }
-.lane { list-style: none; margin-top: var(--s2); }
-.lane li { border-top: 1px solid var(--line-soft); }
-.lane li:last-child { border-bottom: 1px solid var(--line-soft); }
-
-.lane a {
-  display: grid;
-  grid-template-columns: 7.4rem 1fr 3.1rem;
-  column-gap: var(--s4);
-  align-items: baseline;
-  padding-block: var(--s2);
-}
-.lane .when {
-  color: var(--ink-3);
-  font-size: 0.82rem;
-  white-space: nowrap;
-}
-.lane .src {
-  display: inline-block;
-  width: 1.35em;
-  color: var(--ink-3);
-}
-.lane .txt {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  transition: color var(--swift) ease;
-}
-.lane .tag {
-  color: var(--ink-3);
-  font-size: 0.78rem;
-  margin-left: 0.5em;
-  white-space: nowrap;
-}
-.lane .num {
-  color: var(--ink-3);
-  font-size: 0.82rem;
-  text-align: right;
-  font-variant-numeric: normal;
-}
-.lane a:hover .txt { color: var(--ink); }
-.lane a:hover .tag { color: var(--seal); }
-.lane a[data-out]::after { content: none; }
-
-@media (max-width: 640px) {
-  .lane a { grid-template-columns: 1fr auto; column-gap: var(--s2); }
-  .lane .when { grid-column: 1; }
-  .lane .num { grid-column: 2; }
-  .lane .txt { grid-column: 1 / -1; margin-top: 0.1rem; }
 }
 
 /* ---------- walk between ventures ---------- */
@@ -1272,7 +1220,7 @@ html.locked { overflow: hidden; }
 /* ---------- lost page ---------- */
 .lost { text-align: left; }
 .lost .big {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 500;
   font-style: italic;
   font-size: clamp(2.2rem, 6vw, 3rem);

@@ -159,6 +159,46 @@ with sync_playwright() as pw:
               "%s>%s" % (ov["s"], ov["c"]))
         m.close()
     ctx.close()
+
+    # ---- the footer furniture actually renders ----
+    # a bare .track rule written for the Lofi Muslim list also matched the
+    # player's own label, turned it into a grid and squashed it to five lines
+    # inside a 41px column on all fourteen pages. nothing caught it, so:
+    for path in PAGES:
+        f = b.new_page(viewport={"width": 1200, "height": 900})
+        f.goto(BASE + path, wait_until="networkidle")
+        f.wait_for_timeout(150)
+        r = f.evaluate("""() => {
+          const pl = document.getElementById('player');
+          if (!pl) return null;
+          pl.hidden = false;
+          const t = pl.querySelector('.track'), bar = pl.querySelector('.bar');
+          const cs = getComputedStyle(t), tr = t.getBoundingClientRect();
+          return {lines: tr.height / (parseFloat(cs.lineHeight) || 18),
+                  display: cs.display, bar: bar.getBoundingClientRect().width};
+        }""")
+        if r:
+            check("player label is one line %s" % path, r["lines"] < 1.6,
+                  "%.1f lines, display:%s" % (r["lines"], r["display"]))
+            check("player progress bar has width %s" % path, r["bar"] > 10,
+                  "%.0fpx" % r["bar"])
+        f.close()
+
+    # the feed's own cards must not disagree with the ones scrolled in after them
+    h = b.new_page(viewport={"width": 1100, "height": 900})
+    h.goto(BASE + "/", wait_until="networkidle")
+    h.wait_for_timeout(300)
+    for _ in range(3):
+        h.evaluate("() => { const f=document.querySelector('.feed'); if(f) f.scrollTop=f.scrollHeight; }")
+        h.wait_for_timeout(300)
+    hs = h.evaluate("""() => {
+      const g = s => [...new Set([...document.querySelectorAll(s)].map(e => e.textContent.trim()))];
+      return {li: g('.post.li .handle'), x: g('.post.x .handle')};
+    }""")
+    check("one LinkedIn handle in the feed", len(hs["li"]) <= 1, str(hs["li"]))
+    check("one X handle in the feed", len(hs["x"]) <= 1, str(hs["x"]))
+    h.close()
+
     b.close()
 
 bad = [r for r in results if not r[1]]
