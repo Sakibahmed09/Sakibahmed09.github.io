@@ -26,14 +26,14 @@
   /* motion: three speeds, named like gears */
   --swift:  160ms;   /* feedback */
   --settle: 340ms;   /* state change */
-  --grand:  760ms;   /* entrances */
+  --grand:  700ms;   /* entrances */
   --out:    cubic-bezier(0.19, 1, 0.22, 1);
   --nudge:  cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* type */
-  --sans:   "General Sans", "Helvetica Neue", Arial, sans-serif;
-  --serif:  "Fraunces", Georgia, "Times New Roman", serif;
-  --pen:    "Nanum Pen Script", "Segoe Script", cursive;
+  /* type: a newsroom grotesk, Caslon of the Minories, a real biro, the Amiria Press */
+  --sans:   "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --serif:  "Libre Caslon Text", Georgia, "Times New Roman", serif;
+  --pen:    "Reenie Beanie", "Segoe Script", cursive;
   --arabic: "Amiri", "Geeza Pro", serif;
   --mono:   ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -61,6 +61,7 @@
     --ink-3:      oklch(56% 0.012 85);
     --seal:       oklch(64% 0.17 32);
     --select-bg:  oklch(38% 0.05 85);
+    --grain: 0.018;
   }
 }
 :root[data-theme="dark"] {
@@ -72,6 +73,7 @@
   --ink-3:      oklch(56% 0.012 85);
   --seal:       oklch(64% 0.17 32);
   --select-bg:  oklch(38% 0.05 85);
+  --grain: 0.018;
 }
 
 /* ---------- ground ---------- */
@@ -85,10 +87,10 @@ html {
 
 body {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 15px;
   line-height: 1.68;
-  font-weight: 450;
-  letter-spacing: 0.001em;
+  font-weight: 400;
+  letter-spacing: 0.002em;
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
@@ -104,7 +106,7 @@ body::before {
   inset: 0;
   z-index: 999;
   pointer-events: none;
-  opacity: 0.028;
+  opacity: var(--grain, 0.028);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -155,15 +157,14 @@ body::before {
 /* ---------- masthead ---------- */
 .basmala {
   font-family: var(--arabic);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   color: var(--ink-3);
   margin-bottom: 2.1rem;
-  user-select: none;
 }
 
 .masthead h1 {
   font-size: 1rem;
-  font-weight: 560;
+  font-weight: 600;
   letter-spacing: 0.002em;
 }
 .masthead .updated {
@@ -179,8 +180,8 @@ body::before {
 .prose em, .accent {
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 430;
-  font-size: 1.06em;
+  font-weight: 400;
+  font-size: 1.08em;
   letter-spacing: 0.004em;
 }
 
@@ -281,8 +282,10 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   opacity: 0;
   transform: translateY(9px);
   animation: rise var(--grand) var(--out) forwards;
-  animation-delay: calc(var(--i, 0) * 60ms);
+  animation-delay: calc(var(--i, 0) * 45ms);
 }
+
+html.locked { overflow: hidden; }
 @keyframes rise {
   to { opacity: 1; transform: none; }
 }
@@ -299,9 +302,19 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   color: var(--ink-3);
   font-size: 0.84rem;
 }
-.foot .clock { font-variant-numeric: tabular-nums; }
+.foot .clock { font-variant-numeric: normal; }
 .foot .links { display: flex; gap: 1.05rem; margin-left: auto; }
-.foot .hint { color: var(--ink-3); }
+.foot .hint {
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  padding: 0.4rem 0;
+  margin: -0.4rem 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color var(--swift) ease;
+}
+.foot .hint:hover { color: var(--ink); }
 .foot .hint kbd {
   font-family: var(--sans);
   font-size: 0.72rem;
@@ -327,7 +340,14 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   cursor: pointer;
   color: var(--ink-3);
   font: inherit;
-  padding: 0.15rem 0;
+  padding: 0.7rem 0.2rem;
+  margin: -0.7rem -0.2rem;
+}
+.tasbih.done svg { animation: tasbih-pulse 650ms var(--out); }
+@keyframes tasbih-pulse {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
 }
 .tasbih svg { display: block; overflow: visible; }
 .tasbih .ring {
@@ -351,7 +371,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 }
 .tasbih:active .bead { transform: scale(1.45); fill: var(--seal); }
 .tasbih .count {
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: normal;
   min-width: 3.4ch;
   text-align: left;
 }
@@ -370,8 +390,8 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 0.3rem;
-  margin: -0.3rem;
+  padding: 0.7rem;
+  margin: -0.7rem;
   color: var(--ink-3);
   display: inline-flex;
   border-radius: 50%;
@@ -404,8 +424,8 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 /* ---------- pen: margin annotations ---------- */
 .pen-note {
   font-family: var(--pen);
-  font-size: 1.18rem;
-  line-height: 1.15;
+  font-size: 1.38rem;
+  line-height: 1.02;
   color: var(--seal);
   transform: rotate(-1.6deg);
 }
@@ -432,7 +452,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   aside.pen-note {
     display: block;
     margin: 1.1rem 0 0.2rem;
-    font-size: 1.12rem;
+    font-size: 1.32rem;
   }
   aside.pen-note .stroke { display: none; }
 }
@@ -626,7 +646,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   color: var(--ink-3);
   font-size: 0.9rem;
   font-family: var(--pen);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   transform: rotate(-1.2deg);
 }
 
@@ -697,7 +717,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 .specimen { display: grid; gap: 0.5rem; }
 .specimen .s1 { font-weight: 560; }
 .specimen .s2 { font-family: var(--serif); font-style: italic; font-size: 1.14rem; }
-.specimen .s3 { font-family: var(--pen); font-size: 1.35rem; color: var(--seal); transform: rotate(-1.4deg); }
+.specimen .s3 { font-family: var(--pen); font-size: 1.5rem; color: var(--seal); transform: rotate(-1.4deg); }
 .specimen .s4 { font-family: var(--arabic); font-size: 1.15rem; }
 .specimen small { color: var(--ink-3); font-size: 0.78rem; display: block; margin-top: -0.35rem; }
 
@@ -707,7 +727,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   font-family: var(--serif);
   font-style: italic;
   font-size: 2.6rem;
-  font-weight: 430;
+  font-weight: 400;
   margin-top: 3rem;
 }
 

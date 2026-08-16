@@ -35,6 +35,8 @@
     root.dataset.theme = mode;
     localStorage.setItem("theme", mode);
     paintMoon();
+    var bar = mode === "dark" ? "#17150f" : "#f7f4ec";
+    $$('meta[name="theme-color"]').forEach(function (m) { m.setAttribute("content", bar); });
   };
   var toggleTheme = function () { setTheme(isDark() ? "light" : "dark"); };
   if (moon) {
@@ -165,7 +167,11 @@
       shown.forEach(function (a, i) {
         var li = document.createElement("li");
         li.setAttribute("role", "option");
-        if (i === sel) li.setAttribute("aria-selected", "true");
+        li.id = "opt-" + i;
+        if (i === sel) {
+          li.setAttribute("aria-selected", "true");
+          input.setAttribute("aria-activedescendant", li.id);
+        }
         li.innerHTML = "<span class='glyph'>" + a.g + "</span><span>" + a.t + "</span>";
         li.addEventListener("mouseenter", function () { sel = i; render(input.value); });
         li.addEventListener("click", function () { run(a); });
@@ -180,6 +186,7 @@
     var openPalette = function () {
       open = true;
       veil.hidden = false;
+      root.classList.add("locked");
       requestAnimationFrame(function () { veil.classList.add("open"); });
       input.value = "";
       sel = 0;
@@ -189,8 +196,11 @@
     var close = function () {
       open = false;
       veil.classList.remove("open");
+      root.classList.remove("locked");
       setTimeout(function () { if (!open) veil.hidden = true; }, 260);
     };
+    var hint = $("#k-hint");
+    if (hint) hint.addEventListener("click", function () { open ? close() : openPalette(); });
 
     document.addEventListener("keydown", function (e) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
