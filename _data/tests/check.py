@@ -36,7 +36,8 @@ with sync_playwright() as pw:
           const ids = [...document.querySelectorAll('[id]')].map(e => e.id);
           return {
             dup: ids.filter((v, i) => ids.indexOf(v) !== i),
-            noAlt: [...document.querySelectorAll('img')].filter(i => !i.alt).length,
+            noAlt: [...document.querySelectorAll('img')]
+                     .filter(i => i.getAttribute('alt') === null).length,
             h1: document.querySelectorAll('h1').length,
             hScroll: document.documentElement.scrollWidth >
                      document.documentElement.clientWidth,
@@ -105,20 +106,24 @@ with sync_playwright() as pw:
           "%d rebuilds" % rebuilds)
     pg.close()
 
-    for path, nth, want in [("/", 3, "/ventures/minideed/"),
-                            ("/", 7, "/chapters/"),
-                            ("/ventures/psk/", 2, "/ventures/")]:
+    # select by what the item says, the way a person does, not by position
+    for path, query, want in [("/", "minideed", "/ventures/minideed/"),
+                              ("/", "chapters", "/chapters/"),
+                              ("/", "lofi", "/ventures/lofi-muslim/"),
+                              ("/ventures/psk/", "ventures", "/ventures/")]:
         p2 = b.new_page()
         p2.goto(BASE + path, wait_until="networkidle")
         p2.keyboard.press("Meta+k")
         p2.wait_for_timeout(200)
+        p2.keyboard.type(query, delay=10)
+        p2.wait_for_timeout(200)
         try:
-            p2.click("#palette-list li:nth-child(%d)" % nth, timeout=4000)
+            p2.click("#palette-list li:first-child", timeout=4000)
             p2.wait_for_timeout(700)
             got = p2.url.replace(BASE, "") or "/"
         except Exception:
             got = "CLICK FAILED"
-        check("palette click %s -> %s" % (path, want), got == want, got)
+        check("palette click %r -> %s" % (query, want), got == want, got)
         p2.close()
 
     # ---- mobile ----

@@ -39,7 +39,7 @@ HEAD = """<!doctype html>
   <header class="article-head rise" style="--i:1">
     <h1>{title}</h1>
     <p class="when">{years}</p>
-    <p class="stand">{stand}</p>
+    <p class="stand">{stand}</p>{link}
   </header>
 
   <ul class="proof rise" style="--i:2">
@@ -261,13 +261,18 @@ def main():
     misses = []
     freshest = {}
     for slug, v in SPEC.items():
-        bucket = BUCKETS[BUCKET_ALIAS.get(slug, slug)]
+        bucket = BUCKETS.get(v.get("bucket") or BUCKET_ALIAS.get(slug, slug), [])
         used = set()
         proof = "\n".join(
             '    <li><b>%s</b><span>%s</span></li>' % (a, b) for a, b in v["proof"])
+        link = ""
+        if v.get("link"):
+            href, label = v["link"]
+            link = ('\n    <p class="live"><a class="u" data-out href="%s">%s</a></p>'
+                    % (href, label))
         out = [HEAD.format(title=v["title"], years=v["years"], stand=v["stand"],
                            stand_plain=re.sub("<[^>]+>", "", v["stand"]),
-                           proof=proof)]
+                           proof=proof, link=link)]
         i = 0
         for beat in v["beats"]:
             out.append('\n  <div class="beat">')

@@ -279,6 +279,236 @@
           "I keep entering domains the slow way"
         ]
       }
+    ],
+    "link": [
+      "https://draperhq.com",
+      "draperhq.com"
+    ]
+  },
+  "bilal": {
+    "title": "Bilal",
+    "years": "2024 –",
+    "kind": "side",
+    "bucket": "bilal",
+    "stand": "Masjid times on my living room TV, with the athan going off at leave-time rather than prayer-time.",
+    "proof": [
+      [
+        "2 weeks",
+        "from asking to testing"
+      ],
+      [
+        "1",
+        "living room"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "It started as a question I posted rather than a product. In Muslim countries the athan comes off the minaret and you get up and go. On your phone it just becomes another notification you swipe away.",
+        "posts": [
+          "if you hear the athan out loud according to Jama'ah times",
+          "when you hear the athan from minarets in Muslim countries"
+        ]
+      },
+      {
+        "say": "A fortnight later I was testing it. That is usually the whole distance between me having a thought and me having a thing.",
+        "posts": [
+          "started doing early testing of project Bilal"
+        ]
+      },
+      {
+        "say": "It runs on a TV in my front room now. No business case, no users but me and whoever is round, and I still think it could do something.",
+        "posts": [
+          "im so excited to ship project bilal man"
+        ]
+      }
+    ]
+  },
+  "vibenasheeds": {
+    "title": "vibenasheeds",
+    "years": "2026 –",
+    "kind": "side",
+    "bucket": "vibenasheeds",
+    "stand": "Halal music generation. An AI that composes a track and then strips the music back out of it.",
+    "proof": [
+      [
+        "8 yrs",
+        "between the complaint and the fix"
+      ],
+      [
+        "live",
+        "at vibenasheeds"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "I have been complaining about this for eight years, which is documented and slightly embarrassing.",
+        "posts": [
+          "native deen dropped so many bangers",
+          "nasheeds have regressed so much man"
+        ]
+      },
+      {
+        "say": "Every Muslim creator hits the same wall. Use beats you are not comfortable with, or post in silence.",
+        "posts": [
+          "Every Muslim creator faces the same impossible choice"
+        ]
+      },
+      {
+        "say": "So I built the thing. It writes the music, then removes the music from itself, which is a stupid sentence and an accurate one.",
+        "posts": [
+          "Side project of the week: I built an AI that composes music"
+        ]
+      }
+    ],
+    "link": [
+      "https://sakibahmed09.github.io/vibenasheeds/",
+      "try it"
+    ]
+  },
+  "lofi-muslim": {
+    "title": "Lofi Muslim",
+    "years": "2025 – 2026",
+    "kind": "side",
+    "bucket": "lofi",
+    "stand": "Vocal-only beats, made as a hobby and released on YouTube. Closed in January 2026.",
+    "proof": [
+      [
+        "0",
+        "instruments"
+      ],
+      [
+        "1",
+        "friend's wedding"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "A side-quest that got out of hand in the good way. Vocals only, no instruments, made because I wanted something I could actually put on.",
+        "posts": []
+      },
+      {
+        "say": "The peak was a mate playing them in the background at his wedding. Nothing I have shipped since has felt quite like that.",
+        "posts": []
+      },
+      {
+        "say": "Then I stopped. It had been a fun ride and I had run out of things to say in it.",
+        "posts": [
+          "This is going to be my last beat"
+        ]
+      }
+    ],
+    "link": [
+      "https://www.youtube.com/@LofiMuslimBeats",
+      "the beats on YouTube"
+    ]
+  },
+  "simply-clo": {
+    "title": "Simply Clo",
+    "years": "2023 – 2024",
+    "kind": "side",
+    "bucket": "simplyclo",
+    "stand": "A clothing line. One Palestine collection, made in Bangladesh, then wound down properly.",
+    "proof": [
+      [
+        "£15k",
+        "raised for Palestine"
+      ],
+      [
+        "3 hrs",
+        "to sell out the first drop"
+      ],
+      [
+        "0",
+        "kept"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "Eight years earlier I had worked as a graphic designer at a textile factory outside Dhaka. I went back to the same team to make a hoodie.",
+        "posts": [
+          "FIRST SAMPLE CREATED WE ARE COOKING"
+        ]
+      },
+      {
+        "say": "The Liberation Hoodie. All profits to Gaza, sold out in three hours, and the best boycott is having somewhere else to go.",
+        "posts": [
+          "THE LIBERATION HOODIE 21.12.23"
+        ]
+      },
+      {
+        "say": "Then I closed it. Bootstrapping clothing meant production delays at every single step and I would rather end something cleanly than let it rot. Killing a venture well is underrated.",
+        "posts": [
+          "Fear of God's Essentials hoodie retails at £180"
+        ]
+      }
+    ]
+  },
+  "simply-foundation": {
+    "title": "Simply Foundation",
+    "years": "2022 –",
+    "kind": "side",
+    "bucket": "foundation",
+    "stand": "A boarding school funded out of burger profits. Four huffadh so far.",
+    "proof": [
+      [
+        "4",
+        "huffadh produced"
+      ],
+      [
+        "100%",
+        "funded by the shop"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "Our family had been quietly running a madrasah for a couple of years before we said anything publicly about it.",
+        "posts": [
+          "For the last couple years our family has built our own madrasah"
+        ]
+      },
+      {
+        "say": "Then we made it official and tied it to the business, so the burgers paid for the school.",
+        "posts": [
+          "Proud to announce the public launch of our charity"
+        ]
+      },
+      {
+        "say": "The best day of it: two brothers reciting the entire Qur'an from memory in nine hours, finishing two seconds apart.",
+        "posts": [
+          "These teenage brothers just recited the entire Quran from memory"
+        ]
+      }
+    ]
+  },
+  "dhikry": {
+    "title": "dhikry",
+    "years": "2026 –",
+    "kind": "side",
+    "bucket": "dhikry",
+    "stand": "Dhikr with your closest circle. Invite only, on iOS.",
+    "proof": [
+      [
+        "invite",
+        "only, on purpose"
+      ],
+      [
+        "0",
+        "public posts about it"
+      ]
+    ],
+    "beats": [
+      {
+        "say": "This one has no build log. I have not posted about it once, which for me is the strangest part of the whole project.",
+        "posts": []
+      },
+      {
+        "say": "It is a small app for remembering Allah with the handful of people you actually pray for. Morning and evening, your circle, nothing else in it.",
+        "posts": []
+      },
+      {
+        "say": "If you are in the circle you already have it. If you are not, that is rather the point.",
+        "posts": []
+      }
     ]
   }
 }
