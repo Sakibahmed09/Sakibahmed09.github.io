@@ -44,8 +44,8 @@ HEAD = """<!doctype html>
   <ul class="proof rise" style="--i:2">
 {proof}
   </ul>
-
-  <p class="lede rise" style="--i:3">{lede}</p>
+{clients}
+  <p class="lede rise" style="--i:4">{lede}</p>
 """
 
 LANE_HEAD = """
@@ -129,6 +129,25 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 def pretty(d):
     y, m, dd = d.split("-")
     return "%d %s %s" % (int(dd), MONTHS[int(m) - 1], y)
+
+
+def client_block(v):
+    """Named, checkable proof. Quotes and outcomes as published on draperhq.com."""
+    rows = v.get("clients")
+    if not rows:
+        return ""
+    li = "\n".join(
+        '      <li>\n'
+        '        <p class="cl-said">&#8220;%s&#8221;</p>\n'
+        '        <p class="cl-who"><a class="u" data-out href="%s">%s</a>'
+        '<span class="cl-at">%s</span><span class="cl-win">%s</span></p>\n'
+        '      </li>' % (clean(r["said"]), r["url"], html.escape(r["who"]),
+                         html.escape(r["at"]), html.escape(r["win"]))
+        for r in rows)
+    ask = '\n    <p class="cl-ask">%s</p>' % v["ask"] if v.get("ask") else ""
+    return ('\n  <section class="clients rise" style="--i:3">\n'
+            '    <h2 class="cl-head">Who says so</h2>\n'
+            '    <ul>\n%s\n    </ul>%s\n  </section>\n' % (li, ask))
 
 
 def drop_near_dupes(posts):
@@ -389,7 +408,7 @@ def main():
                 "No posts to show against this one, which is the whole point of it.")
         out = [HEAD.format(title=v["title"], years=v["years"], stand=v["stand"],
                            stand_plain=re.sub("<[^>]+>", "", v["stand"]),
-                           proof=proof, link=link, lede=lede)]
+                           proof=proof, link=link, lede=lede, clients=client_block(v))]
         i = 0
         for beat in v["beats"]:
             out.append('\n  <div class="beat">')

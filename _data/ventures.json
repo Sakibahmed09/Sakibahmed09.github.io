@@ -227,19 +227,19 @@
     "title": "Draper",
     "years": "2025 –",
     "kind": "main",
-    "stand": "We turn founders into industry authorities. Me, Mustafa and Aaquib. I lead product.",
+    "stand": "We turn founders into industry authorities. Me, Mustafa and Aaquib.",
     "proof": [
       [
-        "3",
-        "bootstrapped cofounders"
+        "$5M+",
+        "leads generated for Cur8 Capital"
       ],
       [
-        "2 yrs",
-        "of saying it before naming it"
+        "$1.3M",
+        "contract closed for Sahl AI"
       ],
       [
-        "0",
-        "brand accounts, they are dead"
+        "50+",
+        "founders, executives and partners"
       ]
     ],
     "beats": [
@@ -291,7 +291,31 @@
     "link": [
       "https://draperhq.com",
       "draperhq.com"
-    ]
+    ],
+    "clients": [
+      {
+        "said": "Draper is quietly becoming indispensable. That's the best compliment I can give.",
+        "who": "Ibrahim Khan",
+        "at": "Cur8 Capital",
+        "win": "$5M+ leads generated",
+        "url": "https://www.linkedin.com/in/mibrahimkhan/"
+      },
+      {
+        "said": "Traced enterprise contracts directly to Draper, plus top talent reaching out to Sahl AI.",
+        "who": "Ammar Khan",
+        "at": "Sahl AI",
+        "win": "$1.3M contract closed",
+        "url": "https://www.linkedin.com/in/ammarkhan14/"
+      },
+      {
+        "said": "Something is working. You guys really tickled the algorithm there.",
+        "who": "Daniel Fraai",
+        "at": "YLookup, EQT Ventures",
+        "win": "400K+ impressions",
+        "url": "https://www.linkedin.com/in/danieljfraai/"
+      }
+    ],
+    "ask": "If you want this run for you, <a class=\"u\" data-out href=\"https://draperhq.com\">book a call</a>. First post goes live in seven days."
   },
   "bilal": {
     "title": "Bilal",

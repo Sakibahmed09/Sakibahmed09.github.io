@@ -1272,3 +1272,39 @@ html.locked { overflow: hidden; }
   h1, h2, h3 { break-after: avoid; }
   .post, .beat { break-inside: avoid; }
 }
+
+
+/* ---------- named client proof (draper page) ---------- */
+.clients { margin-top: var(--s7); }
+.cl-head {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  margin-bottom: var(--s3);
+}
+.clients ul { list-style: none; }
+.clients li { border-top: 1px solid var(--line-soft); padding: var(--s4) 0; }
+.clients li:last-of-type { border-bottom: 1px solid var(--line-soft); }
+.cl-said { font-style: italic; color: var(--ink); text-wrap: pretty; }
+.cl-who {
+  margin-top: var(--s2);
+  font-size: 0.84rem;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s3);
+  align-items: baseline;
+}
+/* the outcome is the point, so it keeps the ink */
+/* the outcome gets its own line so a wrap can never strand a separator */
+.cl-win {
+  display: block;
+  width: 100%;
+  margin-top: 0.15rem;
+  color: var(--ink-2);
+  font-variant-numeric: normal;
+}
+.cl-at::before { content: "\00b7"; margin-right: var(--s3); color: var(--line); }
+.cl-ask { margin-top: var(--s4); font-size: 0.9rem; color: var(--ink-2); }
