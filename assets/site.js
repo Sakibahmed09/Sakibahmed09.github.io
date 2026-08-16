@@ -130,6 +130,18 @@
     $$(".article h2[id]").forEach(function (h) { spy.observe(h); });
   }
 
+  /* Only one sound source at a time. The footer beats and the track list are
+     separate players and would happily overlap otherwise. */
+  var AUDIO_BUS = "sakib:audio-claim";
+  var claimAudio = function (owner) {
+    window.dispatchEvent(new CustomEvent(AUDIO_BUS, { detail: owner }));
+  };
+  var onAudioClaim = function (owner, stop) {
+    window.addEventListener(AUDIO_BUS, function (e) {
+      if (e.detail !== owner) stop();
+    });
+  };
+
   /* ---------- toast ---------- */
   var toastEl = $("#toast"), toastTimer;
   var toast = function (msg) {
@@ -197,6 +209,7 @@
       var toggle = function () {
         if (!audio) load();
         if (audio.paused) {
+          claimAudio("footer");
           audio.play().then(function () {
             player.classList.add("on");
             ppBtn.setAttribute("aria-label", "Pause the beats");
@@ -208,6 +221,13 @@
         }
       };
       ppBtn.addEventListener("click", toggle);
+      onAudioClaim("footer", function () {
+        if (audio && !audio.paused) {
+          audio.pause();
+          player.classList.remove("on");
+          ppBtn.setAttribute("aria-label", "Play the beats");
+        }
+      });
       paint();
 
       (function resume() {
@@ -459,6 +479,11 @@
     var rows = $$(".track");
     if (!rows.length || !window.Audio) return;
     var current = null, playing = null;
+    onAudioClaim("tracks", function () {
+      if (current && !current.paused) { current.pause(); }
+      rows.forEach(function (r) { r.classList.remove("on"); });
+      playing = null;
+    });
     rows.forEach(function (btn) {
       btn.addEventListener("click", function () {
         if (playing === btn) {
@@ -474,6 +499,7 @@
         current.addEventListener("ended", function () {
           btn.classList.remove("on"); playing = null;
         });
+        claimAudio("tracks");
         current.play().then(function () {
           btn.classList.add("on"); playing = btn;
         }).catch(function () { playing = null; });
