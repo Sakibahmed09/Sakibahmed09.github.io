@@ -714,6 +714,112 @@ html.locked { overflow: hidden; }
 .specimen .s4 { font-family: var(--arabic); font-size: 1.15rem; }
 .specimen small { color: var(--ink-3); font-size: 0.78rem; display: block; margin-top: -0.35rem; }
 
+/* ---------- venture pages: my voice now, my posts then ---------- */
+.venture .proof {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2.4rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-soft);
+}
+.venture .proof li { display: flex; flex-direction: column; }
+.venture .proof b {
+  font-size: 1.28rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-variant-numeric: normal;
+}
+.venture .proof span { font-size: 0.82rem; color: var(--ink-3); margin-top: -0.1rem; }
+
+.venture .lede {
+  margin-top: 2.6rem;
+  color: var(--ink-3);
+  font-size: 0.86rem;
+}
+
+.beat { margin-top: 2.1rem; }
+.beat .say + .clip { margin-top: 1rem; }
+
+/* a post, pasted in like a clipping */
+.clip {
+  background: var(--paper-high);
+  border-radius: 6px;
+  padding: 0.85rem 1rem 0.75rem;
+  margin: 0.55rem 0 0;
+  max-width: 31rem;
+  transform: rotate(calc(var(--tilt, 0) * 1deg));
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 6%, transparent),
+    0 1px 2px color-mix(in oklab, var(--ink) 5%, transparent),
+    0 6px 14px color-mix(in oklab, var(--ink) 5%, transparent);
+  transition: transform var(--settle) var(--out), box-shadow var(--settle) var(--out);
+}
+.clip:hover {
+  transform: rotate(0deg) translateY(-1px);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent),
+    0 2px 4px color-mix(in oklab, var(--ink) 5%, transparent),
+    0 10px 22px color-mix(in oklab, var(--ink) 7%, transparent);
+}
+.clip figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+  margin-bottom: 0.4rem;
+}
+.clip .src {
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  min-width: 1.1em;
+}
+.clip .num { margin-left: auto; font-variant-numeric: normal; }
+.clip p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  white-space: pre-line;
+}
+.clip .out {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+/* the second clipping in a beat tucks in slightly */
+.clip + .clip { margin-left: 1.6rem; }
+@media (max-width: 640px) {
+  .clip + .clip { margin-left: 0.5rem; }
+  .clip { padding: 0.75rem 0.85rem 0.65rem; }
+}
+
+/* ---------- the menu: mains and sides ---------- */
+.menu-note {
+  color: var(--ink-3);
+  font-size: 0.86rem;
+  margin-top: 0.5rem;
+}
+.side-list { list-style: none; margin-top: 0.3rem; }
+.side-list li {
+  border-top: 1px solid var(--line-soft);
+  padding-block: 0.55rem;
+  display: grid;
+  grid-template-columns: 3.2rem 1fr auto;
+  column-gap: 1rem;
+  align-items: baseline;
+}
+.side-list li:last-child { border-bottom: 1px solid var(--line-soft); }
+.side-list .yr { color: var(--ink-3); font-size: 0.84rem; }
+.side-list .what { font-weight: 500; font-size: 0.95rem; }
+.side-list .what small {
+  display: block; font-weight: 400; font-size: 0.855rem; color: var(--ink-2);
+}
+.side-list .meta { color: var(--ink-3); font-size: 0.84rem; text-align: right; }
+
 /* ---------- lost page ---------- */
 .lost { text-align: left; }
 .lost .big {

@@ -1,0 +1,157 @@
+{
+  "minideed": {
+    "title": "MiniDeed",
+    "years": "2018 – 2021",
+    "kind": "main",
+    "stand": "A social app where every like was worth a penny to charity. My first company, built while I was an apprentice at Goldman Sachs.",
+    "proof": [["£26k", "raised, all of it to charity"], ["£0", "revenue, ever"], ["25", "countries"]],
+    "beats": [
+      {
+        "say": "It started in a basement prayer room. Mehti prayed next to me every day at Goldman and one afternoon on the way out I asked how he was doing. I meant it as a greeting. He heard it as a question about his startup and told me everything.",
+        "posts": ["The best thing I did at Goldman Sachs was talk my way onto"]
+      },
+      {
+        "say": "The idea was simple enough to explain in one line, which is usually a good sign. You see a cause, you feel helpless, all you can do is raise awareness. So we made the awareness itself worth something.",
+        "posts": ["You ever see a cause on social media and feel helpless"]
+      },
+      {
+        "say": "I was eighteen and I had no idea what I was doing, so I just kept showing it to people. It went international before it went anywhere near profitable.",
+        "posts": ["never I thought I’d read minideed praise in another language", "Having a lot of fun presenting @MiniDeed"]
+      },
+      {
+        "say": "The best thing about it was never the money. People started using it to talk about things they were struggling with, and it turned into a place I did not design.",
+        "posts": ["MiniDeed is really precious tonight"]
+      },
+      {
+        "say": "Then the number that still surprises me. Twenty five countries and £26,000, raised entirely through likes, by people who mostly had never donated to anything before.",
+        "posts": ["This MiniDeed journey has been amazing"]
+      },
+      {
+        "say": "Here is the part I got wrong. We removed follower counts because we thought they were toxic. People churned, because we had taken away the thing they came for. You cannot opt out of the attention economy by pretending it is not there. That mistake cost me three years and it is the foundation of everything I do at Draper now.",
+        "posts": ["We raised £26,000 for charity through an app where every like"]
+      },
+      {
+        "say": "It still takes donations daily, years after we stopped touching it. Sadaqah jariyah beats MRR. I kept the mug.",
+        "posts": ["In love with my new desk"]
+      }
+    ]
+  },
+
+  "simply-smashed": {
+    "title": "Simply Smashed",
+    "years": "2021 – 2026",
+    "kind": "main",
+    "stand": "A smashed burger joint I started with my brother in the back of a flower shop. It became the highest rated burger joint in the UK.",
+    "proof": [["4.9", "stars across 3,000 reviews"], ["£0", "on paid marketing, ever"], ["8 min", "order time, down from 50"]],
+    "beats": [
+      {
+        "say": "We did not plan this. The pandemic shut my dad's Italian restaurant, my parents were stranded in Bangladesh, and me and my brother had a kitchen with nothing to cook in it.",
+        "posts": ["I didn’t plan to build Simply Smashed", "We sold burgers from the back of a flower shop"]
+      },
+      {
+        "say": "Everything early was held together with whatever was nearby. A £100 grill, a borrowed projector, my mum's recipes. None of it looked like a plan and all of it turned out to be one.",
+        "posts": ["Three years ago, we borrowed a projector"]
+      },
+      {
+        "say": "The operational stuff is what I am actually proud of, and it is the stuff nobody claps for. Fifty minutes down to eight. Me on a bank holiday morning learning structured cabling off ChatGPT because the alternative was paying someone £2k.",
+        "posts": ["We went from 50-minute order times to 8 minutes", "8am on a bank holiday Monday"]
+      },
+      {
+        "say": "We kept making decisions that looked commercially stupid. Closing for the first week of Ramadan, at 30% of monthly revenue. Banning men on Sisters' Nights. Building a prayer space instead of more covers. Every one of them paid us back.",
+        "posts": ["Why we're closing our restaurant for the first week of Ramadan", "The UK has a prayer space problem", "We ban men from eating at our restaurant"]
+      },
+      {
+        "say": "Then a landlord told us we had to sell beer. We said no and walked away from the site.",
+        "posts": ["The landlord had one requirement: sell beer"]
+      },
+      {
+        "say": "We were vocal about Palestine and got review bombed for it. Lost a thousand reviews in a week and dropped from 4.9 to 4.8. We doubled down, and eight months of interrogation later a customer walked in and called me the Palestinian burger guy, which is when I knew it had worked.",
+        "posts": ["We got review bombed for supporting Palestine", "\"You're the Palestinian burger guy, right?\""]
+      },
+      {
+        "say": "The community stuff went further than the shop. A boarding school funded out of burger profits, and two brothers who recited the entire Qur'an from memory in nine hours, finishing two seconds apart.",
+        "posts": ["These teenage brothers just recited the entire Quran from memory", "This weekend, I’ve been building something I’ve dreamed about for years"]
+      },
+      {
+        "say": "Somewhere in the middle of all this my face became a Ramadan meme, globally, without my permission. Fair enough.",
+        "posts": ["Yes. I am the face of that meme"]
+      },
+      {
+        "say": "A customer reported a missing item, so I hired a Boris bike and cycled it to his door myself in five minutes. He took the bag without a word and shut the door. The game is the game.",
+        "posts": ["I once hired a Boris bike to deliver a missing chicken burger"]
+      },
+      {
+        "say": "I left in January 2026. My brother runs it now, and runs it better.",
+        "posts": ["I've left Simply Smashed. After 2 years of building the highest rated"]
+      }
+    ]
+  },
+
+  "psk": {
+    "title": "Peruvian Street Kitchen",
+    "years": "2025 –",
+    "kind": "main",
+    "stand": "Peruvian chicken and rice, built around a green sauce I spent months failing to recreate. My brother runs it now.",
+    "proof": [["16", "failed attempts at the sauce"], ["3 hrs", "to sell out the first drop"], ["1", "sauce worth all of it"]],
+    "beats": [
+      {
+        "say": "There was a lunch place near the office in my Goldman days that I could not stop thinking about, years after I stopped working there. The whole business exists because of a sauce I could not reverse engineer.",
+        "posts": ["There's this lunch from my Goldman days I can't get out of my head. After 16 failed"]
+      },
+      {
+        "say": "Simply Smashed meant entering a market with a smashed burger place on every corner and trying to be better than all of them. This was the opposite problem. Nobody was asking for it, so the job was to make people want a thing they had never had.",
+        "posts": ["I'm building @PSK_UKI because I want to bring some new flavours", "Proud to announce our newest food brand"]
+      },
+      {
+        "say": "Two months of obsession between the first box and the one we launched with. That gap is the entire job.",
+        "posts": ["Left photo: Our first PSK box"]
+      },
+      {
+        "say": "We ran a stealth test before opening properly. Someone spent £100 trying to sabotage it, which I took as a compliment. A dad tried to buy from us five times in one week and we were shut every time.",
+        "posts": ["Someone spent £100 trying to sabotage my stealth launch", "A dad tried to buy chicken and rice from me 5 times in one week"]
+      },
+      {
+        "say": "Running burgers and rice boxes out of one kitchen was chaos, and I found that out the way I find most things out.",
+        "posts": ["Running burgers and rice boxes from the same kitchen"]
+      }
+    ]
+  },
+
+  "draper": {
+    "title": "Draper",
+    "years": "2025 –",
+    "kind": "main",
+    "stand": "We turn founders into industry authorities. Me, Mustafa and Aaquib. I lead product.",
+    "proof": [["3", "bootstrapped cofounders"], ["2 yrs", "of saying it before naming it"], ["0", "brand accounts, they are dead"]],
+    "beats": [
+      {
+        "say": "For the last two years of the restaurant I was quietly advising Series A founders on their content on the side. Nobody knew. I was taking calls with YC founders between burger orders.",
+        "posts": ["I've been lying to you. Every time you saw me at Simply Smashed"]
+      },
+      {
+        "say": "People keep asking why I left food for this. The honest answer is that the restaurant taught me more about building than anything else I have done, and then I wanted to build the thing that scaled it.",
+        "posts": ["I built the highest rated burger joint in London. 4.9 stars, 3000+ reviews. Those two years", "I was building an AI company between burger orders"]
+      },
+      {
+        "say": "The thesis I keep repeating, to the point that Mustafa has told me to stop. We ran a burger joint to the top of the country on zero paid marketing by documenting the mess of building it. That is not marketing attached to a product. That is the product.",
+        "posts": ["Content is product. Product is content."]
+      },
+      {
+        "say": "Most AI content is slop, and everyone can feel it while scrolling even if they cannot name why. The point of AI here is to sound more like yourself, not less.",
+        "posts": ["Let's address the elephant in the room - most AI content is garbage", "I've been using AI wrong this whole time"]
+      },
+      {
+        "say": "Mustafa brought a deep work system over from his old agency. I thought it was rigid. It doubled our focus time without adding an hour to the week and it cost nothing.",
+        "posts": ["We 2x'd our deep work without adding a single hour"]
+      },
+      {
+        "say": "On the division of labour, there is not much to add.",
+        "posts": ["I'm the leg. Mustafa's the arm"]
+      },
+      {
+        "say": "You can open Claude right now and start building in a field you know nothing about, which is exactly why I keep entering domains the slow way. Twice now, and I would do it again.",
+        "posts": ["I keep entering domains the slow way"]
+      }
+    ]
+  }
+}

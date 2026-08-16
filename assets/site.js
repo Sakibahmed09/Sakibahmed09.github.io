@@ -134,11 +134,18 @@
   /* ---------- command palette ---------- */
   var veil = $("#veil"), input = $("#palette-input"), list = $("#palette-list");
   if (veil && input && list) {
-    var HOME = /\/(chapters|craft)\//.test(location.pathname) ? "../" : "./";
+    var depth = (location.pathname.replace(/\/index\.html$/, "/")
+                  .match(/\/[^/]+(?=\/)/g) || []).length;
+    var HOME = depth ? new Array(depth + 1).join("../") : "./";
     var ACTIONS = [
       { t: "Home",               g: "⌂", k: "sakib start", go: HOME },
+      { t: "Ventures",           g: "▦", k: "mains sides projects built", go: HOME + "ventures/" },
+      { t: "MiniDeed",           g: "·", k: "charity app likes pennies main", go: HOME + "ventures/minideed/" },
+      { t: "Simply Smashed",     g: "·", k: "burger joint main food", go: HOME + "ventures/simply-smashed/" },
+      { t: "Peruvian Street Kitchen", g: "·", k: "psk chicken rice green sauce main", go: HOME + "ventures/psk/" },
+      { t: "Draper",             g: "·", k: "founders authorities content main work", go: HOME + "ventures/draper/" },
       { t: "Chapters",           g: "§", k: "story writing timeline", go: HOME + "chapters/" },
-      { t: "How this site works", g: "✎", k: "craft colophon design", go: HOME + "craft/" },
+      { t: "How this site works", g: "✎", k: "craft colophon design type", go: HOME + "craft/" },
       { t: "Toggle dark mode",   g: "☾", k: "theme light night maghrib", fn: toggleTheme },
       { t: "Count tasbih",       g: "●", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
       { t: "Copy email",         g: "@",      k: "contact mail", fn: function () {
