@@ -814,6 +814,13 @@ html.locked { overflow: hidden; }
 .specimen .s4 { font-family: var(--arabic); font-size: 1.15rem; }
 .specimen small { color: var(--ink-3); font-size: 0.78rem; display: block; margin-top: -0.35rem; }
 
+.chapter-link {
+  margin-top: var(--s2);
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
 /* ---------- venture pages: my voice now, my posts then ---------- */
 .venture .proof {
   list-style: none;
