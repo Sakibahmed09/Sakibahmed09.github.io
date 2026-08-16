@@ -54,6 +54,25 @@ with sync_playwright() as pw:
         pg.close()
         check("structure %s" % path, not issues[path], "; ".join(issues[path])[:90])
 
+    # ---- ledger rows must not squash (a nested grid once ate the link) ----
+    pg = b.new_page()
+    pg.goto(BASE + "/ventures/", wait_until="networkidle")
+    pg.wait_for_timeout(300)
+    squash = pg.evaluate("""() => {
+        const bad = [];
+        document.querySelectorAll('.ledger li').forEach(li => {
+            const w = li.querySelector('.what');
+            if (!w) return;
+            const share = w.getBoundingClientRect().width /
+                          li.getBoundingClientRect().width;
+            if (share < 0.35) bad.push(w.textContent.trim().slice(0, 18)
+                                       + ' @' + Math.round(share * 100) + '%');
+        });
+        return bad;
+    }""")
+    check("no ledger row squash", not squash, ", ".join(squash)[:80])
+    pg.close()
+
     # ---- no JS: content must still be readable ----
     ctx = b.new_context(java_script_enabled=False)
     pg = ctx.new_page()

@@ -862,14 +862,9 @@ html.locked { overflow: hidden; }
   margin-top: 0.5rem;
 }
 .side-list { list-style: none; margin-top: 0.3rem; }
-.side-list li {
-  border-top: 1px solid var(--line-soft);
-  padding-block: 0.55rem;
-  display: grid;
-  grid-template-columns: 3.2rem 1fr auto;
-  column-gap: 1rem;
-  align-items: baseline;
-}
+/* the anchor inside carries the grid (see .ledger a), so this must not
+   declare its own or the link lands in the 3.2rem year column */
+.side-list li { border-top: 1px solid var(--line-soft); }
 .side-list li:last-child { border-bottom: 1px solid var(--line-soft); }
 .side-list .yr { color: var(--ink-3); font-size: 0.84rem; }
 .side-list .what { font-weight: 500; font-size: 0.95rem; }
