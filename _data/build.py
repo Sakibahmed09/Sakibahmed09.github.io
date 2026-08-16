@@ -167,23 +167,37 @@ def card(p, i, img=None, alt=""):
         bits.append("%s %s" % ("{:,}".format(n), metric))
     if p.get("rt"):
         bits.append("%s reposts" % "{:,}".format(p["rt"]))
-    tilt = (i % 3) - 1  # -1, 0, 1
     shot = ""
     if img:
-        shot = ('\n      <img src="../../assets/media/%s" alt="%s" '
+        shot = ('\n        <img class="shot" src="../../assets/media/%s" alt="%s" '
                 'loading="lazy" decoding="async">' % (img, html.escape(alt)))
-    return """    <figure class="clip{has}" style="--tilt:{tilt}">
-      <figcaption>
-        <span class="src" aria-hidden="true">{glyph}</span>
+    # a real post, wearing its own platform's clothes
+    if src == "x":
+        who = ('<span class="name">sakib</span>'
+               '<span class="handle">@mertesakib</span>')
+        mark = "𝕏"
+    else:
+        who = ('<span class="name">Sakib Ahmed</span>'
+               '<span class="handle">Co-founder of Draper · Own your distribution</span>')
+        mark = "in"
+    return """    <article class="post {kind}">
+      <header>
+        <img class="pfp" src="../../assets/media/avatar.jpg" alt="" loading="lazy" decoding="async">
+        <span class="who">{who}</span>
+        <span class="mark" aria-hidden="true">{mark}</span>
+      </header>
+      <div class="body">
+        <p>{txt}</p>{shot}
+      </div>
+      <footer>
         <time>{date}</time>
-        <span class="num">{num}</span>
-      </figcaption>
-      <p>{txt}</p>{shot}
-      <a class="u out" data-out href="{url}">Read on {where}</a>
-    </figure>""".format(has=" has-shot" if img else "", tilt=tilt * 0.35,
-                        glyph=glyph, date=pretty(p["date"]),
-                        num=" · ".join(bits), txt=html.escape(txt), shot=shot,
-                        url=p.get("url", "#"), where=where)
+        <span class="stats">{num}</span>
+        <a class="open" data-out href="{url}">{where}</a>
+      </footer>
+    </article>""".format(kind=src, who=who, mark=mark, txt=html.escape(txt),
+                         shot=shot, date=pretty(p["date"]),
+                         num=" · ".join(bits), url=p.get("url", "#"),
+                         where="Open" if src == "x" else "Open")
 
 
 def lane_row(p, label=None):
