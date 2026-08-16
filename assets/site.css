@@ -715,12 +715,18 @@ html.locked { overflow: hidden; }
 /* ---------- venture pages: my voice now, my posts then ---------- */
 .venture .proof {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 0.9rem 2.4rem;
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--line-soft);
+}
+@media (max-width: 460px) {
+  .venture .proof { gap: 0.85rem 1.3rem; }
+  .venture .proof b { font-size: 1.12rem; }
+  .venture .proof span { font-size: 0.78rem; }
 }
 .venture .proof li { display: flex; flex-direction: column; }
 .venture .proof b {
