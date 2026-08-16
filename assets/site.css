@@ -12,7 +12,7 @@
   --paper-high: oklch(99.2% 0.006 90);
   --ink:        oklch(24% 0.014 85);
   --ink-2:      oklch(44% 0.014 85);
-  --ink-3:      oklch(62% 0.016 85);
+  --ink-3:      oklch(54% 0.016 85);   /* measured: clears AA 4.5:1 on small text */
   --line:       color-mix(in oklab, var(--ink) 11%, transparent);
   --line-soft:  color-mix(in oklab, var(--ink) 6%, transparent);
 
@@ -64,7 +64,7 @@
     --paper-high: oklch(24% 0.009 80);
     --ink:        oklch(90% 0.012 85);
     --ink-2:      oklch(72% 0.012 85);
-    --ink-3:      oklch(56% 0.012 85);
+    --ink-3:      oklch(60% 0.012 85);   /* measured: clears AA in dark too */
     --seal:       oklch(64% 0.17 32);
     --select-bg:  oklch(38% 0.05 85);
     --grain: 0.018;
@@ -76,7 +76,7 @@
   --paper-high: oklch(24% 0.009 80);
   --ink:        oklch(90% 0.012 85);
   --ink-2:      oklch(72% 0.012 85);
-  --ink-3:      oklch(56% 0.012 85);
+  --ink-3:      oklch(60% 0.012 85);   /* measured: clears AA in dark too */
   --seal:       oklch(64% 0.17 32);
   --select-bg:  oklch(38% 0.05 85);
   --grain: 0.018;
@@ -1012,18 +1012,29 @@ html.locked { overflow: hidden; }
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 0.15rem 0.9rem 0.5rem 0;
-  scrollbar-width: thin;
   /* a soft hint of more below, without slicing the text at the top */
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
           mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
 }
-.feed::-webkit-scrollbar { width: 10px; }
+/* the scrollbar is a hairline that only shows while you're in the feed,
+   never a chrome bar sitting on the paper */
+.feed { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.feed:hover, .feed:focus-within { scrollbar-color: color-mix(in oklab, var(--ink) 16%, transparent) transparent; }
+.feed::-webkit-scrollbar { width: 6px; }
+.feed::-webkit-scrollbar-track { background: transparent; }
 .feed::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--ink) 13%, transparent);
-  border: 3px solid transparent;
-  border-radius: 8px;
-  background-clip: padding-box;
+  background: transparent;
+  border-radius: 999px;
+  transition: background var(--settle) ease;
 }
+.feed:hover::-webkit-scrollbar-thumb,
+.feed:focus-within::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--ink) 15%, transparent);
+}
+.feed:hover::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
+}
+
 .feed .post { margin-left: 0; max-width: 30rem; }
 .feed .post + .post { margin-left: 0; margin-top: var(--s4); }
 
