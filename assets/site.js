@@ -134,68 +134,72 @@
     toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 1800);
   };
 
-  /* ---------- the beats: opt-in only, his own tracks ---------- */
-  var player = $("#player");
-  if (player && window.Audio) {
-    var depth2 = (location.pathname.replace(/\/index\.html$/, "/")
-                   .match(/\/[^/]+(?=\/)/g) || []).length;
-    var root2 = depth2 ? new Array(depth2 + 1).join("../") : "./";
-    var TRACKS = [
-      { src: root2 + "assets/audio/study.mp3", name: "study" },
-      { src: root2 + "assets/audio/gratitude.mp3", name: "gratitude" }
-    ];
-    var at = 0, audio = null;
-    var ppBtn = $("#pp"), label = $("#track"), bar = $("#bar");
-    player.hidden = false;
+  /* ---------- the beats: opt-in only, his own tracks ----------
+     Scoped on purpose: `var` is function-scoped, and paint/label/tick
+     would otherwise clobber the tasbih and the clock. */
+  (function () {
+    var player = $("#player");
+    if (player && window.Audio) {
+      var depth2 = (location.pathname.replace(/\/index\.html$/, "/")
+                     .match(/\/[^/]+(?=\/)/g) || []).length;
+      var root2 = depth2 ? new Array(depth2 + 1).join("../") : "./";
+      var TRACKS = [
+        { src: root2 + "assets/audio/study.mp3", name: "study" },
+        { src: root2 + "assets/audio/gratitude.mp3", name: "gratitude" }
+      ];
+      var at = 0, audio = null;
+      var ppBtn = $("#pp"), label = $("#track"), bar = $("#bar");
+      player.hidden = false;
 
-    var paint = function () {
-      label.textContent = "Lofi Muslim \u00b7 " + TRACKS[at].name;
-    };
-    var load = function () {
-      if (audio) { audio.pause(); audio.removeEventListener("timeupdate", tick); }
-      audio = new Audio(TRACKS[at].src);
-      audio.loop = false;
-      audio.volume = 0.55;
-      audio.addEventListener("timeupdate", tick);
-      audio.addEventListener("ended", function () {
-        at = (at + 1) % TRACKS.length;
-        paint();
-        load();
-        audio.play();
-      });
-    };
-    var tick = function () {
-      if (!audio || !audio.duration) return;
-      bar.style.width = (audio.currentTime / audio.duration * 100) + "%";
-    };
-    var toggle = function () {
-      if (!audio) load();
-      if (audio.paused) {
-        audio.play().then(function () {
-          player.classList.add("on");
-          ppBtn.setAttribute("aria-label", "Pause the beats");
-        }).catch(function () { /* browser said no, leave it alone */ });
-      } else {
-        audio.pause();
-        player.classList.remove("on");
-        ppBtn.setAttribute("aria-label", "Play the beats");
+      var paint = function () {
+        label.textContent = "Lofi Muslim \u00b7 " + TRACKS[at].name;
+      };
+      var load = function () {
+        if (audio) { audio.pause(); audio.removeEventListener("timeupdate", tick); }
+        audio = new Audio(TRACKS[at].src);
+        audio.loop = false;
+        audio.volume = 0.55;
+        audio.addEventListener("timeupdate", tick);
+        audio.addEventListener("ended", function () {
+          at = (at + 1) % TRACKS.length;
+          paint();
+          load();
+          audio.play();
+        });
+      };
+      var tick = function () {
+        if (!audio || !audio.duration) return;
+        bar.style.width = (audio.currentTime / audio.duration * 100) + "%";
+      };
+      var toggle = function () {
+        if (!audio) load();
+        if (audio.paused) {
+          audio.play().then(function () {
+            player.classList.add("on");
+            ppBtn.setAttribute("aria-label", "Pause the beats");
+          }).catch(function () { /* browser said no, leave it alone */ });
+        } else {
+          audio.pause();
+          player.classList.remove("on");
+          ppBtn.setAttribute("aria-label", "Play the beats");
+        }
+      };
+      ppBtn.addEventListener("click", toggle);
+      paint();
+
+      /* on the Lofi Muslim page the player owns up to itself */
+      if (/lofi-muslim/.test(location.pathname)) {
+        var mine = document.createElement("span");
+        mine.className = "mine";
+        mine.textContent = "these are the ones";
+        player.appendChild(mine);
+        var io2 = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) mine.classList.add("show"); });
+        });
+        io2.observe(player);
       }
-    };
-    ppBtn.addEventListener("click", toggle);
-    paint();
-
-    /* on the Lofi Muslim page the player owns up to itself */
-    if (/lofi-muslim/.test(location.pathname)) {
-      var mine = document.createElement("span");
-      mine.className = "mine";
-      mine.textContent = "these are the ones";
-      player.appendChild(mine);
-      var io2 = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting) mine.classList.add("show"); });
-      });
-      io2.observe(player);
     }
-  }
+  })();
 
   /* ---------- command palette ---------- */
   var veil = $("#veil"), input = $("#palette-input"), list = $("#palette-list");
