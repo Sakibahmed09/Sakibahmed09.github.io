@@ -7,17 +7,123 @@
   var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- the clock: always London ---------- */
+  /* The footer clock, which is an homage to Bilal.
+     Bilal's whole point is that a prayer time is only useful if it tells you
+     when to move. So this shows the time where you actually are and what is
+     next, worked out on your machine. Your timezone comes from the browser
+     with no permission prompt and no request, and the prayer times are solar
+     geometry, not an API. Maghrib is true sunset. */
   var clock = $("#clock");
   if (clock) {
+    /* enough of the world to place you within a degree or so */
+    var ZONES = {
+      "Europe/London":[51.51,-0.13,"London"], "Europe/Dublin":[53.35,-6.26,"Dublin"],
+      "Europe/Paris":[48.86,2.35,"Paris"], "Europe/Madrid":[40.42,-3.70,"Madrid"],
+      "Europe/Berlin":[52.52,13.40,"Berlin"], "Europe/Amsterdam":[52.37,4.90,"Amsterdam"],
+      "Europe/Brussels":[50.85,4.35,"Brussels"], "Europe/Rome":[41.90,12.50,"Rome"],
+      "Europe/Lisbon":[38.72,-9.14,"Lisbon"], "Europe/Stockholm":[59.33,18.07,"Stockholm"],
+      "Europe/Oslo":[59.91,10.75,"Oslo"], "Europe/Copenhagen":[55.68,12.57,"Copenhagen"],
+      "Europe/Warsaw":[52.23,21.01,"Warsaw"], "Europe/Zurich":[47.38,8.54,"Zurich"],
+      "Europe/Istanbul":[41.01,28.98,"Istanbul"], "Europe/Moscow":[55.76,37.62,"Moscow"],
+      "Europe/Athens":[37.98,23.73,"Athens"], "Europe/Kyiv":[50.45,30.52,"Kyiv"],
+      "America/New_York":[40.71,-74.01,"New York"], "America/Toronto":[43.65,-79.38,"Toronto"],
+      "America/Chicago":[41.88,-87.63,"Chicago"], "America/Denver":[39.74,-104.99,"Denver"],
+      "America/Los_Angeles":[34.05,-118.24,"Los Angeles"], "America/Vancouver":[49.28,-123.12,"Vancouver"],
+      "America/Mexico_City":[19.43,-99.13,"Mexico City"], "America/Sao_Paulo":[-23.55,-46.63,"S\u00e3o Paulo"],
+      "America/Bogota":[4.71,-74.07,"Bogot\u00e1"], "America/Lima":[-12.05,-77.04,"Lima"],
+      "Asia/Dubai":[25.20,55.27,"Dubai"], "Asia/Riyadh":[24.71,46.68,"Riyadh"],
+      "Asia/Qatar":[25.29,51.53,"Doha"], "Asia/Kuwait":[29.38,47.99,"Kuwait City"],
+      "Asia/Karachi":[24.86,67.01,"Karachi"], "Asia/Kolkata":[19.08,72.88,"Mumbai"],
+      "Asia/Dhaka":[23.81,90.41,"Dhaka"], "Asia/Colombo":[6.93,79.86,"Colombo"],
+      "Asia/Jakarta":[-6.21,106.85,"Jakarta"], "Asia/Kuala_Lumpur":[3.14,101.69,"Kuala Lumpur"],
+      "Asia/Singapore":[1.35,103.82,"Singapore"], "Asia/Bangkok":[13.76,100.50,"Bangkok"],
+      "Asia/Hong_Kong":[22.32,114.17,"Hong Kong"], "Asia/Shanghai":[31.23,121.47,"Shanghai"],
+      "Asia/Tokyo":[35.68,139.65,"Tokyo"], "Asia/Seoul":[37.57,126.98,"Seoul"],
+      "Asia/Manila":[14.60,120.98,"Manila"], "Asia/Jerusalem":[31.78,35.22,"Jerusalem"],
+      "Asia/Amman":[31.95,35.93,"Amman"], "Asia/Baghdad":[33.31,44.37,"Baghdad"],
+      "Asia/Tehran":[35.69,51.39,"Tehran"], "Africa/Cairo":[30.04,31.24,"Cairo"],
+      "Africa/Casablanca":[33.57,-7.59,"Casablanca"], "Africa/Lagos":[6.52,3.38,"Lagos"],
+      "Africa/Nairobi":[-1.29,36.82,"Nairobi"], "Africa/Johannesburg":[-26.20,28.05,"Johannesburg"],
+      "Australia/Sydney":[-33.87,151.21,"Sydney"], "Australia/Melbourne":[-37.81,144.96,"Melbourne"],
+      "Australia/Perth":[-31.95,115.86,"Perth"], "Pacific/Auckland":[-36.85,174.76,"Auckland"]
+    };
+
+    var NAMES = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+    function prayers(now, lat, lon, tzMin) {
+      var rad = Math.PI / 180, deg = 180 / Math.PI;
+      var d = Math.floor((now.getTime() / 86400000) - 10957.5) + 0.5 - lon / 360;
+      var g = (357.529 + 0.98560028 * d) * rad;
+      var q = (280.459 + 0.98564736 * d) * rad;
+      var L = q + (1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * rad;
+      var e = (23.439 - 0.00000036 * d) * rad;
+      var decl = Math.asin(Math.sin(e) * Math.sin(L));
+      var ra = (Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L)) * deg / 15 + 24) % 24;
+      var eqt = ((q * deg / 15 - ra) + 12) % 24 - 12;
+      var noon = 12 - lon / 15 - eqt + tzMin / 60;
+      function ha(alt) {
+        var c = (Math.sin(alt * rad) - Math.sin(decl) * Math.sin(lat * rad)) /
+                (Math.cos(decl) * Math.cos(lat * rad));
+        return (c > 1 || c < -1) ? null : Math.acos(c) * deg / 15;
+      }
+      var set = ha(-0.833);
+      var asrAlt = Math.atan(1 / (1 + Math.tan(Math.abs(lat - decl * deg) * rad))) * deg;
+      var f = ha(-18), i = ha(-17), a = ha(asrAlt);
+      return [ f === null ? null : noon - f,
+               set === null ? null : noon - set,
+               noon,
+               a === null ? null : noon + a,
+               set === null ? null : noon + set,   /* maghrib is true sunset */
+               i === null ? null : noon + i ];
+    }
+
+    var tz = "Europe/London", place = ZONES["Europe/London"];
+    try {
+      tz = Intl.DateTimeFormat().resolvedOptions().timeZone || tz;
+      if (ZONES[tz]) place = ZONES[tz];
+    } catch (err) { /* older browser: London it is */ }
+
     var fmt = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/London", hour: "numeric", minute: "2-digit", hour12: true
+      hour: "numeric", minute: "2-digit", hour12: true
     });
+
     var tick = function () {
-      var t = fmt.format(new Date()).replace(/\s/g, "");
-      clock.textContent = "It’s " + t + " in London E1.";
+      var now = new Date();
+      var tzMin = -now.getTimezoneOffset();
+      var t = fmt.format(now).replace(/\s/g, "");
+      var known = !!ZONES[tz];
+      if (!known) {                       /* no idea where you are, so do not pretend */
+        clock.classList.remove("soon");
+        clock.textContent = "It\u2019s " + t + " where you are.";
+        return;
+      }
+      var here = place[2];
+      var list = prayers(now, place[0], place[1], tzMin);
+      var mins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+
+      var next = null, name = "", gap = 1e9;
+      for (var k = 0; k < list.length; k++) {
+        if (list[k] === null || k === 1) continue;          /* sunrise is not a prayer */
+        var g2 = list[k] * 60 - mins;
+        if (g2 > 0 && g2 < gap) { gap = g2; next = list[k]; name = NAMES[k]; }
+      }
+      if (next === null) {                                   /* past isha: fajr tomorrow */
+        var fj = list[0];
+        if (fj !== null) { name = "Fajr"; gap = (24 * 60 - mins) + fj * 60; next = fj; }
+      }
+
+      if (next === null) { clock.textContent = "It\u2019s " + t + " in " + here + "."; return; }
+
+      var at = new Date(now); at.setHours(0, Math.round(next * 60), 0, 0);
+      var atTxt = fmt.format(at).replace(/\s/g, "");
+      clock.classList.toggle("soon", gap <= 30);
+      clock.textContent = gap <= 30
+        ? name + " in " + Math.max(1, Math.round(gap)) + " min" + (Math.round(gap) === 1 ? "" : "s") + "."
+        : "It\u2019s " + t + " in " + here + ". " + name + " at " + atTxt + ".";
+      clock.title = tz + " \u00b7 worked out on your device, nothing sent anywhere";
     };
     tick();
-    setInterval(tick, 10000);
+    setInterval(tick, 20000);
   }
 
   /* ---------- theme: the sun sets properly ---------- */

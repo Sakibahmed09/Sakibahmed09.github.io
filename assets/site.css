@@ -382,6 +382,10 @@ html.locked { overflow: hidden; }
   font-size: var(--t-s);
 }
 .foot .clock  { grid-column: 1; grid-row: 1; }
+
+/* Bilal's actual insight: a prayer time only matters when it is nearly time
+   to move. Inside half an hour the clock stops reporting and starts nudging. */
+.clock.soon { color: var(--seal); }
 .foot .tasbih { grid-column: 2; grid-row: 1; }
 .foot .links  { grid-column: 3; grid-row: 1; justify-self: end; }
 .foot .moon   { grid-column: 4; grid-row: 1; justify-self: end; }
