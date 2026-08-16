@@ -30,9 +30,9 @@
   --out:    cubic-bezier(0.19, 1, 0.22, 1);
   --nudge:  cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* type: a newsroom grotesk, Caslon of the Minories, a real biro, the Amiria Press */
+  /* type: a newsroom grotesk, a chancery italic, a real biro, the Amiria Press */
   --sans:   "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --serif:  "Libre Caslon Text", Georgia, "Times New Roman", serif;
+  --serif:  "EB Garamond", Georgia, "Times New Roman", serif;
   --pen:    "Reenie Beanie", "Segoe Script", cursive;
   --arabic: "Amiri", "Geeza Pro", serif;
   --mono:   ui-monospace, "SF Mono", Menlo, monospace;
@@ -155,13 +155,6 @@ body::before {
 .page > * { grid-column: main; }
 
 /* ---------- masthead ---------- */
-.basmala {
-  font-family: var(--arabic);
-  font-size: 1.15rem;
-  color: var(--ink-3);
-  margin-bottom: 2.1rem;
-}
-
 .masthead h1 {
   font-size: 1rem;
   font-weight: 600;
@@ -177,12 +170,12 @@ body::before {
 .prose { margin-top: 2.2rem; }
 .prose p + p { margin-top: 1.05em; }
 
-.prose em, .accent {
+.prose em, .accent, .article em {
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 400;
-  font-size: 1.08em;
-  letter-spacing: 0.004em;
+  font-weight: 500;
+  font-size: 1.16em;
+  letter-spacing: 0.002em;
 }
 
 /* links: quiet ink, a hairline under, red on approach */
@@ -716,7 +709,7 @@ html.locked { overflow: hidden; }
 
 .specimen { display: grid; gap: 0.5rem; }
 .specimen .s1 { font-weight: 560; }
-.specimen .s2 { font-family: var(--serif); font-style: italic; font-size: 1.14rem; }
+.specimen .s2 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.24rem; }
 .specimen .s3 { font-family: var(--pen); font-size: 1.5rem; color: var(--seal); transform: rotate(-1.4deg); }
 .specimen .s4 { font-family: var(--arabic); font-size: 1.15rem; }
 .specimen small { color: var(--ink-3); font-size: 0.78rem; display: block; margin-top: -0.35rem; }
@@ -726,8 +719,8 @@ html.locked { overflow: hidden; }
 .lost .big {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 2.6rem;
-  font-weight: 400;
+  font-size: 3rem;
+  font-weight: 500;
   margin-top: 3rem;
 }
 
