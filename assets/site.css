@@ -37,6 +37,12 @@
   --arabic: "Amiri", "Geeza Pro", serif;
   --mono:   ui-monospace, "SF Mono", Menlo, monospace;
 
+
+  /* spacing: one ramp instead of thirty-five improvisations.
+     Values under 0.4rem stay literal, they are optical nudges not rhythm. */
+  --s2: 0.5rem;  --s3: 0.75rem; --s4: 1rem;   --s5: 1.25rem;
+  --s6: 1.5rem;  --s7: 2rem;    --s8: 2.5rem; --s9: 3rem;  --s10: 3.5rem;
+
   /* layered shadow, warm not grey */
   --raised:
     0 0 0 1px color-mix(in oklab, var(--ink) 7%, transparent),
@@ -87,10 +93,13 @@ html {
 
 body {
   font-family: var(--sans);
-  font-size: 15px;
-  line-height: 1.68;
-  font-weight: 400;
-  letter-spacing: 0.002em;
+  font-size: 15.5px;
+  line-height: 1.6;
+  /* 440 is a variable-font weight, not a preset: 400 read thin on this paper,
+     500 read heavy. Tracking is optical, negative here and neutral on the
+     small print, where tightening only hurts. */
+  font-weight: 440;
+  letter-spacing: -0.004em;
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
@@ -169,7 +178,7 @@ button, a, summary, [role="button"] {
   display: grid;
   grid-template-columns:
     [full-start gutter-start] minmax(1.25rem, 1fr)
-    [main-start] min(38.5rem, calc(100% - 2.5rem)) [main-end]
+    [main-start] min(36.5rem, calc(100% - 2.5rem)) [main-end]
     minmax(1.25rem, 1fr) [gutter-end full-end];
   padding-block: clamp(3.5rem, 11vh, 7.5rem) clamp(4rem, 10vh, 7rem);
   row-gap: 0;
@@ -180,9 +189,10 @@ button, a, summary, [role="button"] {
 .masthead h1 {
   font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.002em;
+  letter-spacing: -0.012em;
 }
 .masthead .updated {
+  letter-spacing: 0;
   color: var(--ink-3);
   font-size: 0.84rem;
   margin-top: 0.15rem;
@@ -225,12 +235,13 @@ a[data-out]::after {
 a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--seal); }
 
 /* ---------- section label + ledger tables ---------- */
-.section { margin-top: 3.4rem; }
+.section { margin-top: var(--s10); }
 .section > h2 {
+  letter-spacing: 0;
   font-size: 0.84rem;
   font-weight: 480;
   color: var(--ink-3);
-  margin-bottom: 0.45rem;
+  margin-bottom: var(--s2);
 }
 
 .ledger { list-style: none; }
@@ -241,11 +252,12 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   display: grid;
   grid-template-columns: 3.2rem 1fr auto;
   align-items: baseline;
-  column-gap: 1rem;
-  padding-block: 0.58rem;
+  column-gap: var(--s4);
+  padding-block: var(--s2);
 }
 
 .ledger .yr {
+  letter-spacing: 0;
   color: var(--ink-3);
   font-size: 0.84rem;
   font-variant-numeric: tabular-nums;
@@ -258,6 +270,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   color: var(--ink-2);
 }
 .ledger .meta {
+  letter-spacing: 0;
   color: var(--ink-3);
   font-size: 0.84rem;
   text-align: right;
@@ -310,8 +323,9 @@ html.locked { overflow: hidden; }
 
 /* ---------- footer ---------- */
 .foot {
+  letter-spacing: 0;
   margin-top: 4.2rem;
-  padding-top: 1.1rem;
+  padding-top: var(--s4);
   border-top: 1px solid var(--line-soft);
   display: grid;
   grid-template-columns: auto auto 1fr auto;
@@ -369,7 +383,7 @@ html.locked { overflow: hidden; }
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-  gap: 0.5rem;
+  gap: var(--s2);
   background: none;
   border: 0;
   cursor: pointer;
@@ -425,7 +439,7 @@ html.locked { overflow: hidden; }
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 0.7rem;
+  padding: var(--s3);
   margin: -0.7rem;
   color: var(--ink-3);
   display: inline-flex;
@@ -474,7 +488,7 @@ html.locked { overflow: hidden; }
     position: absolute;
     left: 100%;
     top: var(--pin, 0);
-    margin-left: 1.1rem;
+    margin-left: var(--s4);
     width: 15rem;
   }
   /* the arrow sits in the gap and points back at the paragraph */
@@ -510,7 +524,7 @@ html.locked { overflow: hidden; }
 .crumb {
   font-size: 0.84rem;
   color: var(--ink-3);
-  margin-bottom: 2rem;
+  margin-bottom: var(--s7);
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
@@ -522,21 +536,22 @@ html.locked { overflow: hidden; }
 .crumb:hover .back { transform: translateX(-0.22em); }
 .crumb:hover { color: var(--ink); }
 
-.article-head h1 { font-size: 1.35rem; font-weight: 560; letter-spacing: -0.004em; }
-.article-head .when { color: var(--ink-3); font-size: 0.84rem; margin-top: 0.2rem; }
+.article-head h1 { font-size: 1.4rem; font-weight: 560; letter-spacing: -0.018em; }
+.article-head .when {
+  letter-spacing: 0; color: var(--ink-3); font-size: 0.84rem; margin-top: 0.2rem; }
 .article-head .stand {
-  margin-top: 1.15rem;
+  margin-top: var(--s5);
   color: var(--ink-2);
 }
 
 .article h2 {
   font-size: 0.95rem;
   font-weight: 560;
-  margin-top: 3rem;
+  margin-top: var(--s9);
   display: flex;
   align-items: center;
-  gap: 1rem;
-  scroll-margin-top: 2.5rem;
+  gap: var(--s4);
+  scroll-margin-top: var(--s8);
 }
 .article h2::after {
   content: "";
@@ -550,7 +565,7 @@ html.locked { overflow: hidden; }
   font-size: 0.84rem;
   font-variant-numeric: tabular-nums;
 }
-.article h2 + p, .article h2 + .anchored { margin-top: 1rem; }
+.article h2 + p, .article h2 + .anchored { margin-top: var(--s4); }
 .article p + p, .article p + .anchored, .article .anchored + p, .article .anchored + .anchored { margin-top: 1.05em; }
 
 .article .highlight {
@@ -562,7 +577,7 @@ html.locked { overflow: hidden; }
 .article .quiet { color: var(--ink-2); }
 
 .article .sign {
-  margin-top: 3rem;
+  margin-top: var(--s9);
   color: var(--ink-2);
 }
 
@@ -646,12 +661,12 @@ html.locked { overflow: hidden; }
   list-style: none;
   max-height: 17rem;
   overflow-y: auto;
-  padding: 0.45rem;
+  padding: var(--s2);
 }
 .palette li {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: var(--s3);
   padding: 0.52rem 0.68rem;
   border-radius: 9px;
   font-size: 0.92rem;
@@ -675,7 +690,7 @@ html.locked { overflow: hidden; }
 }
 .palette li[aria-selected="true"] .glyph { color: var(--seal); }
 .palette .none {
-  padding: 1rem;
+  padding: var(--s4);
   color: var(--ink-3);
   font-size: 0.9rem;
   font-family: var(--pen);
@@ -707,21 +722,21 @@ html.locked { overflow: hidden; }
   border: 1px solid var(--line-soft);
   border-radius: 12px;
   padding: 1.2rem 1.3rem;
-  margin-top: 1.2rem;
+  margin-top: var(--s5);
   background: color-mix(in oklab, var(--paper-high) 55%, transparent);
 }
 .demo .label {
   font-size: 0.78rem;
   color: var(--ink-3);
-  margin-bottom: 0.85rem;
+  margin-bottom: var(--s3);
 }
 
-.race { display: grid; gap: 0.85rem; cursor: pointer; }
+.race { display: grid; gap: var(--s3); cursor: pointer; }
 .race .lane {
   display: grid;
   grid-template-columns: 4.4rem 1fr;
   align-items: center;
-  gap: 0.9rem;
+  gap: var(--s4);
 }
 .race .lane span { font-size: 0.8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .race .track { position: relative; height: 14px; border-bottom: 1px dashed var(--line); }
@@ -737,8 +752,8 @@ html.locked { overflow: hidden; }
 .race.go .b2 { transition: transform var(--settle) var(--out); transform: translateX(var(--tx)); }
 .race.go .b3 { transition: transform var(--grand) var(--out); transform: translateX(var(--tx)); }
 
-.swatches { display: flex; gap: 1.4rem; flex-wrap: wrap; }
-.swatches figure { display: flex; align-items: center; gap: 0.55rem; }
+.swatches { display: flex; gap: var(--s6); flex-wrap: wrap; }
+.swatches figure { display: flex; align-items: center; gap: var(--s2); }
 .swatches i {
   width: 1.05rem; height: 1.05rem;
   border-radius: 50%;
@@ -747,7 +762,7 @@ html.locked { overflow: hidden; }
 }
 .swatches figcaption { font-size: 0.82rem; color: var(--ink-2); }
 
-.specimen { display: grid; gap: 0.5rem; }
+.specimen { display: grid; gap: var(--s2); }
 .specimen .s1 { font-weight: 560; }
 .specimen .s2 { font-style: italic; font-weight: 500; font-size: 1.1rem; }
 .specimen .s3 { font-family: var(--pen); font-size: 1.5rem; color: var(--seal); transform: rotate(-1.4deg); }
@@ -761,8 +776,8 @@ html.locked { overflow: hidden; }
   grid-template-columns: repeat(3, minmax(0, auto));
   justify-content: start;
   gap: 0.9rem 2.4rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
+  margin-top: var(--s6);
+  padding-top: var(--s4);
   border-top: 1px solid var(--line-soft);
 }
 @media (max-width: 460px) {
@@ -780,19 +795,20 @@ html.locked { overflow: hidden; }
 .venture .proof span { font-size: 0.82rem; color: var(--ink-3); margin-top: -0.1rem; }
 
 .venture .lede {
-  margin-top: 2.6rem;
+  letter-spacing: 0;
+  margin-top: var(--s8);
   color: var(--ink-3);
   font-size: 0.86rem;
 }
 
-.beat { margin-top: 2.1rem; }
-.beat .say + .clip { margin-top: 1rem; }
+.beat { margin-top: var(--s7); }
+.beat .say + .clip { margin-top: var(--s4); }
 
 /* ---------- a post: a row in a stream, not a card in a stack ---------- */
 .post {
   display: grid;
   grid-template-columns: 2.35rem 1fr;
-  column-gap: 0.7rem;
+  column-gap: var(--s3);
   padding: 0.95rem 0 0.85rem;
   border-bottom: 1px solid var(--line-soft);
   transition: background var(--swift) ease;
@@ -844,7 +860,7 @@ html.locked { overflow: hidden; }
   display: block;
   width: 100%;
   height: auto;
-  margin-top: 0.6rem;
+  margin-top: var(--s2);
   border-radius: 12px;
   border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
 }
@@ -852,8 +868,8 @@ html.locked { overflow: hidden; }
 .post > .col > footer {
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
+  gap: var(--s2);
+  margin-top: var(--s2);
   font-size: 0.78rem;
   color: var(--ink-3);
 }
@@ -876,16 +892,17 @@ html.locked { overflow: hidden; }
 .beat .post { margin-left: 0.1rem; }
 
 @media (max-width: 640px) {
-  .post { grid-template-columns: 2.1rem 1fr; column-gap: 0.6rem; }
+  .post { grid-template-columns: 2.1rem 1fr; column-gap: var(--s2); }
   .post .pfp { width: 2.1rem; height: 2.1rem; }
   .post > .col > footer .open { opacity: 1; }
 }
 
 /* ---------- the menu: mains and sides ---------- */
 .menu-note {
+  letter-spacing: 0;
   color: var(--ink-3);
   font-size: 0.86rem;
-  margin-top: 0.5rem;
+  margin-top: var(--s2);
 }
 .side-list { list-style: none; margin-top: 0.3rem; }
 /* the anchor inside carries the grid (see .ledger a), so this must not
@@ -903,7 +920,7 @@ html.locked { overflow: hidden; }
 .player {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--s2);
   margin-top: 0.15rem;
   color: var(--ink-3);
   font-size: 0.82rem;
@@ -912,7 +929,7 @@ html.locked { overflow: hidden; }
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 0.45rem;
+  padding: var(--s2);
   margin: -0.45rem;
   color: var(--ink-3);
   display: inline-flex;
@@ -963,9 +980,9 @@ html.locked { overflow: hidden; }
 .player .mine.show { opacity: 1; transform: none; }
 
 /* ---------- the feed: a window onto the posts, not a longer page ---------- */
-.feed-wrap { margin-top: 3.4rem; }
+.feed-wrap { margin-top: var(--s10); }
 .feed {
-  margin-top: 0.9rem;
+  margin-top: var(--s4);
   max-height: min(72vh, 40rem);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -984,7 +1001,7 @@ html.locked { overflow: hidden; }
   background-clip: padding-box;
 }
 .feed .post { margin-left: 0; max-width: 30rem; }
-.feed .post + .post { margin-left: 0; margin-top: 0.9rem; }
+.feed .post + .post { margin-left: 0; margin-top: var(--s4); }
 
 .feed-end {
   min-height: 2rem;
@@ -1012,17 +1029,17 @@ html.locked { overflow: hidden; }
 }
 
 /* ---------- the lane: the part that refreshes itself ---------- */
-.lane-wrap { margin-top: 3.4rem; }
-.lane { list-style: none; margin-top: 0.45rem; }
+.lane-wrap { margin-top: var(--s10); }
+.lane { list-style: none; margin-top: var(--s2); }
 .lane li { border-top: 1px solid var(--line-soft); }
 .lane li:last-child { border-bottom: 1px solid var(--line-soft); }
 
 .lane a {
   display: grid;
   grid-template-columns: 7.4rem 1fr 3.1rem;
-  column-gap: 1rem;
+  column-gap: var(--s4);
   align-items: baseline;
-  padding-block: 0.6rem;
+  padding-block: var(--s2);
 }
 .lane .when {
   color: var(--ink-3);
@@ -1056,7 +1073,7 @@ html.locked { overflow: hidden; }
 .lane a[data-out]::after { content: none; }
 
 @media (max-width: 640px) {
-  .lane a { grid-template-columns: 1fr auto; column-gap: 0.6rem; }
+  .lane a { grid-template-columns: 1fr auto; column-gap: var(--s2); }
   .lane .when { grid-column: 1; }
   .lane .num { grid-column: 2; }
   .lane .txt { grid-column: 1 / -1; margin-top: 0.1rem; }
@@ -1064,11 +1081,11 @@ html.locked { overflow: hidden; }
 
 /* ---------- walk between ventures ---------- */
 .prevnext {
-  margin-top: 3rem;
-  padding-top: 1.1rem;
+  margin-top: var(--s9);
+  padding-top: var(--s4);
   border-top: 1px solid var(--line-soft);
   display: flex;
-  gap: 1rem;
+  gap: var(--s4);
 }
 .prevnext a {
   display: flex;
@@ -1143,15 +1160,15 @@ html.locked { overflow: hidden; }
   font-size: clamp(2.2rem, 6vw, 3rem);
   font-weight: 500;
   line-height: 1.1;
-  margin-top: 2.6rem;
+  margin-top: var(--s8);
 }
-.lost p + p { margin-top: 1.1rem; max-width: 30rem; }
+.lost p + p { margin-top: var(--s4); max-width: 30rem; }
 .lost aside.pen-note { margin-top: 2.2rem; }
 
 /* ---------- small screens ---------- */
 @media (max-width: 640px) {
   body { font-size: 15px; }
-  .ledger a, .ledger .row { grid-template-columns: 2.6rem 1fr auto; column-gap: 0.7rem; }
+  .ledger a, .ledger .row { grid-template-columns: 2.6rem 1fr auto; column-gap: var(--s3); }
 
   /* Two tidy rows instead of five stacked ones:
      clock + tasbih, then links + moon, with the colophon underneath. */
@@ -1160,15 +1177,15 @@ html.locked { overflow: hidden; }
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 0.85rem 1rem;
-    margin-top: 2.6rem;
+    margin-top: var(--s8);
   }
   .foot { grid-template-columns: 1fr auto; }
   .foot .clock  { grid-column: 1; grid-row: 1; }
   .foot .tasbih { grid-column: 2; grid-row: 1; justify-self: end; }
-  .foot .links  { grid-column: 1; grid-row: 2; gap: 1.2rem; }
+  .foot .links  { grid-column: 1; grid-row: 2; gap: var(--s5); }
   .foot .moon   { grid-column: 2; grid-row: 2; justify-self: end; }
   .foot .player { grid-column: 1 / -1; grid-row: 3; }
   .foot .colophon-line { grid-column: 1 / -1; grid-row: 4; margin-top: 0; }
   .foot .hint { display: none; }
-  .lane-wrap { margin-top: 2.4rem; }
+  .lane-wrap { margin-top: var(--s8); }
 }
