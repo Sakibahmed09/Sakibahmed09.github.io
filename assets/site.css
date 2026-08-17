@@ -770,6 +770,16 @@ kbd {
   stroke-width: 1.75;
   transition: color var(--swift) ease, opacity var(--swift) ease, transform var(--swift) var(--out);
 }
+/* where a search hit came from */
+.palette .from {
+  margin-left: auto;
+  padding-left: var(--s4);
+  color: var(--ink-3);
+  font-size: var(--t-xs);
+  white-space: nowrap;
+}
+.palette li span:nth-of-type(1) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .palette li .kbd {
   margin-left: auto;
   color: var(--ink-3);
@@ -1455,6 +1465,50 @@ kbd {
   .foot .player { grid-column: 1 / -1; grid-row: 4; }
   .foot .colophon-line { grid-column: 1 / -1; grid-row: 5; }
 }
+
+/* A long post folds rather than gets cut. The old 300-character clip landed
+   before the payoff on most of them, so the reader got the setup and had to
+   leave the site to find out what happened. */
+/* only fold when there is a script to unfold it; otherwise the post shows whole */
+.js .body.folded { position: relative; }
+.js .body.folded > p {
+  max-height: 11.2rem;
+  overflow: hidden;
+  transition: max-height var(--settle) var(--out);
+}
+.js .body.folded > p::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 3.2rem;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent, var(--paper));
+  pointer-events: none;
+  transition: opacity var(--swift) ease;
+}
+.js .body.folded.open > p { max-height: none; }
+.js .body.folded.open > p::after { opacity: 0; }
+
+.unfold {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  margin-top: var(--s2);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  letter-spacing: 0;
+  border-bottom: 1px solid var(--line);
+  transition: color var(--swift) ease, border-color var(--swift) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .unfold:hover { color: var(--seal); border-bottom-color: var(--seal); }
+}
+.unfold:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
 
 /* ---------- print: paper wants the words, not the furniture ---------- */
 @media print {

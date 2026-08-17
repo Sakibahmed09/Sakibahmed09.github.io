@@ -225,12 +225,11 @@ def card(p, i, img=None, alt=""):
     glyph = "𝕏" if src == "x" else "in"
     where = "X" if src == "x" else "LinkedIn"
     txt = clean(p["text"])
-    limit = 300
-    clipped = len(txt) > limit
-    if clipped:
-        cut = txt[:limit]
-        cut = cut[:cut.rfind(" ")]
-        txt = cut + "…"
+    # The post used to be cut at 300 characters, which landed before the payoff
+    # on most of them: the reader got the setup and had to leave to find out
+    # what happened. Send the whole thing and let the page fold it instead.
+    long_post = len(txt) > 320
+    anchor = "p-" + re.sub(r"[^a-z0-9]+", "", (p.get("url") or "")[-14:].lower()) or "p"
     n = p.get("fav", 0)
     metric = "reactions" if src == "li" else "likes"
     bits = []
@@ -257,7 +256,7 @@ def card(p, i, img=None, alt=""):
         # the same headline the venture cards and the scrolled-in cards use,
         # otherwise one feed shows two different handles
         name, handle, mark = "Sakib Ahmed", "Co-founder of Draper · Own your distribution", "in"
-    return """    <article class="post {kind}">
+    return """    <article class="post {kind}" id="{anchor}">
       <img class="pfp" src="../../assets/media/avatar.jpg" alt="" loading="lazy" decoding="async">
       <div class="col">
         <header>
@@ -267,7 +266,7 @@ def card(p, i, img=None, alt=""):
           <time>{date}</time>
           <span class="mark" aria-hidden="true">{mark}</span>
         </header>
-        <div class="body">
+        <div class="body{fold}">
           <p>{txt}</p>{shot}
         </div>
         <footer>
@@ -275,7 +274,7 @@ def card(p, i, img=None, alt=""):
           <a class="open" data-out href="{url}">Open</a>
         </footer>
       </div>
-    </article>""".format(kind=src, name=name, handle=handle, mark=mark,
+    </article>""".format(kind=src, anchor=anchor, fold=" folded" if long_post else "", name=name, handle=handle, mark=mark,
                          txt=html.escape(txt), shot=shot, date=pretty(p["date"]),
                          num=" &#183; ".join(bits), url=p.get("url", "#"))
 
@@ -319,6 +318,9 @@ def dedupe(rows):
         if k not in best or p.get("fav", 0) > best[k].get("fav", 0):
             best[k] = p
     return sorted(best.values(), key=lambda r: r["date"], reverse=True)
+
+
+SEARCH = []
 
 
 def find(bucket, needle):
@@ -445,6 +447,24 @@ def main():
                     '    </aside>' % (note.get("pin", "6rem"), clean(note["txt"])))
             out.append('  </div>')
 
+        # index the curated clippings so the palette can search what he
+        # actually wrote, not just the fourteen page titles
+        for beat in v.get("beats", []):
+            for entry in beat.get("posts", []):
+                needle = entry["m"] if isinstance(entry, dict) else entry
+                q = find(bucket, needle)
+                if not q:
+                    continue
+                SEARCH.append({
+                    # the whole post, so a search finds what he wrote in the
+                    # middle of it and not only how it opened
+                    "t": flat(q["text"]),
+                    "v": v["title"],
+                    "d": q["date"],
+                    "u": "ventures/%s/#p-%s" % (
+                        slug, re.sub(r"[^a-z0-9]+", "", (q.get("url") or "")[-14:].lower())),
+                })
+
         # the self-updating lane: everything not already in the spine
         rest = dedupe([p for p in bucket if key_of(p) not in used])
         if rest:
@@ -543,6 +563,9 @@ def main():
     a, b_ = "<!-- LATELY:START -->", "<!-- LATELY:END -->"
     html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
     open(home, "w").write(html_s)
+    with open(os.path.join(FEED_OUT, "search.json"), "w") as fh:
+        json.dump(SEARCH, fh)
+    print("search index: %d clippings" % len(SEARCH))
     print("front page feed: %d posts, newest %s" % (len(feed), feed[0]["d"]))
     write_site_files(feed)
 

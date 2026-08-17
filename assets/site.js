@@ -13,6 +13,31 @@
      next, worked out on your machine. Your timezone comes from the browser
      with no permission prompt and no request, and the prayer times are solar
      geometry, not an API. Maghrib is true sunset. */
+  /* Long posts arrive folded. Give each one a way to open in place, so the
+     payoff never costs you a trip to X. Built here rather than shipped in the
+     markup: with no script the post simply shows in full. */
+  (function () {
+    var folded = document.querySelectorAll(".body.folded");
+    Array.prototype.forEach.call(folded, function (b) {
+      var p = b.querySelector("p");
+      if (!p || p.scrollHeight <= p.clientHeight + 4) { b.classList.remove("folded"); return; }
+      var btn = document.createElement("button");
+      btn.className = "unfold";
+      btn.type = "button";
+      btn.textContent = "Read the rest";
+      btn.setAttribute("aria-expanded", "false");
+      btn.addEventListener("click", function () {
+        var open = b.classList.toggle("open");
+        btn.textContent = open ? "Fold it back" : "Read the rest";
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      b.appendChild(btn);
+      /* arriving from search: the post you were sent to opens itself */
+      var card = b.closest(".post");
+      if (card && location.hash && card.id === location.hash.slice(1)) btn.click();
+    });
+  })();
+
   var clock = $("#clock");
   if (clock) {
     /* enough of the world to place you within a degree or so */
@@ -648,6 +673,19 @@
         : '';
     }
 
+    /* The palette used to know fourteen page titles. It now also searches what he
+   actually wrote: the index is fetched once, the first time you open it, so it
+   costs nothing until someone goes looking. */
+    var WROTE = null, WROTE_TRIED = false;
+    function loadWrote() {
+      if (WROTE_TRIED) return;
+      WROTE_TRIED = true;
+      fetch(HOME + "assets/feed/search.json")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d) { WROTE = d; if (veil && !veil.hidden) paint(); } })
+        .catch(function () { /* the fourteen titles still work */ });
+    }
+
     var ACTIONS = [
       { t: "Home",               i: "home", k: "sakib start", go: HOME },
       { t: "Ventures",           i: "grid", k: "mains sides projects built", go: HOME + "ventures/" },
@@ -694,6 +732,27 @@
       shown = ACTIONS.filter(function (a) {
         return !q || (a.t + " " + a.k).toLowerCase().indexOf(q) !== -1;
       });
+      /* then what he actually wrote, once the query is worth searching for */
+      if (q.length >= 3 && WROTE) {
+        var hits = [];
+        for (var w = 0; w < WROTE.length && hits.length < 8; w++) {
+          var it = WROTE[w];
+          var at = it.t.toLowerCase().indexOf(q);
+          if (at === -1) continue;
+          /* show the words around the hit, so you can see why it matched */
+          var from = Math.max(0, at - 28);
+          var snip = it.t.slice(from, from + 74).trim();
+          if (from > 0) snip = '\u2026' + snip.replace(/^\S*\s/, '');
+          if (from + 74 < it.t.length) snip = snip.replace(/\s\S*$/, '') + '\u2026';
+          hits.push({
+            t: snip,
+            sub: it.v,
+            i: 'scroll',
+            go: HOME + it.u
+          });
+        }
+        shown = shown.concat(hits);
+      }
       sel = Math.min(sel, Math.max(shown.length - 1, 0));
       list.innerHTML = "";
       items = [];
@@ -709,7 +768,7 @@
         var li = document.createElement("li");
         li.setAttribute("role", "option");
         li.id = "opt-" + i;
-        li.innerHTML = (a.i ? svg(a.i) : "<span class='glyph'>" + (a.g || "") + "</span>") + "<span>" + a.t + "</span>";
+        li.innerHTML = (a.i ? svg(a.i) : "<span class='glyph'>" + (a.g || "") + "</span>") + "<span>" + a.t + "</span>" + (a.sub ? "<span class='from'>" + a.sub + "</span>" : "");
         li.addEventListener("mouseenter", function () { sel = i; paintSel(false); });
         /* keep focus in the input so typing still filters after a hover */
         li.addEventListener("mousedown", function (e) { e.preventDefault(); });
@@ -725,6 +784,7 @@
       else if (a.fn) { a.fn(); }
     };
     var openPalette = function () {
+      loadWrote();
       open = true;
       veil.hidden = false;
       root.classList.add("locked");

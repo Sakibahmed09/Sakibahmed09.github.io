@@ -199,6 +199,35 @@ with sync_playwright() as pw:
     check("one X handle in the feed", len(hs["x"]) <= 1, str(hs["x"]))
     h.close()
 
+    # a folded post must always have a way out. it clamps only when a script
+    # is there to open it, otherwise the reader is stuck with half a story.
+    f = b.new_page(viewport={"width": 900, "height": 900})
+    f.goto(BASE + "/ventures/minideed/", wait_until="networkidle")
+    f.wait_for_timeout(400)
+    r = f.evaluate("""() => {
+      const el = document.querySelector('.body.folded p');
+      if (!el) return null;
+      return {clipped: el.scrollHeight > el.clientHeight + 4,
+              controls: document.querySelectorAll('.unfold').length};
+    }""")
+    if r:
+        check("folded post has an open control", r["controls"] > 0, str(r))
+        f.click(".unfold")
+        f.wait_for_timeout(450)
+        opened = f.evaluate("() => {const e=document.querySelector('.body.folded p');"
+                            "return e.scrollHeight <= e.clientHeight + 4;}")
+        check("folded post opens fully", opened, "still clipped after click")
+    f.close()
+
+    nojs = b.new_context(java_script_enabled=False)
+    n = nojs.new_page()
+    n.goto(BASE + "/ventures/minideed/", wait_until="domcontentloaded")
+    n.wait_for_timeout(300)
+    r2 = n.evaluate("""() => {const el=document.querySelector('.body.folded p');
+      return el ? el.scrollHeight > el.clientHeight + 4 : false;}""")
+    check("no-JS shows the whole post", not r2, "clipped with no way to open it")
+    nojs.close()
+
     b.close()
 
 bad = [r for r in results if not r[1]]
