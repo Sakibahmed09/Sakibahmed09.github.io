@@ -1456,6 +1456,50 @@ kbd {
   .foot .colophon-line { grid-column: 1 / -1; grid-row: 5; }
 }
 
+/* The colophon as the thing it describes. A care label lists what a garment is
+   made of and how to treat it, which is exactly what this paragraph was doing
+   in four sentences of prose. Sewn-in, not printed on. */
+.care {
+  margin-top: var(--s6);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: var(--s5) var(--s5) var(--s4);
+  max-width: 17rem;
+  background: color-mix(in oklab, var(--ink) 1.6%, transparent);
+}
+.care-brand {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--line-soft);
+}
+.care ul {
+  list-style: none;
+  margin: var(--s3) 0 var(--s3);
+  display: grid;
+  gap: 0.28rem;
+}
+.care li {
+  font-size: var(--t-xs);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.35;
+}
+/* the numbers are the point of a label, so they keep the ink */
+.care li span { color: var(--ink); font-weight: 600; font-variant-numeric: normal; }
+.care-foot {
+  font-size: var(--t-xs);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: var(--s2);
+  border-top: 1px solid var(--line-soft);
+}
+
 /* ---------- print: paper wants the words, not the furniture ---------- */
 @media print {
   :root { --paper: #fff; --ink: #111; --ink-2: #333; --ink-3: #555; }
