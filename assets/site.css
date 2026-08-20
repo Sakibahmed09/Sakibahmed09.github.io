@@ -282,7 +282,9 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 .ledger li { border-top: 1px solid var(--line-soft); }
 .ledger li:last-child { border-bottom: 1px solid var(--line-soft); }
 
-.ledger a, .ledger .row {
+/* direct children only: a row can now hold its own links, and they must not
+   inherit the row's grid */
+.ledger li > a, .ledger li > .row {
   display: grid;
   grid-template-columns: 3.2rem 1fr auto;
   align-items: baseline;
@@ -311,13 +313,36 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
   transition: color var(--swift) ease;
 }
 
+/* the outbound half of a row: the story is the title, this is the door */
+.ledger .meta.out {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ledger .meta.out:hover { color: var(--seal); border-bottom-color: var(--seal); }
+}
+.ledger .meta.out::after {
+  content: "\2197\FE0E";
+  font-variant-emoji: text;
+  margin-left: 0.18em;
+  opacity: 0.55;
+}
+.ledger a.what { text-decoration: none; color: inherit; }
+@media (hover: hover) and (pointer: fine) {
+  .ledger a.what:hover { color: var(--seal); }
+}
+
 /* Hovering the list makes the whole list recede and brings back only the row
    under the pointer. Years stay legible so you can still scan the dates. */
 @media (hover: hover) and (pointer: fine) {
-  .ledger a .what,
-  .ledger a .meta { transition: opacity var(--swift) ease, color var(--swift) ease; }
-  .ledger:hover a .what,
-  .ledger:hover a .meta { opacity: 0.34; }
+  .ledger .what,
+  .ledger .meta { transition: opacity var(--swift) ease, color var(--swift) ease; }
+  .ledger:hover li .what,
+  .ledger:hover li .meta { opacity: 0.34; }
+  /* the row you are on comes back, whichever of its two links you are over */
+  .ledger li:hover .what,
+  .ledger li:hover .meta { opacity: 1; }
   .ledger a:hover .what,
   .ledger a:hover .meta { opacity: 1; }
   .ledger:hover a .yr { opacity: 0.55; transition: opacity var(--swift) ease; }
