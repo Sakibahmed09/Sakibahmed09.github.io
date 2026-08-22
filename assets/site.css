@@ -108,7 +108,11 @@
 /* ---------- ground ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* iPhone: let the page run under the status bar and the home indicator so the
+   paper meets the clock instead of stopping short of it. theme-color paints
+   the bar itself; these insets keep the words out from under the notch. */
 html {
+  background: var(--paper);
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
   overflow-x: clip;
@@ -129,6 +133,17 @@ body {
   text-rendering: optimizeLegibility;
   font-variant-numeric: oldstyle-nums;
   min-height: 100svh;
+}
+
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  /* the footer is the last thing above the home indicator */
+  .foot { padding-bottom: max(var(--s4), env(safe-area-inset-bottom)); }
+  /* fixed furniture has to dodge the notch too */
+  .veil { padding-top: env(safe-area-inset-top); }
 }
 
 /* faint paper grain, both themes */
@@ -1534,75 +1549,6 @@ kbd {
   .unfold:hover { color: var(--seal); border-bottom-color: var(--seal); }
 }
 .unfold:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
-
-/* The chapter rail: tabs cut into the edge of the notebook. Only where there is
-   room for it and only where there are chapters to mark. */
-/* Below 1180px the sticky index in the margin has nowhere to go, so a long
-   page loses its wayfinding entirely. That is the gap this fills. Above that
-   width the index is already there and two of them would be one too many. */
-.rail {
-  position: fixed;
-  right: var(--s4);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  z-index: 5;
-}
-/* Only where there is margin to sit in. On a phone the column runs to within
-   20px of the edge, so the rail would lie over the ends of lines. */
-/* the measure is centred, so the margin only clears the rail past ~720px */
-@media (max-width: 719.9px), (min-width: 1180px) {
-  .rail { display: none; }
-}
-.rail .mark {
-  background: none;
-  border: 0;
-  /* the tab is a hairline; the thing you tap is not */
-  padding: 0.55rem 0.3rem 0.55rem var(--s4);
-  margin: -0.35rem 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--s3);
-}
-/* the tab itself */
-.rail .mark i {
-  display: block;
-  width: 0.85rem;
-  height: 1px;
-  background: var(--line);
-  transition: width var(--settle) var(--out), background var(--swift) ease;
-}
-.rail .mark.on i { width: 1.6rem; background: var(--seal); }
-/* the chapter's name, only when you go looking for it */
-/* the name sits out of flow: in flow it made every tab as wide as its label,
-   so the rail's hit area lay across the body text */
-.rail .mark { position: relative; }
-.rail .mark span {
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  margin-top: -0.6em;
-  font-size: var(--t-xs);
-  letter-spacing: 0;
-  color: var(--ink-3);
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateX(4px);
-  pointer-events: none;
-  transition: opacity var(--swift) ease, transform var(--settle) var(--out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .rail:hover .mark span { opacity: 1; transform: none; }
-  .rail .mark:hover i { background: var(--ink-2); }
-  .rail .mark.on:hover i { background: var(--seal); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .rail .mark i, .rail .mark span { transition: none; }
-}
 
 /* ---------- print: paper wants the words, not the furniture ---------- */
 @media print {

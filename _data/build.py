@@ -14,7 +14,7 @@ HEAD = """<!doctype html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title} · Sakib Ahmed</title>
 <meta name="description" content="{stand_plain}">
 <meta property="og:title" content="{title}">
