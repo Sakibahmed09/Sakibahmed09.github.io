@@ -1552,8 +1552,7 @@ kbd {
 }
 /* Only where there is margin to sit in. On a phone the column runs to within
    20px of the edge, so the rail would lie over the ends of lines. */
-/* the measure is centred, so the margin only clears the rail past ~720px */
-@media (max-width: 719.9px), (min-width: 1180px) {
+@media (max-width: 599.9px), (min-width: 1180px) {
   .rail { display: none; }
 }
 .rail .mark {
