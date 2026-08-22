@@ -259,6 +259,43 @@
       });
     }, { rootMargin: "-8% 0px -78% 0px" });
     $$(".article h2[id]").forEach(function (h) { spy.observe(h); });
+
+    /* A rail down the edge, one mark per chapter, like the tabs cut into the
+       side of a notebook. Built from the index that is already on the page so
+       the two can never drift apart. */
+    if (tocLinks.length > 3) {
+      var rail = document.createElement("nav");
+      rail.className = "rail";
+      rail.setAttribute("aria-hidden", "true");   /* the index above is the real one */
+      var marks = [];
+      tocLinks.forEach(function (a) {
+        var m = document.createElement("button");
+        m.type = "button";
+        m.className = "mark";
+        m.tabIndex = -1;
+        m.innerHTML = "<i></i><span></span>";
+        m.querySelector("span").textContent = a.textContent;
+        m.addEventListener("click", function () {
+          var t = document.getElementById(a.getAttribute("href").slice(1));
+          if (!t) return;
+          t.scrollIntoView({
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+            block: "start"
+          });
+        });
+        marks.push(m);
+        rail.appendChild(m);
+      });
+      document.body.appendChild(rail);
+      var syncRail = function () {
+        tocLinks.forEach(function (a, i2) {
+          marks[i2].classList.toggle("on", a.hasAttribute("aria-current"));
+        });
+      };
+      new MutationObserver(syncRail).observe(tocLinks[0].parentNode,
+        { attributes: true, subtree: true, attributeFilter: ["aria-current"] });
+      syncRail();
+    }
   }
 
   /* Only one sound source at a time. The footer beats and the track list are
