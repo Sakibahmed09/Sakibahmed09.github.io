@@ -140,6 +140,10 @@ body {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
+  /* iOS already runs the page under the status bar, so the paper reaches the
+     top on its own. What it does not do is keep the words out of the clock.
+     Start the page below the inset and the time sits on clean paper. */
+  .page { padding-top: max(var(--s6), calc(env(safe-area-inset-top) + var(--s4))); }
   /* the footer is the last thing above the home indicator */
   .foot { padding-bottom: max(var(--s4), env(safe-area-inset-bottom)); }
   /* fixed furniture has to dodge the notch too */
