@@ -55,6 +55,16 @@ def media_index():
 MEDIA = media_index()
 
 
+MONTHS = dict(Jan=1, Feb=2, Mar=3, Apr=4, May=5, Jun=6,
+              Jul=7, Aug=8, Sep=9, Oct=10, Nov=11, Dec=12)
+
+
+def iso(d):
+    # "Tue Jan 30 18:11:23 +0000 2024"
+    p = d.split()
+    return "%s-%02d-%02d" % (p[5], MONTHS[p[1]], int(p[2]))
+
+
 def load_tweets():
     raw = open(ARCHIVE, encoding="utf-8").read()
     raw = raw[raw.index("["):]
@@ -72,22 +82,21 @@ def load_tweets():
         out.append({
             "media": sorted(MEDIA.get(t["id_str"], []))[:1],
             "id": t["id_str"],
-            "date": t["created_at"],
+            "date": iso(t["created_at"]),
             "text": txt,
             "fav": int(t.get("favorite_count", 0)),
             "rt": int(t.get("retweet_count", 0)),
         })
+
+    # The archive download stops at 15 Apr 2026. tweets_live.json, kept fresh
+    # by pull_tweets.py, carries the record forward.
+    live = os.path.join(OUT, "tweets_live.json")
+    if os.path.exists(live):
+        have = {t["id"] for t in out}
+        for t in json.load(open(live)):
+            if t["id"] not in have:
+                out.append(dict(t, media=[]))
     return out
-
-
-MONTHS = dict(Jan=1, Feb=2, Mar=3, Apr=4, May=5, Jun=6,
-              Jul=7, Aug=8, Sep=9, Oct=10, Nov=11, Dec=12)
-
-
-def iso(d):
-    # "Tue Jan 30 18:11:23 +0000 2024"
-    p = d.split()
-    return "%s-%02d-%02d" % (p[5], MONTHS[p[1]], int(p[2]))
 
 
 def main():
@@ -123,7 +132,7 @@ def main():
     buckets = {}
     for name, pats in VENTURES.items():
         rx = re.compile("|".join(pats), re.I)
-        tw = [dict(t, date=iso(t["date"]), src="x",
+        tw = [dict(t, src="x",
                    url="https://x.com/mertesakib/status/" + t["id"])
               for t in tweets if rx.search(t["text"])]
         lp = [p for p in li if rx.search(p["text"])]
@@ -137,7 +146,7 @@ def main():
                                          r["text"][:95].replace("\n", " ")))
 
     # a searchable pool for posts that never name the venture
-    pool = li + [dict(t, date=iso(t["date"]), src="x",
+    pool = li + [dict(t, src="x",
                       url="https://x.com/mertesakib/status/" + t["id"])
                  for t in tweets if t["fav"] >= 5]
     buckets["_all"] = sorted(pool, key=lambda r: r["date"])

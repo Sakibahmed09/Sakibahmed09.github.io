@@ -3,3 +3,5 @@ _data/refresh.out
 _data/refresh.err
 _data/linkedin_raw.json
 _data/buckets.json
+_data/tweets_live.json
+*-posts.json

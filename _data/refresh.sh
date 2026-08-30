@@ -12,18 +12,22 @@ exec >> "$LOG" 2>&1
 echo "--- $(date '+%Y-%m-%d %H:%M') refresh starting"
 
 # 1. top up the LinkedIn cache (cache-first, only calls Apify when stale).
+# Args are positional: <username> <total_posts> <max_age_days>.
 # Current vanity is mertesakib; sakib-ahmed1 is the pre-Aug-2026 handle that
 # older cached rows are filed under. mine.py reads both.
+cd "$DATA"
 if [ -x "$HOME/scripts/scrape-linkedin.sh" ]; then
-  "$HOME/scripts/scrape-linkedin.sh" mertesakib --limit 40 --max-age-days 6 \
-    || "$HOME/scripts/scrape-linkedin.sh" sakib-ahmed1 --limit 40 --max-age-days 6 \
+  "$HOME/scripts/scrape-linkedin.sh" mertesakib 40 6 \
+    || "$HOME/scripts/scrape-linkedin.sh" sakib-ahmed1 40 6 \
     || echo "warn: linkedin scrape failed, carrying on with cache"
 else
   echo "warn: scrape-linkedin.sh missing, using cache only"
 fi
 
+# 1.5 top up the live tweet cache (Typefully X analytics, all posts on the account)
+python3 pull_tweets.py || echo "warn: tweet pull failed, carrying on with cache"
+
 # 2. re-mine both sources into buckets
-cd "$DATA"
 python3 mine.py | tail -3
 
 # 3. regenerate the venture pages
