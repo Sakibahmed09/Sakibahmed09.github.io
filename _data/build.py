@@ -186,8 +186,15 @@ def flat(t):
     return re.sub(r"\s+", " ", clean(t)).strip()
 
 
-MEDIA_SRC = glob.glob(os.path.expanduser(
-    "~/Downloads/twitter-*/data/tweets_media"))
+def media_dirs():
+    here = os.path.join(HERE, "archive", "tweets_media")
+    if os.path.isdir(here):
+        return [here]
+    return sorted(glob.glob(os.path.expanduser(
+        "~/Downloads/twitter-*/data/tweets_media")))[-1:]
+
+
+MEDIA_SRC = media_dirs()
 MEDIA_OUT = os.path.join(ROOT, "assets", "media")
 FEED_OUT = os.path.join(ROOT, "assets", "feed")
 
@@ -195,6 +202,12 @@ FEED_OUT = os.path.join(ROOT, "assets", "feed")
 def stage_image(fname):
     """Copy a photo out of the archive, downscaled for the web.
     Returns the site-relative filename, or None if it isn't there."""
+    out_name = fname.split("-")[0] + ".jpg"
+    dst = os.path.join(MEDIA_OUT, out_name)
+    # a photo staged on an earlier run stays on the page even when the
+    # archive is out of reach, so a scheduled rebuild never strips pictures
+    if os.path.exists(dst):
+        return out_name
     if not MEDIA_SRC:
         return None
     src = os.path.join(MEDIA_SRC[0], fname)
@@ -202,9 +215,7 @@ def stage_image(fname):
         print("   !! missing photo: %s" % fname)
         return None
     os.makedirs(MEDIA_OUT, exist_ok=True)
-    out_name = fname.split("-")[0] + ".jpg"
-    dst = os.path.join(MEDIA_OUT, out_name)
-    if not os.path.exists(dst):
+    if True:
         try:
             from PIL import Image
             im = Image.open(src)
@@ -343,7 +354,7 @@ def write_site_files(feed):
     """sitemap, robots and a real RSS feed — the marks of a site that is kept."""
     import xml.sax.saxutils as sx
     BASE = "https://sakib.lol"
-    paths = ["/", "/chapters/", "/craft/", "/ventures/"]
+    paths = ["/", "/chapters/", "/craft/", "/manifesto/", "/ventures/"]
     paths += ["/ventures/%s/" % k for k in SPEC.keys()]
     today = max(p["d"] for p in feed) if feed else "2026-08-16"
 

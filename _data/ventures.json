@@ -32,7 +32,7 @@
         ]
       },
       {
-        "say": "I was eighteen and had no idea what I was doing, so I kept showing it to people.",
+        "say": "I was in the first year of my apprenticeship and had no idea what I was doing, so I kept showing it to people. The company was two co-founders, one engineer and me. I did users and support, worked out what to build next, and posted about all of it.",
         "posts": [
           "never I thought I’d read minideed praise in another language",
           "Having a lot of fun presenting @MiniDeed"
@@ -48,6 +48,12 @@
         "say": "Then the number that still surprises me. Twenty five countries and £26,000, raised entirely through likes, by people who mostly had never donated to anything before.",
         "posts": [
           "This MiniDeed journey has been amazing"
+        ]
+      },
+      {
+        "say": "The thing I did not design was the guarding. Someone would post something a bit off, within the rules and outside the spirit of it, and other users would step in before we had seen it. They had bought in hard enough to police it themselves, and that was also the ceiling. We had built a room that only fit one kind of person.",
+        "posts": [
+          "Years before Simply Smashed I built a little app, and one day the users started throwing people out"
         ]
       },
       {
@@ -157,6 +163,13 @@
         "posts": [
           "I've left Simply Smashed. After 2 years of building the highest rated"
         ]
+      },
+      {
+        "say": "Eight months after I left, IFG made a documentary about it. They dug our childhood cassettes out of the attic and made it about my dad as much as the burgers. A hundred thousand people watched it over a bank holiday weekend, their most watched video in eight years.",
+        "posts": [
+          "Adil and the team did a brilliant job capturing the Simply Smashed story",
+          "80k in 24 hours with IFG"
+        ]
       }
     ]
   },
@@ -246,7 +259,7 @@
         "contract closed for Sahl AI"
       ],
       [
-        "50+",
+        "100+",
         "founders, executives and partners"
       ]
     ],
@@ -278,6 +291,12 @@
         ]
       },
       {
+        "say": "The problem underneath it is older than AI. The best thinkers I know do not post. Their best ideas come out loud, to one person, after the meeting, and then stay in the room. I wrote that up properly as <a class=\"u\" href=\"../../manifesto/\">The Corridor</a>.",
+        "posts": [
+          "AI has scraped nearly the entire internet"
+        ]
+      },
+      {
         "say": "Mustafa brought a deep work system over from his old agency. I thought it was rigid. It doubled our focus time without adding an hour to the week and it cost nothing.",
         "posts": [
           "We 2x'd our deep work without adding a single hour"
@@ -293,6 +312,13 @@
         "say": "You can open Claude right now and start building in a field you know nothing about. Twice now, and I would do it again.",
         "posts": [
           "I keep entering domains the slow way"
+        ]
+      },
+      {
+        "say": "Nine months in, the industry has found names for what we were doing, forward deployed content engineers and AI native services firms, and last winter people told me these ideas were mad.",
+        "posts": [
+          "they called me crazy for these ideas 9 months ago",
+          "Forward deployed content engineer"
         ]
       }
     ],
@@ -330,35 +356,61 @@
     "years": "2024 –",
     "kind": "side",
     "bucket": "bilal",
-    "stand": "Masjid times on my living room TV, with the athan going off at leave-time rather than prayer-time.",
+    "stand": "An athan that tells you when to leave for jama'ah at your masjid, not when the prayer starts. Phone, Mac and the TV in your kitchen. Launched 11 September 2026.",
     "proof": [
       [
-        "2 weeks",
-        "from asking to testing"
+        "2,500+",
+        "masajid, times collected and checked"
       ],
       [
-        "1",
-        "living room"
+        "1,400+",
+        "people on it before launch day"
+      ],
+      [
+        "2 yrs",
+        "from the question to the launch"
       ]
     ],
     "beats": [
       {
-        "say": "It started as a question I posted rather than a product. In Muslim countries the athan comes off the minaret and you get up and go. On your phone it just becomes another notification you swipe away.",
+        "say": "It started as a question I posted rather than a product. In Muslim countries the athan comes off the minaret and you get up and go. On your phone it is one more notification you swipe away.",
         "posts": [
           "if you hear the athan out loud according to Jama'ah times",
           "when you hear the athan from minarets in Muslim countries"
         ]
       },
       {
-        "say": "A fortnight later I was testing it. That is usually the whole distance between me having a thought and me having a thing.",
+        "say": "A fortnight later I was testing it. That is usually the distance between me having a thought and me having a thing.",
         "posts": [
           "started doing early testing of project Bilal"
         ]
       },
       {
-        "say": "It runs on a TV in my front room now, and it is up at bilalathan.co.uk if you want to point a screen at it. One household so far. Mine.",
+        "say": "The first version lived on the TV in my front room for the best part of two years. Somewhere in that it started getting me to jama'ahs I would have missed, at mosques two minutes away that I never knew were there.",
         "posts": [
-          "im so excited to ship project bilal man"
+          "im so excited to ship project bilal man",
+          "I can’t believe how many more Jama’ah I’m catching because of Bilal"
+        ]
+      },
+      {
+        "say": "Then it launched properly, on 11 September 2026, with the jama'ah times of over 2,500 masajid collected and checked. Phone, Mac and the TV. The athan goes at the time you need to leave, and it is free and stays free.",
+        "posts": [
+          "Introducing Bilal. Finally.",
+          "Bilal for Mac",
+          "Bilal for the TV and Echo Show"
+        ]
+      },
+      {
+        "say": "Before I had announced anything it was already going round WhatsApp groups, and it had 1,400 people on it in a couple of days.",
+        "posts": [
+          "Even before launching bilal started being shared"
+        ]
+      },
+      {
+        "say": "The logo is a masjid arch, left open for you. The feeling I want it to give you is your dad holding your hand and walking you to the masjid when you were eight. Somewhere along the way most of us lost that, and the hand is still there.",
+        "posts": [
+          "introducing bilal's logo",
+          "the inspiration behind bilal design is nostalgia"
         ]
       }
     ],
@@ -566,14 +618,16 @@
         "only, on purpose"
       ],
       [
-        "0",
-        "public posts about it"
+        "1",
+        "public post about it, after a month of use"
       ]
     ],
     "beats": [
       {
-        "say": "This one has no build log. I have not posted about it once, which for me is the strangest part of the whole project.",
-        "posts": []
+        "say": "This one has almost no build log. My family and I used it every morning and evening for a month before I said a word about it in public, and that was one post.",
+        "posts": [
+          "dogfooding the Adhkar app"
+        ]
       },
       {
         "say": "It is a small app for remembering Allah with the handful of people you actually pray for. Morning and evening, your circle, nothing else in it.",

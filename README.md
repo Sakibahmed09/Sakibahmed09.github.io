@@ -1,4 +1,4 @@
-# sakib.page
+# sakib.lol
 
 Personal site. Paper, ink and one red biro.
 
@@ -27,7 +27,10 @@ Each one shows **what I say about it now** next to **what I was actually posting
 
 Data comes from two places already on disk:
 
-- X archive: `~/Downloads/twitter-*/data/tweets.js`
+- X archive: `_data/archive/tweets*.js` (gitignored; every part of the download is read, and
+  the photos sit in `_data/archive/tweets_media`). It lives inside the repo on purpose: macOS
+  blocks launchd jobs from reading `~/Downloads`, so a copy left there made the weekly refresh
+  fail every Monday. `~/Downloads/twitter-*/data` is only a fallback for a hand-run session.
 - LinkedIn cache: `~/.linkedin-cache/posts.db`. Current handle `mertesakib`; posts from
   before Aug 2026 are filed under the old `sakib-ahmed1` handle, and `mine.py` reads both.
   Existing post URLs keep the old slug on purpose: LinkedIn pins a post URL to the handle
@@ -79,5 +82,5 @@ For a custom domain, add a `CNAME` file.
 - `⌘K` command palette · `t` counts the tasbih (33 completes the ring) · footer clock is always Europe/London
 - Theme: system by default, moon toggle persists, `?theme=dark|light` forces it per link
 - Margin notes (`aside.pen-note`) draw in on scroll, and go inline below 1180px
-- Type: Schibsted Grotesk, EB Garamond italic, Reenie Beanie, Amiri
+- Type: Schibsted Grotesk (its own italic for emphasis), Reenie Beanie, Amiri
 - Motion: `--swift` 160ms, `--settle` 340ms, `--grand` 700ms, reduced-motion respected

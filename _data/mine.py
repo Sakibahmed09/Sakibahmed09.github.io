@@ -2,10 +2,20 @@
 """Mine the X archive + LinkedIn cache into per-venture candidate pools."""
 import json, re, os, sqlite3, glob, html
 
-ARCHIVE = glob.glob(os.path.expanduser(
-    "~/Downloads/twitter-*/data/tweets.js"))[0]
-LI_DB = os.path.expanduser("~/.linkedin-cache/posts.db")
 OUT = os.path.dirname(os.path.abspath(__file__))
+LI_DB = os.path.expanduser("~/.linkedin-cache/posts.db")
+
+# The X archive is copied into _data/archive rather than read from ~/Downloads:
+# macOS keeps Downloads off-limits to anything launchd starts, so the weekly
+# job could never see it and failed every Monday. Downloads is only a fallback
+# for a hand-run session.
+ARCHIVE_DIR = os.path.join(OUT, "archive")
+if not os.path.isdir(ARCHIVE_DIR):
+    found = sorted(glob.glob(os.path.expanduser("~/Downloads/twitter-*/data")))
+    ARCHIVE_DIR = found[-1] if found else None
+# X splits a big archive into tweets.js plus tweets-part1.js and so on, and
+# the parts barely overlap, so every part gets read.
+ARCHIVE_FILES = sorted(glob.glob(os.path.join(ARCHIVE_DIR, "tweets*.js"))) if ARCHIVE_DIR else []
 
 VENTURES = {
     "minideed":    [r"\bminideed\b", r"mini deed"],
@@ -20,7 +30,7 @@ VENTURES = {
     "simplyclo":   [r"simply\s*clo", r"simplyclo", r"liberation collection",
                     r"\bhoodie\b"],
     "vibenasheeds": [r"vibenasheed", r"\bnasheed"],
-    "dhikry":      [r"\bdhikry\b", r"\bdhikr\b"],
+    "dhikry":      [r"\bdhikry\b", r"\bdhikr\b", r"\badhkar\b"],
     "bilal":       [r"\bbilal\b", r"masjid.{0,15}(time|display|tv)",
                     r"\bathan\b", r"\badhan\b"],
     "lofi":        [r"lofi muslim", r"lofimuslim", r"\blofi\b"],
@@ -43,10 +53,10 @@ def tidy(t):
 def media_index():
     """tweet id -> its image files in the archive"""
     import collections
-    dirs = glob.glob(os.path.expanduser("~/Downloads/twitter-*/data/tweets_media"))
+    d = os.path.join(ARCHIVE_DIR, "tweets_media") if ARCHIVE_DIR else ""
     idx = collections.defaultdict(list)
-    if dirs:
-        for f in os.listdir(dirs[0]):
+    if os.path.isdir(d):
+        for f in os.listdir(d):
             if f.lower().endswith((".jpg", ".png")):
                 idx[f.split("-")[0]].append(f)
     return idx
@@ -66,12 +76,16 @@ def iso(d):
 
 
 def load_tweets():
-    raw = open(ARCHIVE, encoding="utf-8").read()
-    raw = raw[raw.index("["):]
-    data = json.loads(raw)
-    out = []
+    data = []
+    for f in ARCHIVE_FILES:
+        raw = open(f, encoding="utf-8").read()
+        data += json.loads(raw[raw.index("["):])
+    out, seen = [], set()
     for row in data:
         t = row.get("tweet", row)
+        if t["id_str"] in seen:
+            continue
+        seen.add(t["id_str"])
         txt = html.unescape(t.get("full_text", ""))
         if txt.startswith("RT @"):
             continue
@@ -88,7 +102,7 @@ def load_tweets():
             "rt": int(t.get("retweet_count", 0)),
         })
 
-    # The archive download stops at 15 Apr 2026. tweets_live.json, kept fresh
+    # The archive download stops where it was taken. tweets_live.json, kept fresh
     # by pull_tweets.py, carries the record forward.
     live = os.path.join(OUT, "tweets_live.json")
     if os.path.exists(live):

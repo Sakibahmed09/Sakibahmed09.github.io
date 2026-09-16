@@ -9,8 +9,9 @@ from playwright.sync_api import sync_playwright
 import collections, sys
 
 BASE = "http://localhost:5177"
-PAGES = ["/", "/chapters/", "/craft/", "/ventures/", "/ventures/minideed/",
-         "/ventures/simply-smashed/", "/ventures/psk/", "/ventures/draper/",
+PAGES = ["/", "/chapters/", "/craft/", "/manifesto/", "/ventures/",
+         "/ventures/minideed/", "/ventures/simply-smashed/", "/ventures/psk/",
+         "/ventures/draper/", "/ventures/bilal/", "/ventures/dhikry/",
          "/404.html"]
 
 results = []
