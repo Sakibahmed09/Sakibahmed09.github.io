@@ -9,7 +9,6 @@
   d.className=`mobile-disclosure ${className}`;s.textContent=label;el.before(d);d.append(s,el);disclosures.push(d);return d;
  }
  disclosure($('.hero-content>p'),'Your LinkedIn team','hero-explainer');
- disclosure($('.format-intro'),'Choosing the right format','format-explainer');
  disclosure($('.arc-intro'),'How the strategy works','arc-explainer');
  disclosure($('.arc-reading'),'Explore the three arcs','arc-deeper');
  disclosure($('#package-features'),"What’s included",'package-inclusions');
@@ -18,6 +17,20 @@
  const portfolio=park($('#case-studies')),results=park($('#results'));
  const customerTabs=park($('.customer-tabs')),outcome=park($('.customer-outcome'));
 
+ // Mobile has one optional depth layer, rather than three mandatory chapters.
+ const depthSections=[$('#how-it-works'),$('#methodology')].map(park);
+ const depth=document.createElement('details');depth.className='mobile-approach';
+ depth.innerHTML='<summary>Explore our approach <span aria-hidden="true">+</span></summary><div class="approach-content"></div>';
+ $('#pricing').before(depth);
+ const contexts=[...document.querySelectorAll('.evidence-context')].map(park);
+ const mobileHeading=document.createElement('h2');mobileHeading.className='mobile-results-title';mobileHeading.textContent='Client results.';$('.authority-opening').before(mobileHeading);
+ const shortValue=document.createElement('p');shortValue.className='mobile-value';shortValue.textContent='Your leadership, employees and company page. One narrative. One senior partner running the channel.';$('.advantage-case').prepend(shortValue);
+ const attributed=document.createElement('p');attributed.className='mobile-attribution';attributed.textContent='Results reported by our clients.';$('.evidence-tabs').after(attributed);
+ function revealAnchor(){
+  if(mq.matches&&depthSections.some(el=>'#'+el.id===location.hash)){depth.open=true;requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView({behavior:'instant'}))}
+ }
+ addEventListener('hashchange',revealAnchor);
+ depth.addEventListener('toggle',()=>{depth.querySelector('summary span').textContent=depth.open?'−':'+'});
  // Native scrolling: examples remain real, inspectable and individually linked.
  const rails=[];
  function makeRail(selector,itemSelector,label){
@@ -36,7 +49,7 @@
   rail.addEventListener('scroll',()=>{clearTimeout(timer);timer=setTimeout(()=>{const r=rail.getBoundingClientRect();index=items.reduce((best,el,i)=>Math.abs(el.getBoundingClientRect().left-r.left)<Math.abs(items[best].getBoundingClientRect().left-r.left)?i:best,0);state()},120)},{passive:true});
   rails.push({rail,reset:()=>{index=0;rail.scrollLeft=0;state()}});state();
  }
- makeRail('.post-composition','.post','work example');makeRail('.format-collection','article','format');
+ makeRail('.post-composition','.post','work example');
 
  const questions=[...document.querySelectorAll('.faq>details')];
  const more=document.createElement('button');more.type='button';more.className='faq-more mobile-only';more.setAttribute('aria-expanded','false');
@@ -48,11 +61,14 @@
   root.classList.toggle('mobile-edition',mq.matches);
   disclosures.forEach(d=>{d.open=!mq.matches});
   if(mq.matches){
-   $('.backers').after(portfolio);portfolio.after(results);
+   $('.backers').after(results);results.after(portfolio);
+   depthSections.forEach(el=>depth.querySelector('.approach-content').append(el));
+   contexts.forEach(el=>el.closest('.evidence-result').querySelector('.evidence-detail summary').after(el));
+   document.querySelectorAll('.evidence-detail summary').forEach(el=>el.firstChild.textContent='Read the case ');
    $('#testimonial-panel').before(customerTabs);
    $('.testimonial-portrait').append(outcome);
-  }else placements.forEach(({el,marker})=>marker.after(el));
-  showQuestions();rails.forEach(r=>r.reset());
+  }else {placements.forEach(({el,marker})=>marker.after(el));depth.open=false;document.querySelectorAll('.evidence-detail summary').forEach(el=>el.firstChild.textContent='Inside the work ');}
+  showQuestions();rails.forEach(r=>r.reset());revealAnchor();
  }
  mq.addEventListener('change',apply);apply();
 })();
