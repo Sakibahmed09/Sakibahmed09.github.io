@@ -22,3 +22,14 @@
 /* Keep portrait provenance available without making it a competing caption. */
 .testimonial-portrait figcaption{min-height:0;padding-top:8px}.portrait-info{font-size:11px;line-height:1.5}.portrait-info summary{width:fit-content;cursor:pointer;min-height:32px;display:flex;align-items:center;gap:8px;list-style:none}.portrait-info summary::-webkit-details-marker{display:none}.portrait-info summary:after{content:'+'}.portrait-info[open] summary:after{content:'−'}.portrait-info>span{display:block;margin:4px 0}.testimonial-portrait .portrait-info button{display:block;margin:0;min-height:40px}.portrait-info[open]{padding-bottom:8px}
 @media(max-width:760px){.testimonial-portrait figcaption{min-height:0;padding-top:4px}.portrait-info summary{min-height:40px;font-size:12px}}
+
+/* Deliberate, stable logo rows on small screens. */
+@media(max-width:760px){
+ .trust .client-names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px;align-items:center;justify-items:start}
+ .trust .client-names>span{font-size:20px;gap:9px;min-width:0;max-width:100%}
+ .trust .client-names>span>img{flex:0 0 26px;width:26px;height:26px}
+ .trust .client-names>.client-cur8{width:102px;height:40px}
+ .trust .client-names>.client-sahl{width:108px;height:32px}
+ .trust .client-names>.client-centaurian{grid-column:1/-1;font-size:20px}
+ .trust{padding:24px var(--gutter) 28px}.trust>p{margin-bottom:22px}
+}

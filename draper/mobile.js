@@ -60,7 +60,7 @@
   root.classList.toggle('mobile-edition',mq.matches);
   disclosures.forEach(d=>{d.open=!mq.matches});
   if(mq.matches){
-   $('.backers').after(results);results.after(portfolio);
+   $('#clients').before(results);$('#clients').after(portfolio);
    depthSections.forEach(el=>depth.querySelector('.approach-content').append(el));
    contexts.forEach(el=>el.closest('.evidence-result').querySelector('.evidence-detail summary').after(el));
    document.querySelectorAll('.evidence-detail summary').forEach(el=>el.firstChild.textContent='Read the case ');
