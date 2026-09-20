@@ -8,7 +8,6 @@
   const d=document.createElement('details'),s=document.createElement('summary');
   d.className=`mobile-disclosure ${className}`;s.textContent=label;el.before(d);d.append(s,el);disclosures.push(d);return d;
  }
- disclosure($('.hero-content>p'),'Your LinkedIn team','hero-explainer');
  disclosure($('.arc-intro'),'How the strategy works','arc-explainer');
  disclosure($('.arc-reading'),'Explore the three arcs','arc-deeper');
  disclosure($('#package-features'),"What’s included",'package-inclusions');
