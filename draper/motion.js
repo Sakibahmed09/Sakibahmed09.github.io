@@ -4,11 +4,9 @@
  const root=document.documentElement, hero=document.querySelector('.hero');
  const preference=matchMedia('(prefers-reduced-motion: reduce)');
  const finePointer=matchMedia('(hover: hover) and (pointer: fine)');
- const toggle=document.querySelector('.motion-toggle');
  const activeAnimations=new Set();
- let paused=false, heroVisible=true, lastY=scrollY, frame=0;
- try{paused=sessionStorage.getItem('draper-motion')==='paused'}catch{}
- const allowed=()=>!paused&&!preference.matches;
+ let heroVisible=true, lastY=scrollY, frame=0;
+ const allowed=()=>!preference.matches;
  // Load ambient footage after the page, and only when motion can actually play.
  const heroFilm=hero.querySelector('.hero-film'),connection=navigator.connection;
  let filmReadyToLoad=false,filmRequested=false,filmFailed=false;
@@ -47,16 +45,10 @@
  }
  function syncMotion(){
   root.dataset.motion=allowed()?'on':'paused';
-  toggle.hidden=preference.matches;
-  toggle.setAttribute('aria-pressed',String(paused));
-  toggle.setAttribute('aria-label',paused?'Play motion':'Pause motion');
-  toggle.querySelector('.motion-label').textContent=paused?'Play motion':'Pause motion';
-  toggle.querySelector('.motion-symbol').textContent=paused?'▷':'Ⅱ';
   hero.classList.toggle('is-active',heroVisible&&!document.hidden);
   if(!allowed())activeAnimations.forEach(a=>a.finish());
   syncHeroFilm();
  }
- toggle.addEventListener('click',()=>{paused=!paused;try{sessionStorage.setItem('draper-motion',paused?'paused':'on')}catch{}syncMotion()});
  preference.addEventListener('change',syncMotion);document.addEventListener('visibilitychange',syncMotion);syncMotion();
  new IntersectionObserver(([entry])=>{heroVisible=entry.isIntersecting;syncMotion()},{threshold:0}).observe(hero);
 

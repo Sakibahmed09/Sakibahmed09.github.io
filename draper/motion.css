@@ -17,11 +17,11 @@ html{scroll-padding-top:120px}
 .hero-line{display:block;overflow:clip;padding-bottom:.095em;margin-bottom:-.095em}
 .hero-line>span{display:block}
 .hero-content{padding-bottom:8px}
-.hero-proof{padding-right:130px}
-.motion-toggle{position:absolute;right:var(--gutter);bottom:22px;z-index:3;display:flex;align-items:center;gap:10px;min-height:44px;background:transparent;color:#e4e7d9;font-size:11px;padding:8px 12px;background:#1c1e1ac9}
-.motion-symbol{display:grid;place-items:center;width:24px;height:24px;border:1px solid #e4e7d959;border-radius:50%;font-size:10px;letter-spacing:-2px;padding-right:2px}
-.motion-toggle:hover .motion-symbol,.motion-toggle:focus-visible .motion-symbol{background:#e4e7d91a;border-color:var(--paper)}
-.motion-toggle[hidden]{display:none}
+
+
+
+
+
 html[data-motion] .hero .hero-image{animation:architecture-breathe 20s var(--ease-inout) infinite alternate}
 html[data-motion] .hero .hero-light{animation:daylight 16s var(--ease-inout) infinite alternate}
 html[data-motion] .hero .draft-orbit{animation:drafting 36s linear infinite}
@@ -84,7 +84,7 @@ html[data-motion="paused"] *,html[data-motion="paused"] *:before,html[data-motio
  .hero{padding-top:42px}.hero h1{font-size:clamp(43px,9.8vw,70px)}.hero-art{position:relative;inset:auto;width:calc(100% + 2 * var(--gutter));height:340px;margin:32px calc(-1 * var(--gutter)) 0;order:2}
  .hero .hero-image{position:absolute;margin:0;inset:0;width:100%;height:100%;object-position:73% 54%}.hero-camera{inset:-5%}.hero-drafting{width:90%;height:160%;top:-15%;opacity:.3}
  .hero-proof{padding:22px 0 75px;margin-top:0;gap:15px 25px;justify-content:flex-start}.hero-proof span:first-child{width:auto}.hero-proof strong{font-size:20px;display:block;margin-bottom:3px}.hero-proof span{font-size:10px}
- .motion-toggle{bottom:14px;right:var(--gutter);font-size:11px}.hero-content>p{font-size:15px}.hero-content .button{min-height:56px}
+.hero-content>p{font-size:15px}.hero-content .button{min-height:56px}
  .customer-tabs{gap:12px}.customer-tabs button{min-height:68px}.customer-tabs button span{font-size:10px}.testimonial-copy blockquote{font-size:clamp(32px,8.8vw,40px)}
  .arc-scrubber{gap:18px;align-items:center}.arc-scrubber label{font-size:10px;max-width:110px;white-space:normal;line-height:1.4}.arc-scrubber label span{display:none}.arc-scrubber input{min-height:48px}
  .process-sheet{min-height:320px}.process-sheet>p{font-size:14px;min-height:68px}.process-sheet h3{min-height:78px}.process-track button{font-size:12px;flex-basis:120px}
