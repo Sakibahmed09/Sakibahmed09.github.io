@@ -1,0 +1,18 @@
+
+.ramp-arcs text{text-anchor:middle;font-size:23px;pointer-events:none}
+.arc-caption{font-size:11px;color:var(--muted,#687065);margin:12px 0 22px}
+.chart-phases button{transition:color .25s, border-color .25s;padding-bottom:14px;border-bottom:2px solid transparent}
+.chart-phases button[aria-selected=true]{border-bottom-color:currentColor}
+#phase-description{font-family:Editorial,serif;font-size:26px;min-height:0;line-height:1.2}
+.arc-reading{align-items:center;margin-top:24px;padding-top:24px}
+#arc-panel{min-height:145px}#arc-question{margin:0 0 8px}#arc-description{margin:0 0 18px}
+#arc-example{display:block;font-family:Editorial,serif;font-size:25px;line-height:1.25;max-width:560px}
+#arc-example:before,#arc-example:after{content:none}
+@media(max-width:760px){
+ .chart-phases{gap:12px}.chart-phases button{font-size:17px!important;flex:1;text-align:left}.chart-phases button span{font-size:10px!important}
+ .ramp-arcs text{font-size:25px}.arc-caption{font-size:10px;margin:4px 0 14px}
+ #phase-description{font-size:24px!important;min-height:0!important;margin-bottom:18px}
+ .arc-reading{display:block!important;margin-top:22px!important;padding-top:20px!important}
+ .arc-tabs{display:flex;flex-direction:row;gap:24px;margin-bottom:20px}.arc-tabs button{font-size:21px}
+ #arc-panel{min-height:142px}#arc-question{font-size:25px}#arc-description{font-size:13px;margin-bottom:12px}#arc-example{font-size:23px}
+}

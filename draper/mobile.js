@@ -9,7 +9,7 @@
   d.className=`mobile-disclosure ${className}`;s.textContent=label;el.before(d);d.append(s,el);disclosures.push(d);return d;
  }
  disclosure($('.arc-intro'),'How the strategy works','arc-explainer');
- disclosure($('.arc-reading'),'Explore the three arcs','arc-deeper');
+
  disclosure($('#package-features'),"What’s included",'package-inclusions');
  disclosure($('.footer-description'),'About Draper','footer-explainer');
 

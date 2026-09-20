@@ -83,9 +83,6 @@
  document.addEventListener('click',e=>{if(!header.contains(e.target)&&document.querySelector('#navigation').classList.contains('open'))document.querySelector('.menu-toggle').click()});
  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>header.classList.remove('is-away')));
 
- const scrubber=document.querySelector('#arc-progress');
- const stageLabels=['Establishment, months 1 to 3','Growth, months 3 to 6','Thought Leader, month 6 onwards'];
- scrubber.addEventListener('input',()=>document.querySelector(`[data-phase="${scrubber.value}"]`).click());
  document.addEventListener('draper:select',({detail:{selector,index,tab}})=>{
   let targets=[];
   if(selector==='[data-step]'){
@@ -95,7 +92,7 @@
    const track=tab.parentElement;if(track.scrollWidth>track.clientWidth)track.scrollTo({left:tab.offsetLeft-track.offsetLeft-track.clientWidth/2+tab.clientWidth/2,behavior:allowed()?'smooth':'instant'});
   }
   if(selector==='[data-customer]')targets=[document.querySelector('.testimonial-copy')];
-  if(selector==='[data-phase]'){targets=[document.querySelector('#phase-panel')];scrubber.value=index;scrubber.setAttribute('aria-valuetext',stageLabels[index]);}
+  if(selector==='[data-phase]'){targets=[document.querySelector('#phase-panel')];}
   if(selector==='[data-arc]')targets=[document.querySelector('#arc-panel')];
   if(selector==='[data-package]')targets=[document.querySelector('.package-about'),document.querySelector('#package-features')];
   targets.forEach((el,i)=>animate(el,[{opacity:.15,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:360,delay:i*35}));
