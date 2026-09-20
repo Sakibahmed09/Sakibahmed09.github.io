@@ -1,0 +1,6 @@
+/* The film replaces decorative CSS movement once a playable frame is available. */
+.hero-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:64% center;opacity:0;pointer-events:none;transition:opacity 900ms var(--ease-draper)}
+.hero.has-film .hero-film{opacity:.95}.hero.has-film .hero-image{animation:none;transform:none}.hero.has-film .hero-light,.hero.has-film .hero-drafting{opacity:0}
+@media(max-width:760px){.hero-film{object-position:68% center}.hero.has-film .hero-film{opacity:.9}}
+@media(prefers-reduced-motion:reduce){.hero .hero-film{display:none}}
+html[data-motion] .hero.has-film .hero-image,html[data-motion] .hero.has-film .hero-light,html[data-motion] .hero.has-film .draft-orbit,html[data-motion] .hero.has-film .draft-trace{animation:none}
