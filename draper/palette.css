@@ -83,3 +83,17 @@ footer{background:var(--paper)}
  .hero+.trust .client-sahl{width:100px;height:30px}
 }
 @media(max-width:760px){.mobile-edition .hero-proof{margin-top:44px;padding-bottom:24px}.mobile-edition .hero-proof strong{font-size:28px}}
+/* Portrait art direction: copy in shadow, light opening beneath it. */
+@media(max-width:760px){
+ .mobile-edition .hero{padding-top:40px;min-height:min(680px,85svh);display:flex;justify-content:flex-start}
+ .mobile-edition .hero-film{object-position:74% center}
+ .mobile-edition .hero:after{background:linear-gradient(180deg,rgba(25,24,21,.94) 0%,rgba(25,24,21,.83) 26%,rgba(25,24,21,.43) 49%,rgba(25,24,21,.08) 68%,rgba(25,24,21,.72) 100%)}
+ .mobile-edition .hero h1{font-size:clamp(37px,10.7vw,54px);line-height:1.035;letter-spacing:-.045em}
+ .mobile-edition .hero-content>p{max-width:285px;margin:22px 0 24px;color:#d9d1c2;line-height:1.6}
+ .mobile-edition .hero-content .button{min-height:49px;padding:14px 22px;background:#f3ead8}
+ .mobile-edition .hero-proof{margin-top:auto;padding-top:100px;padding-bottom:27px;gap:18px}
+ .mobile-edition .hero-proof strong{font-size:29px;margin-bottom:7px}
+ .mobile-edition .hero-proof>span{font-size:10px;color:#d9d1c2}
+ .mobile-edition .hero .hero-proof:before{background:linear-gradient(180deg,transparent,rgba(30,28,24,.68));inset:-50px calc(-1 * var(--gutter)) -30px}
+}
+@media(max-width:360px){.mobile-edition .hero{padding-top:30px;min-height:590px}.mobile-edition .hero h1{font-size:35px}.mobile-edition .hero-proof{padding-top:84px}.mobile-edition .hero-content>p{font-size:13px}}
