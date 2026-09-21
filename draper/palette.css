@@ -97,3 +97,5 @@ footer{background:var(--paper)}
  .mobile-edition .hero .hero-proof:before{background:linear-gradient(180deg,transparent,rgba(30,28,24,.68));inset:-50px calc(-1 * var(--gutter)) -30px}
 }
 @media(max-width:360px){.mobile-edition .hero{padding-top:30px;min-height:590px}.mobile-edition .hero h1{font-size:35px}.mobile-edition .hero-proof{padding-top:84px}.mobile-edition .hero-content>p{font-size:13px}}
+
+@media(max-width:760px){.mobile-edition .hero-film{object-position:center center}}
