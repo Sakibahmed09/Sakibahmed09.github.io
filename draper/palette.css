@@ -1,0 +1,17 @@
+/* Charcoal, parchment and a small, deliberate gold signal. */
+:root{--paper:#f2ecdf;--ink:#282620;--muted:#746f63;--line:#cec5b3;--blue:#d9cfba;--gold:#d7ae50}
+::selection{background:#e0bd6a;color:#24221d}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline-color:#a47c26}
+.hero{background:#24221d}.hero:after{background:linear-gradient(90deg,#24221d 7%,#24221df0 35%,#24221d00 72%)}
+.hero h1 em{color:#e1bc64}.hero-proof{background:#24221dd9}.hero-proof strong{color:#f5eedf}
+.advantage{background:#e6dece}.advantage-statement{background:#27241f}.advantage-statement:after{background:linear-gradient(0deg,#24211df5 5%,#24211d8a 50%,#24211d00 90%)}
+.advantage-case p,.advantage-case strong,.evidence-person p>span,.trust>p{color:#625b4f}.advantage-case>div+div{border-color:var(--line)}
+.authority{background:#e4dccb}.evidence-sheet{background:#f7f1e5}.evidence-tabs{border-color:#b8ac95}.evidence-tabs button{color:#766b58}.evidence-tabs button[aria-selected=true]:before{background:#b68c32}
+.portfolio{background:#26241f;color:#f2ecdf}.portfolio h2 em{color:var(--gold)}
+.portfolio .post-image,.portfolio .post:nth-child(2n) .post-image{background:#39362e}
+.portfolio .post figcaption p,.portfolio .post figcaption small{color:#c8bfad}.portfolio .post figcaption small{border-color:#645d4d}
+.portfolio .folio-controls button{border-color:#71654b!important;color:#e3bd64}.portfolio .folio-controls button:hover:not(:disabled){background:#d7ae50!important;color:#24221d!important}
+.methodology{background:#eee6d6}.founder-area{fill:#353129}.builder-area{fill:#b5a88a}.pulse-area{fill:#dbb75c}.arc-stroke{stroke:#5f5137}.arc-grid{stroke:#a39880}.pulse-hatch{opacity:.2}
+.chart-phases button[aria-selected=true]{border-bottom-color:#ad8126}.arc-tabs button[aria-selected=true]{color:#946b1d}
+.process,.pricing{background:#f2ecdf}.process-sheet,.package-page{background:#e8dfcd}.closing{background:#25231e;color:#f2ecdf}.closing h2 em{color:var(--gold)}
+@media(max-width:760px){.hero:after{display:none}.advantage-statement:after{background:linear-gradient(90deg,#24211dee,#24211d35)}}
