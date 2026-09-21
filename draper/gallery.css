@@ -1,0 +1,24 @@
+/* A browsable collection, with a consistent frame for very different work. */
+@media(min-width:761px){
+ .portfolio{padding-top:80px;padding-bottom:65px}
+ .portfolio h2{font-size:clamp(58px,6.5vw,94px);margin-bottom:38px;line-height:1}
+ .portfolio h2 br{display:none}.portfolio h2 em{white-space:nowrap}
+ .portfolio .post-composition{display:flex;flex-direction:row;gap:28px;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0;padding:0 0 24px;margin:0;scrollbar-width:none;overscroll-behavior-x:contain}
+ .post-composition::-webkit-scrollbar{display:none}
+ .portfolio .post-composition .post{flex:0 0 78%;width:78%;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;margin:0;align-items:center;scroll-snap-align:start;align-self:stretch}
+ .portfolio .post-image{height:450px;padding:20px;display:flex;align-items:center;justify-content:center;background:#deded2}
+ .portfolio .post-image img{height:100%;width:100%;object-fit:contain;object-position:center;max-height:none}
+ .portfolio .post:nth-child(2n) .post-image{background:#c5d1d2}
+ .portfolio .post figcaption{padding:20px 12px 20px 0;align-self:center}
+ .portfolio .post figcaption>a,.portfolio .post figcaption>strong{font-size:clamp(27px,3vw,44px);line-height:1.08;display:block}
+ .portfolio .post figcaption p{font-size:13px;line-height:1.7;margin:18px 0}
+ .portfolio .post figcaption small{display:block;border-top:1px solid var(--line);padding-top:14px;font-size:12px}
+ .portfolio .post-image>span{opacity:1;transform:none}
+ .portfolio .folio-controls.mobile-only{display:flex!important;justify-content:flex-end;align-items:center;gap:14px;margin-top:4px}
+ .portfolio .folio-controls>span{margin-right:auto;font-size:12px;font-variant-numeric:tabular-nums}
+ .portfolio .folio-controls button{width:52px;height:52px;border:1px solid var(--line);background:transparent;font-size:25px;transition:background .2s,color .2s}
+ .portfolio .folio-controls button:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+ .portfolio .folio-controls button:disabled{opacity:.25}
+}
+@media(min-width:761px) and (max-width:1100px){.portfolio .post-composition .post{flex-basis:88%;width:88%;gap:20px}.portfolio .post-image{height:365px}}
+@media(min-width:761px){.portfolio .folio-controls>span{order:-1}}
