@@ -31,3 +31,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline-color:#a47c26
  footer .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:10px}
 }
 footer{background:var(--paper)}
+@media(max-width:760px){
+ .mobile-edition .hero h1{font-size:clamp(38px,10.8vw,58px);line-height:1.02;letter-spacing:-.045em;text-wrap:initial;max-width:none}
+ .mobile-edition .hero-line,.mobile-edition .hero-line>span{display:block}
+ .mobile-edition .hero-line:nth-child(3){margin-top:12px}
+ .mobile-edition .hero h1 em{color:#e1bc64}
+ .mobile-edition .hero-content>p{font-size:14px;line-height:1.55;color:#d0c9bb;max-width:300px;margin:26px 0 22px;text-wrap:pretty}
+ .mobile-edition .hero-content .button{font-size:14px;min-height:48px}
+}
+@media(max-width:360px){.mobile-edition .hero h1{font-size:36px}.mobile-edition .hero-content>p{font-size:13px;margin-top:22px}}
