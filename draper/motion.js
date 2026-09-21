@@ -86,9 +86,9 @@
  document.addEventListener('draper:select',({detail:{selector,index,tab}})=>{
   let targets=[];
   if(selector==='[data-step]'){
-   targets=[document.querySelector('#step-title'),document.querySelector('#step-copy'),document.querySelector('.page-number')];
+   targets=[document.querySelector('#step-title'),document.querySelector('#step-copy'),document.querySelector('.work-specimen:not([hidden])')];
    const art=document.querySelector('.process-art');
-   if(allowed())art.style.transform=`scale(${1+index*.007}) translateX(${-index*.25}%)`;
+   
    const track=tab.parentElement;if(track.scrollWidth>track.clientWidth)track.scrollTo({left:tab.offsetLeft-track.offsetLeft-track.clientWidth/2+tab.clientWidth/2,behavior:allowed()?'smooth':'instant'});
   }
   if(selector==='[data-customer]')targets=[document.querySelector('.testimonial-copy')];
