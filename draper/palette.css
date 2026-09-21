@@ -56,3 +56,6 @@ footer{background:var(--paper)}
  .mobile-edition .hero-proof>span{font-size:10px;line-height:1.4}
 }
 @media(max-width:360px){.mobile-edition .hero h1{font-size:35px}.mobile-edition .hero-proof{margin-top:56px}.mobile-edition .hero-content>p{font-size:13px}}
+/* Remove the app tile's white patch against the client strip. */
+.client-clickup img{mix-blend-mode:multiply}
+.client-clickup img{clip-path:inset(12%)}
