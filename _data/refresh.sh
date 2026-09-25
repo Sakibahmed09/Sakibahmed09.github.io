@@ -39,7 +39,13 @@ if [ -n "$(git status --porcelain)" ]; then
   git add -A
   git commit -q -m "Refresh: new posts through $(date '+%d %b %Y')"
   if git remote get-url origin >/dev/null 2>&1; then
-    git push -q origin HEAD && echo "pushed"
+    # the Draper preview under /draper/ is pushed to this repo from elsewhere
+    if git pull -q --rebase origin main; then
+      git push -q origin HEAD:main && echo "pushed"
+    else
+      git rebase --abort 2>/dev/null || true
+      echo "warn: could not rebase onto origin/main, committed locally only"
+    fi
   else
     echo "committed locally (no remote yet)"
   fi

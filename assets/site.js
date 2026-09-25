@@ -700,6 +700,7 @@
       { t: "Simply Clo",         i: "shirt", k: "side hoodie palestine clothing", go: HOME + "ventures/simply-clo/" },
       { t: "Simply Foundation",  i: "book", k: "side school huffadh charity", go: HOME + "ventures/simply-foundation/" },
       { t: "Chapters",           i: "scroll", k: "story writing timeline", go: HOME + "chapters/" },
+      { t: "The Corridor",       i: "pen", k: "manifesto essay writing witness", go: HOME + "manifesto/" },
       { t: "How this site works", i: "pencil", k: "craft colophon design type", go: HOME + "craft/" },
       { t: "Toggle dark mode",   i: "moon", k: "theme light night maghrib", fn: toggleTheme },
       { t: "Count tasbih",       i: "dot", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
