@@ -548,7 +548,9 @@
           '<span class="sep">\u00b7</span><time>' + pretty(p.d) + '</time>' +
           '<span class="mark" aria-hidden="true">' + (isX ? "\ud835\udd4f" : "in") + '</span></header>' +
           '<div class="body"><p>' + esc(txt) + '</p>' +
-          (p.m ? '<img class="shot" src="' + media + p.m + '" alt="Photo from the post." loading="lazy">' : '') +
+          (p.m ? (p.v
+            ? '<a class="shot-play" href="' + p.u + '" aria-label="Play the video on X"><img class="shot" src="' + media + p.m + '" alt="Still from the video in the post." loading="lazy"></a>'
+            : '<img class="shot" src="' + media + p.m + '" alt="Photo from the post." loading="lazy">') : '') +
           '</div>' +
           '<footer><span class="stats">' + bits.join(" \u00b7 ") + '</span>' +
           '<a class="open" data-out href="' + p.u + '">Open</a></footer>' +

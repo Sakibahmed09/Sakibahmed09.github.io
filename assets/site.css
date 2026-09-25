@@ -1159,6 +1159,22 @@ kbd {
   border-radius: 12px;
   border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
 }
+/* a still from a video: the button says it plays, and it opens the post on X */
+.post .shot-play { position: relative; display: block; margin-top: var(--s2); }
+.post .shot-play .shot { margin-top: 0; }
+.post .shot-play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.25rem;
+  height: 3.25rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M7 4.5v11l9-5.5z' fill='white'/%3E%3C/svg%3E") 55% 50% / 1.35rem no-repeat;
+  transition: background-color var(--swift) ease;
+}
+.post .shot-play:hover::after { background-color: rgb(0 0 0 / 0.75); }
 
 .post > .col > footer {
   display: flex;

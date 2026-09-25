@@ -199,6 +199,23 @@ MEDIA_OUT = os.path.join(ROOT, "assets", "media")
 FEED_OUT = os.path.join(ROOT, "assets", "feed")
 
 
+def video_still(src):
+    """A frame from early in the clip, for posts whose only media is a video."""
+    import subprocess, tempfile
+    out = os.path.join(tempfile.gettempdir(), os.path.basename(src) + ".jpg")
+    for at in ("0.5", "0"):
+        try:
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", at,
+                            "-i", src, "-frames:v", "1", out],
+                           check=True, timeout=60)
+            if os.path.exists(out) and os.path.getsize(out):
+                return out
+        except Exception:
+            pass
+    print("   !! could not take a still from %s" % os.path.basename(src))
+    return None
+
+
 def stage_image(fname):
     """Copy a photo out of the archive, downscaled for the web.
     Returns the site-relative filename, or None if it isn't there."""
@@ -215,6 +232,11 @@ def stage_image(fname):
         print("   !! missing photo: %s" % fname)
         return None
     os.makedirs(MEDIA_OUT, exist_ok=True)
+    if fname.lower().endswith(".mp4"):
+        still = video_still(src)
+        if not still:
+            return None
+        src = still
     if True:
         try:
             from PIL import Image
@@ -250,8 +272,15 @@ def card(p, i, img=None, alt=""):
         bits.append("%s repost%s" % ("{:,}".format(p["rt"]), "" if p["rt"] == 1 else "s"))
     shot = ""
     if img:
-        shot = ('\n        <img class="shot" src="../../assets/media/%s" alt="%s" '
+        if p.get("video"):
+            alt = "Still from the video in the post."
+        shot = ('<img class="shot" src="../../assets/media/%s" alt="%s" '
                 'loading="lazy" decoding="async">' % (img, html.escape(alt)))
+        if p.get("video"):
+            # a still is not the video, so it says so and opens the real thing
+            shot = ('<a class="shot-play" href="%s" aria-label="Play the video on X">%s</a>'
+                    % (p.get("url", "#"), shot))
+        shot = "\n        " + shot
     # a real post, wearing its own platform's clothes
     if src == "x":
         who = ('<span class="name">sakib</span>'
@@ -418,7 +447,7 @@ def main():
         has_posts = any(b.get("posts") for b in v["beats"])
         lede = ("What I say about it now, and what I was actually posting at the time."
                 if has_posts else
-                "No posts to show against this one, which is the whole point of it.")
+                "No posts to show for this one, and that's on purpose.")
         out = [HEAD.format(title=v["title"], years=v["years"], stand=v["stand"],
                            stand_plain=re.sub("<[^>]+>", "", v["stand"]),
                            proof=proof, link=link, lede=lede, clients=client_block(v))]
@@ -483,7 +512,8 @@ def main():
             feed = [{"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
                      "u": r.get("url", ""), "f": r.get("fav", 0),
                      "r": r.get("rt", 0),
-                     "m": stage_image(r["media"][0]) if r.get("media") else None}
+                     "m": stage_image(r["media"][0]) if r.get("media") else None,
+                     "v": 1 if r.get("video") else 0}
                     for r in rest]
             with open(os.path.join(FEED_OUT, slug + ".json"), "w") as fh:
                 json.dump(feed, fh)
@@ -552,7 +582,8 @@ def main():
         feed.append({"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
                      "u": r.get("url", ""), "f": r.get("fav", 0),
                      "r": r.get("rt", 0),
-                     "m": stage_image(r["media"][0]) if r.get("media") else None})
+                     "m": stage_image(r["media"][0]) if r.get("media") else None,
+                     "v": 1 if r.get("video") else 0})
         if len(feed) >= 400:
             break
     with open(os.path.join(FEED_OUT, "all.json"), "w") as fh:

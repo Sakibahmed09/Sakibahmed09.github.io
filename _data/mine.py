@@ -34,10 +34,14 @@ VENTURES = {
     "bilal":       [r"\bbilal\b", r"masjid.{0,15}(time|display|tv)",
                     r"\bathan\b", r"\badhan\b"],
     "lofi":        [r"lofi muslim", r"lofimuslim", r"\blofi\b"],
-    "foundation":  [r"simply foundation", r"simplyfoundatn", r"\bhuffadh\b",
-                    r"\bhifz\b", r"boarding school"],
+    # huffadh and hifz alone pulled in Simply Smashed's Quran Revision Project
+    # posts, and put a Barking family's sons on the school's page
+    "foundation":  [r"simply foundation", r"simplyfoundatn",
+                    r"boarding school", r"hifdh school"],
     "pouches":     [r"phone pouch", r"pouches", r"khutbah.{0,30}phone"],
 }
+# a 2016 tweet about someone else's boarding school is not the Foundation
+SINCE = {"foundation": "2022-01-01"}
 
 
 def tidy(t):
@@ -51,18 +55,30 @@ def tidy(t):
 
 
 def media_index():
-    """tweet id -> its image files in the archive"""
+    """tweet id -> its image files and its video files in the archive"""
     import collections
     d = os.path.join(ARCHIVE_DIR, "tweets_media") if ARCHIVE_DIR else ""
-    idx = collections.defaultdict(list)
+    images, videos = collections.defaultdict(list), collections.defaultdict(list)
     if os.path.isdir(d):
         for f in os.listdir(d):
             if f.lower().endswith((".jpg", ".png")):
-                idx[f.split("-")[0]].append(f)
-    return idx
+                images[f.split("-")[0]].append(f)
+            elif f.lower().endswith(".mp4"):
+                videos[f.split("-")[0]].append(f)
+    return images, videos
 
 
-MEDIA = media_index()
+MEDIA, VIDEOS = media_index()
+
+
+def media_for(tweet_id):
+    """First photo if the post has one; otherwise its video, which build.py
+    turns into a still."""
+    if MEDIA.get(tweet_id):
+        return sorted(MEDIA[tweet_id])[:1], False
+    if VIDEOS.get(tweet_id):
+        return sorted(VIDEOS[tweet_id])[:1], True
+    return [], False
 
 
 MONTHS = dict(Jan=1, Feb=2, Mar=3, Apr=4, May=5, Jun=6,
@@ -75,7 +91,16 @@ def iso(d):
     return "%s-%02d-%02d" % (p[5], MONTHS[p[1]], int(p[2]))
 
 
+def deleted_ids():
+    """Posts he has since deleted on X, which pull_tweets.py spots and flags."""
+    live = os.path.join(OUT, "tweets_live.json")
+    if not os.path.exists(live):
+        return set()
+    return {t["id"] for t in json.load(open(live)) if t.get("deleted")}
+
+
 def load_tweets():
+    gone = deleted_ids()
     data = []
     for f in ARCHIVE_FILES:
         raw = open(f, encoding="utf-8").read()
@@ -83,7 +108,7 @@ def load_tweets():
     out, seen = [], set()
     for row in data:
         t = row.get("tweet", row)
-        if t["id_str"] in seen:
+        if t["id_str"] in seen or t["id_str"] in gone:
             continue
         seen.add(t["id_str"])
         txt = html.unescape(t.get("full_text", ""))
@@ -93,8 +118,10 @@ def load_tweets():
             # keep self-threads only
             if t.get("in_reply_to_user_id_str") != "355236713":
                 continue
+        media, video = media_for(t["id_str"])
         out.append({
-            "media": sorted(MEDIA.get(t["id_str"], []))[:1],
+            "media": media,
+            "video": video,
             "id": t["id_str"],
             "date": iso(t["created_at"]),
             "text": txt,
@@ -108,8 +135,10 @@ def load_tweets():
     if os.path.exists(live):
         have = {t["id"] for t in out}
         for t in json.load(open(live)):
-            if t["id"] not in have:
-                out.append(dict(t, media=[]))
+            if t["id"] not in have and t["id"] not in gone:
+                media, video = media_for(t["id"])
+                out.append(dict(t, media=t.get("media") or media,
+                                video=bool(t.get("video") or video)))
     return out
 
 
@@ -150,7 +179,8 @@ def main():
                    url="https://x.com/mertesakib/status/" + t["id"])
               for t in tweets if rx.search(t["text"])]
         lp = [p for p in li if rx.search(p["text"])]
-        rows = sorted(tw + lp, key=lambda r: r["date"])
+        rows = sorted((r for r in tw + lp if r["date"] >= SINCE.get(name, "")),
+                      key=lambda r: r["date"])
         buckets[name] = rows
         top = sorted(rows, key=lambda r: -r["fav"])[:6]
         print("\n=== %s: %d posts (%d x, %d li) ==="

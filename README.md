@@ -36,6 +36,11 @@ Data comes from two places already on disk:
   Existing post URLs keep the old slug on purpose: LinkedIn pins a post URL to the handle
   you had when you posted it, and rewriting them to the new slug 404s (verified).
 
+Photos: archive tweets use the archive's own files, and a video-only tweet gets a still
+from its clip. Newer tweets come from Typefully, which carries no media, so
+`pull_tweets.py` asks fxtwitter for each one's first photo or video still once. The same
+pass notices tweets deleted on X (Typefully keeps reporting them) and they drop off the site.
+
 Three files in `_data/` drive it:
 
 | File | Job |
