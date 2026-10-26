@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Top up tweets_live.json from Typefully's X analytics.
+"""Top up tweets_live.json from @mertesakib's timeline on fxtwitter.
 
-The analytics feed carries every post on the account (not just ones published
-through Typefully), so this is the forward continuation of the X archive
-download, which stops at 15 Apr 2026. Overlap is deduped by status id.
+This is the forward continuation of the X archive download, which stops at
+15 Apr 2026. Overlap is deduped by status id. Typefully's analytics feed did
+this job until it was dropped from their public API in Sep 2026.
 """
-import json, os, datetime, time, urllib.error, urllib.request
+import json, os, datetime, time, urllib.error, urllib.parse, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "tweets_live.json")
@@ -18,33 +18,43 @@ class Deleted(Exception):
     pass
 
 
-SOCIAL_SET = 209256  # @mertesakib
+HANDLE = "mertesakib"
 FLOOR = "2026-04-01"
 REPULL_DAYS = 30  # re-read a trailing window so engagement counts settle
+MAX_PAGES = 60
+BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/130 Safari/537.36")
 
 
-def api_key():
-    v = os.environ.get("TYPEFULLY_API_KEY", "").strip()
-    if v:
-        return v
-    p = os.path.expanduser("~/.config/typefully/api_key")
-    if os.path.exists(p):
-        return open(p).read().strip()
-    cfg = os.path.expanduser(
-        "~/claude-draper/datstra-slack-watcher/config.json")
-    return json.load(open(cfg))["typefully_api_key"]
+def timeline_page(cursor=None):
+    """fxtwitter answers about one call in three with an empty 404, so retry."""
+    url = ("https://api.fxtwitter.com/2/profile/%s/statuses?count=50" % HANDLE)
+    if cursor:
+        url += "&cursor=" + urllib.parse.quote(cursor)
+    req = urllib.request.Request(url, headers={"User-Agent": BROWSER_UA})
+    for attempt in range(8):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                d = json.load(r)
+        except urllib.error.HTTPError as e:
+            d = json.load(e)
+        if d.get("results"):
+            return d
+        time.sleep(2 + 2 * attempt)
+    raise RuntimeError("fxtwitter timeline kept coming back empty")
 
 
-def fetch(url, key):
-    req = urllib.request.Request(
-        url, headers={"Authorization": "Bearer " + key})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+def own_post(r):
+    author = ((r.get("author") or {}).get("screen_name") or "").lower()
+    if author != HANDLE or r.get("reposted_by"):
+        return False
+    to = ((r.get("replying_to") or {}).get("screen_name") or HANDLE).lower()
+    return to == HANDLE
 
 
 def deleted_on_x(tweet_id):
-    """Typefully keeps reporting a post after he deletes it; X's embed
-    endpoint answers with a tombstone instead."""
+    """A cached post stays here after he deletes it; X's embed endpoint
+    answers with a tombstone instead."""
     req = urllib.request.Request(
         "https://cdn.syndication.twimg.com/tweet-result?id=%s&token=a" % tweet_id,
         headers={"User-Agent": "Mozilla/5.0"})
@@ -54,8 +64,8 @@ def deleted_on_x(tweet_id):
 
 
 def fetch_media(tweet_id):
-    """Typefully's analytics carry no media, so ask fxtwitter (free, no key)
-    for the post's first photo, or the still for a video, and keep a copy."""
+    """Ask fxtwitter (free, no key) for the post's first photo, or the still
+    for a video, and keep a copy."""
     req = urllib.request.Request(
         "https://api.fxtwitter.com/mertesakib/status/" + tweet_id,
         headers={"User-Agent": "sakib.lol refresh"})
@@ -89,7 +99,6 @@ def fetch_media(tweet_id):
 
 
 def main():
-    key = api_key()
     cache = {}
     if os.path.exists(OUT):
         cache = {t["id"]: t for t in json.load(open(OUT))}
@@ -99,32 +108,37 @@ def main():
         newest = max(t["date"] for t in cache.values())
         start = max(FLOOR, (datetime.date.fromisoformat(newest)
                             - datetime.timedelta(days=REPULL_DAYS)).isoformat())
-    end = datetime.date.today().isoformat()
 
-    url = ("https://api.typefully.com/v2/social-sets/%d/analytics/x/posts"
-           "?start_date=%s&end_date=%s&limit=100" % (SOCIAL_SET, start, end))
     added = 0
-    while url:
-        d = fetch(url, key)
+    cursor = None
+    for _ in range(MAX_PAGES):
+        d = timeline_page(cursor)
+        dates = []
         for r in d["results"]:
-            txt = (r.get("preview_text") or "").strip()
-            if not txt or txt.startswith("RT @"):
+            date = datetime.datetime.utcfromtimestamp(
+                r["created_timestamp"]).date().isoformat()
+            dates.append(date)
+            txt = (r.get("text") or "").strip()
+            if not txt or not own_post(r) or date < start:
                 continue
-            eng = (r.get("metrics") or {}).get("engagement") or {}
-            if r["post_id"] not in cache:
+            if r["id"] not in cache:
                 added += 1
-            kept = {k: v for k, v in cache.get(r["post_id"], {}).items()
+            kept = {k: v for k, v in cache.get(r["id"], {}).items()
                     if k in MEDIA_KEYS}
-            cache[r["post_id"]] = dict({
-                "id": r["post_id"],
-                "date": r["created_at"][:10],
+            cache[r["id"]] = dict({
+                "id": r["id"],
+                "date": date,
                 "text": txt,
-                "fav": int(eng.get("likes") or 0),
-                "rt": int(eng.get("shares") or 0),
-                "url": r.get("url")
-                or "https://x.com/mertesakib/status/" + r["post_id"],
+                "fav": int(r.get("likes") or 0),
+                "rt": int(r.get("reposts") or 0),
+                "url": "https://x.com/%s/status/%s" % (HANDLE, r["id"]),
             }, **kept)
-        url = d.get("next")
+        cursor = (d.get("cursor") or {}).get("bottom")
+        # reposts and the pinned post carry old dates, so stop only once the
+        # newest post on a page is already older than the window
+        if not cursor or max(dates) < start:
+            break
+        time.sleep(1)
 
     looked = 0
     recent = (datetime.date.today()
@@ -133,7 +147,7 @@ def main():
         if t.get("deleted"):
             continue
         if t.get("media_checked"):
-            # he sometimes deletes a post days later, and Typefully keeps it
+            # he sometimes deletes a post days later, after it was cached
             if t["date"] >= recent:
                 try:
                     if deleted_on_x(t["id"]):

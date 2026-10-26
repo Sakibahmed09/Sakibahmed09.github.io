@@ -37,9 +37,10 @@ Data comes from two places already on disk:
   you had when you posted it, and rewriting them to the new slug 404s (verified).
 
 Photos: archive tweets use the archive's own files, and a video-only tweet gets a still
-from its clip. Newer tweets come from Typefully, which carries no media, so
-`pull_tweets.py` asks fxtwitter for each one's first photo or video still once. The same
-pass notices tweets deleted on X (Typefully keeps reporting them) and they drop off the site.
+from its clip. Newer tweets come from the @mertesakib timeline on fxtwitter (free, no key;
+Typefully dropped its analytics feed in Sep 2026), and `pull_tweets.py` saves each one's
+first photo or video still once. The same pass notices cached tweets later deleted on X,
+and they drop off the site.
 
 Three files in `_data/` drive it:
 

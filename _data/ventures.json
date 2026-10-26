@@ -271,13 +271,6 @@
         ]
       },
       {
-        "say": "Those two years at the restaurant taught me more about building than any MBA could. Every decision I make at Draper now, I can trace back to something I learned in that kitchen.",
-        "posts": [
-          "I built the highest rated burger joint in London. 4.9 stars, 3000+ reviews. Those two years",
-          "I was building an AI company between burger orders"
-        ]
-      },
-      {
         "say": "Content is product and product is content. I've said it maybe 200 times now. We took a burger joint to the top of London with zero paid marketing, just by documenting the mess of building it.",
         "posts": [
           "Content is product. Product is content."
@@ -297,8 +290,9 @@
         ]
       },
       {
-        "say": "Mustafa brought a deep work system over from his old agency, with client calls stacked on Mondays and Wednesdays and the rest of the week kept for building. I thought it was a bit rigid, and it ended up doubling our deep work without adding an hour.",
+        "say": "The first year nearly broke me. In October 2025 I fell asleep at the wheel in traffic and drove into the back of the car in front. Nobody was hurt. So we hired, and stacked every client call into Mondays and Wednesdays so the rest of the week is for building.",
         "posts": [
+          "Last October I fell asleep at the wheel",
           "We 2x'd our deep work without adding a single hour"
         ]
       },
@@ -315,9 +309,15 @@
         ]
       },
       {
-        "say": "Nine months ago people called me crazy for these ideas, and now the industry has names for them, forward deployed content engineers and AI native services firms.",
+        "say": "People called these ideas crazy when I started posting them, and now the industry has names for them, forward deployed content engineers and AI native services firms.",
         "posts": [
           "they called me crazy for these ideas 9 months ago"
+        ]
+      },
+      {
+        "say": "So far that's 400M+ views for 100+ founders and north of £20M in pipeline from the content, and we're hiring.",
+        "posts": [
+          "IM HIRING FOR DRAPER!"
         ]
       }
     ],
@@ -355,11 +355,11 @@
     "years": "2024 –",
     "kind": "side",
     "bucket": "bilal",
-    "stand": "An athan that tells you when to leave for jama'ah at your masjid, not when the prayer starts. Out since 11 September 2026 on phone, Mac and the TV in your kitchen.",
+    "stand": "An athan that tells you when to leave for jama'ah at your masjid, not when the prayer starts. On the iPhone, the Mac and the TV in your kitchen.",
     "proof": [
       [
-        "2,500+",
-        "masajid, times collected and checked"
+        "24,000+",
+        "masajid around the world"
       ],
       [
         "1,400+",
@@ -392,7 +392,7 @@
         ]
       },
       {
-        "say": "It launched properly on 11 September 2026 with the jama'ah times of over 2,500 masajid, on your phone, your Mac and the TV. The athan goes off when it's time to leave, and it's free and stays free. An iPhone app is coming soon, and Android after that, iA.",
+        "say": "It launched on 11 September 2026 on the web, the Mac and the TV. The athan goes off when it's time to leave, there's no sign up, and it's free and stays free.",
         "posts": [
           "Introducing Bilal. Finally.",
           "Bilal for Mac",
@@ -403,6 +403,12 @@
         "say": "Before I'd announced anything it was already going round WhatsApp groups, and it had 1,400 people on it in a couple of days.",
         "posts": [
           "Even before launching bilal started being shared"
+        ]
+      },
+      {
+        "say": "The iPhone app followed on 9 October. It now knows over 24,000 masajid around the world, and Android is next, iA.",
+        "posts": [
+          "your masjid time. in your pocket."
         ]
       },
       {

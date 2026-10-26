@@ -24,7 +24,7 @@ else
   echo "warn: scrape-linkedin.sh missing, using cache only"
 fi
 
-# 1.5 top up the live tweet cache (Typefully X analytics, all posts on the account)
+# 1.5 top up the live tweet cache (fxtwitter timeline for @mertesakib)
 python3 pull_tweets.py || echo "warn: tweet pull failed, carrying on with cache"
 
 # 2. re-mine both sources into buckets
