@@ -333,6 +333,8 @@ for name,w in [('Regular',400),('Medium',500),('Semibold',600)]:
   if record.nameID in [1,2,4,6]:
    value={1:'Sakib Grotesk '+name,2:'Regular',4:'Sakib Grotesk '+name,6:'SakibGrotesk-'+name}[record.nameID];record.string=value.encode(record.getEncoding())
  inst.save(OUT/f'SakibGrotesk-{name}.ttf')
+ if name=='Regular':
+  inst.flavor='woff2';inst.save(OUT/'SakibGrotesk-Regular.woff2')
 coverage={'version':'0.400','glyph_count':len(ORDER),'unicode_count':len(CMAP),'characters':''.join(chr(c) for c in sorted(CMAP)),'axes':{'wght':[400,400,650]},'status':'Newly drawn reconstruction study after public Söhne specimens; not Söhne font software.'}
 (ROOT/'coverage.json').write_text(json.dumps(coverage,ensure_ascii=False,indent=2))
 print('Built Sakib Grotesk: variable TTF/WOFF2 and three static cuts.')

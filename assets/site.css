@@ -1,4 +1,4 @@
-@font-face { font-family: 'Sakib Grotesk'; font-style: normal; font-weight: 400 650; font-display: swap; src: url(fonts/sakib-grotesk-v04.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00A3, U+00B7, U+00C0-00C5, U+00C7-00CF, U+00D1-00D6, U+00D9-00DD, U+00E0-00E5, U+00E7-00EF, U+00F1-00F6, U+00F9-00FD, U+00FF, U+0131, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+20AC, U+2190, U+2192; }
+@font-face { font-family: 'Sakib Grotesk'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/sakib-grotesk-regular-v041.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00A3, U+00B7, U+00C0-00C5, U+00C7-00CF, U+00D1-00D6, U+00D9-00DD, U+00E0-00E5, U+00E7-00EF, U+00F1-00F6, U+00F9-00FD, U+00FF, U+0131, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+20AC, U+2190, U+2192; }
 /* Self-hosted so nothing render-blocking points at another origin.
    Latin only: latin-ext was dead weight for this site. */
 @font-face { font-family: 'Schibsted Grotesk'; font-style: italic; font-weight: 400 600; font-display: swap; src: url(fonts/schibsted-grotesk-italic.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -1963,3 +1963,6 @@ a.door { cursor: pointer; }
 /* Sakib Grotesk is upright only. Use the existing genuine italic for emphasis. */
 em, i, cite, .prose em, .accent, .article em, .specimen .s2,
 .lost .big, .memo em, .cl-said { font-family: var(--italic); }
+
+/* Only the Regular drawing is ready; never synthesize heavier outlines. */
+body { font-synthesis: none; }
