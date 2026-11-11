@@ -56,8 +56,9 @@
   --out:    cubic-bezier(0.19, 1, 0.22, 1);
   --nudge:  cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* type: Sakib Grotesk for the memo, a true italic, a biro, and Amiri for dhikr */
-  --sans:   "Sakib Grotesk", "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  /* type: custom display titles, Schibsted reading text, a biro, and Amiri for dhikr */
+  --sans:   "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --display: "Sakib Grotesk", "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --serif:  var(--sans);
   --italic: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --pen:    "Reenie Beanie", "Segoe Script", cursive;
@@ -124,10 +125,9 @@ html {
 
 body {
   font-family: var(--sans);
-  font-size: 15.5px;
-  line-height: 1.6;
-  /* Sakib Grotesk has firmer stems: Regular keeps long passages open.
-     Neutral tracking at reading sizes; tighter settings belong to headings. */
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  /* Schibsted carries small text and long passages; custom outlines are display-only. */
   font-weight: 400;
   letter-spacing: 0;
   color: var(--ink);
@@ -651,7 +651,7 @@ kbd {
 .crumb:hover .back { transform: translateX(-0.22em); }
 .crumb:hover { color: var(--ink); }
 
-.article-head h1 { font-size: var(--t-2xl); font-weight: 600; letter-spacing: -0.018em; }
+.article-head h1 { font-family: var(--display); font-size: clamp(1.75rem, 2.5vw, 2rem); font-weight: 400; letter-spacing: -0.018em; }
 .article-head .when {
   letter-spacing: 0; color: var(--ink-3); font-size: var(--t-s); margin-top: 0.2rem; }
 .article-head .stand {
@@ -1058,7 +1058,7 @@ kbd {
 .swatches figcaption { font-size: var(--t-s); color: var(--ink-2); }
 
 .specimen { display: grid; gap: var(--s2); }
-.specimen .s1 { font-weight: 600; }
+.specimen .s1 { font-family: var(--display); font-size: 1.75rem; font-weight: 400; line-height: 1.2; }
 .specimen .s2 { font-style: italic; font-weight: 500; font-size: var(--t-l); }
 .specimen .s3 { font-family: var(--pen); font-size: var(--pen-l); color: var(--seal); transform: rotate(-1.4deg); }
 .specimen .s4 { font-family: var(--arabic); font-size: var(--pen-s); }
@@ -1623,8 +1623,9 @@ kbd {
    opening quote mark hangs in the margin so the words line up, not the mark. */
 .memo-head dl div.re { margin-top: 1.45rem; align-items: baseline; }
 .memo-head .re dd {
-  font-size: clamp(1.7rem, 1.08rem + 3.1vw, 2.45rem);
-  font-weight: 600;
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 1.08rem + 3.1vw, 2.45rem);
+  font-weight: 400;
   letter-spacing: -0.034em;
   line-height: 1.07;
   color: var(--ink);
@@ -1826,7 +1827,7 @@ a.door { cursor: pointer; }
 
 /* ---------- small screens ---------- */
 @media (max-width: 640px) {
-  body { font-size: 15px; }
+  body { font-size: 1rem; }
   .ledger a, .ledger .row { grid-template-columns: 2.6rem 1fr auto; column-gap: var(--s3); }
 
   /* Two tidy rows instead of five stacked ones:
