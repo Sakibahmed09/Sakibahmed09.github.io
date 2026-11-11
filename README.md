@@ -120,5 +120,5 @@ For a custom domain, add a `CNAME` file.
 - Theme: system by default, moon toggle persists, `?theme=dark|light` forces it per link
 - Receipts (`aside.receipts`) sit in the margin beside their number, and go under the paragraph below 1180px
 - Pen notes (`aside.pen-note`) only write on old posts and on the craft page
-- Type: Schibsted Grotesk (its own italic for emphasis), Reenie Beanie, Amiri
+- Type: Sakib Grotesk (upright prose and headings), Schibsted Grotesk (true italic and character fallback), Reenie Beanie, Amiri
 - Motion: `--swift` 160ms, `--settle` 340ms, `--grand` 700ms, reduced-motion respected

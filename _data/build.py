@@ -34,8 +34,8 @@ HEAD = """<!doctype html>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41z' fill='%23efc96a'/%3E%3Cpath d='M19 12l18.5 3.6v33.8L19 53z' fill='%232b2822'/%3E%3Ccircle cx='33' cy='33.4' r='1.9' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41' fill='none' stroke='%232b2822' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M10 53h44' stroke='%232b2822' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
 <script>(function(){{document.documentElement.classList.add("js");var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;}})();</script>
-<link rel="preload" href="../../assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../../assets/site.css">
+<link rel="preload" href="../../assets/fonts/sakib-grotesk-v04.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/site.css?v=grotesk-04">
 </head>
 <body>
 

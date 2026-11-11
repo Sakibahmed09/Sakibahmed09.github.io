@@ -1,3 +1,4 @@
+@font-face { font-family: 'Sakib Grotesk'; font-style: normal; font-weight: 400 650; font-display: swap; src: url(fonts/sakib-grotesk-v04.woff2) format('woff2'); unicode-range: U+0020-007E, U+00A0, U+00A3, U+00B7, U+00C0-00C5, U+00C7-00CF, U+00D1-00D6, U+00D9-00DD, U+00E0-00E5, U+00E7-00EF, U+00F1-00F6, U+00F9-00FD, U+00FF, U+0131, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+20AC, U+2190, U+2192; }
 /* Self-hosted so nothing render-blocking points at another origin.
    Latin only: latin-ext was dead weight for this site. */
 @font-face { font-family: 'Schibsted Grotesk'; font-style: italic; font-weight: 400 600; font-display: swap; src: url(fonts/schibsted-grotesk-italic.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -55,9 +56,10 @@
   --out:    cubic-bezier(0.19, 1, 0.22, 1);
   --nudge:  cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* type: a newsroom grotesk, a real biro, and the Amiria Press for dhikr */
-  --sans:   "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --serif:  var(--sans);   /* one voice: emphasis is the same face, leaning */
+  /* type: Sakib Grotesk for the memo, a true italic, a biro, and Amiri for dhikr */
+  --sans:   "Sakib Grotesk", "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --serif:  var(--sans);
+  --italic: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --pen:    "Reenie Beanie", "Segoe Script", cursive;
   --arabic: "Amiri", "Geeza Pro", serif;
   --mono:   ui-monospace, "SF Mono", Menlo, monospace;
@@ -124,11 +126,10 @@ body {
   font-family: var(--sans);
   font-size: 15.5px;
   line-height: 1.6;
-  /* 440 is a variable-font weight, not a preset: 400 read thin on this paper,
-     500 read heavy. Tracking is optical, negative here and neutral on the
-     small print, where tightening only hurts. */
-  font-weight: 440;
-  letter-spacing: -0.004em;
+  /* Sakib Grotesk has firmer stems: Regular keeps long passages open.
+     Neutral tracking at reading sizes; tighter settings belong to headings. */
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
@@ -323,7 +324,7 @@ a[data-out]:hover::after { transform: translate(0.1em, -0.12em); color: var(--se
 .ledger .what small {
   display: block;
   font-size: var(--t-s);
-  font-weight: 440;
+  font-weight: 400;
   color: var(--ink-2);
 }
 .ledger .meta {
@@ -675,7 +676,7 @@ kbd {
 }
 .article h2 .chno {
   color: var(--ink-3);
-  font-weight: 440;
+  font-weight: 400;
   font-size: var(--t-s);
   font-variant-numeric: tabular-nums;
 }
@@ -1229,7 +1230,7 @@ kbd {
 .side-list .yr { color: var(--ink-3); font-size: var(--t-s); }
 .side-list .what { font-weight: 500; font-size: var(--t-ml); }
 .side-list .what small {
-  display: block; font-weight: 440; font-size: var(--t-s); color: var(--ink-2);
+  display: block; font-weight: 400; font-size: var(--t-s); color: var(--ink-2);
 }
 .side-list .meta { color: var(--ink-3); font-size: var(--t-s); text-align: right; }
 
@@ -1535,7 +1536,7 @@ kbd {
 }
 .memo h2 .chno, .memo-h .chno, .article h2 .chno {
   color: var(--ink-3);
-  font-weight: 440;
+  font-weight: 400;
   font-size: var(--t-s);
   font-variant-numeric: lining-nums proportional-nums;
   min-width: 1.05rem;
@@ -1657,7 +1658,7 @@ kbd {
   margin-left: calc(var(--s4) * -1);
   transform: translateY(-50%);          /* stands on the hairline */
   color: var(--ink-2);
-  font-weight: 440;
+  font-weight: 400;
   -webkit-tap-highlight-color: transparent;
   cursor: default;
 }
@@ -1958,3 +1959,7 @@ a.door { cursor: pointer; }
 }
 .cl-at::before { content: "\00b7"; margin-right: var(--s3); color: var(--line); }
 .cl-ask { margin-top: var(--s4); font-size: var(--t-m); color: var(--ink-2); }
+
+/* Sakib Grotesk is upright only. Use the existing genuine italic for emphasis. */
+em, i, cite, .prose em, .accent, .article em, .specimen .s2,
+.lost .big, .memo em, .cl-said { font-family: var(--italic); }
