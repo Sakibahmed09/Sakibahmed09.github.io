@@ -7,7 +7,8 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23bf3a2a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' fill='%23faf7f0' text-anchor='middle'%3E%D8%B3%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41z' fill='%23efc96a'/%3E%3Cpath d='M19 12l18.5 3.6v33.8L19 53z' fill='%232b2822'/%3E%3Ccircle cx='33' cy='33.4' r='1.9' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41' fill='none' stroke='%232b2822' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M10 53h44' stroke='%232b2822' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <script>(function(){document.documentElement.classList.add("js");var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;})();</script>
 <link rel="preload" href="/assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
@@ -18,12 +19,11 @@
 
   <a class="crumb rise" style="--i:0" href="/"><span class="back">←</span> Sakib Ahmed</a>
 
-  <h1 class="big rise" style="--i:1">There&#8217;s nothing here.</h1>
+  <div class="rise" style="--i:1"><a class="door shut rect" href="/" aria-label="A shut door. Back to the front page"><span class="room"><svg class="frame" viewBox="0 0 20 27" aria-hidden="true"><path class="glow" d="M3.5 26.2 L3.8 3.1 L16.5 2.8 L16.7 26.2 Z"/><path class="line" pathLength="1" d="M2.1 26.4 L2.5 1.9 L17.7 1.5 L18 26.5"/></svg><svg class="leaf" viewBox="0 0 20 27" aria-hidden="true"><path class="panel" d="M3.3 26.2 L3.6 3 L16.7 2.7 L16.9 26.3 Z"/><circle class="knob" cx="14.3" cy="14.9" r="0.9"/></svg></span></a></div>
 
-  <p class="rise" style="--i:2">Either I moved it or it never existed. Both are likely. You can
-    <a class="u" href="/">start from the top</a>, read the
-    <a class="u" href="/chapters/">chapters</a>, or go through the
-    <a class="u" href="/ventures/">ventures</a>.</p>
+  <h1 class="big rise" style="--i:1">There&#8217;s nothing behind this one.</h1>
+
+  <p class="rise" style="--i:2">Either I moved it or it never existed. Both are likely. You can <a class="u" href="/">start from the top</a> or read the <a class="u" href="/chapters/">chapters</a>.</p>
 
   <aside class="pen-note drawn rise" style="--i:3">
     <span class="txt">or press ⌘K and go anywhere</span>
@@ -33,7 +33,6 @@
     <span class="clock" id="clock" title="Europe/London">&nbsp;</span>
     <nav class="links" aria-label="Elsewhere">
       <a class="u" href="/">Home</a>
-      <a class="u" href="/ventures/">Ventures</a>
     </nav>
     <button class="moon" id="moon" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
@@ -52,11 +51,6 @@
         <circle class="core" cx="11" cy="11" r="4.5" mask="url(#bite-mask)"></circle>
       </svg>
     </button>
-    <div class="player" id="player" hidden>
-      <button class="pp" id="pp" aria-label="Play the beats"><span class="tri" aria-hidden="true"></span></button>
-      <span class="track" id="track">Lofi Muslim &#183; Open Road</span>
-      <span class="bar" aria-hidden="true"><i id="bar"></i></span>
-    </div>
   </footer>
 
 </main>

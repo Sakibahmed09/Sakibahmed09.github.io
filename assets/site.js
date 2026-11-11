@@ -1,4 +1,4 @@
-/* sakib.page — one script, no dependencies */
+/* sakib.lol — one script, no dependencies */
 (function () {
   "use strict";
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -112,19 +112,59 @@
       hour: "numeric", minute: "2-digit", hour12: true
     });
 
+    /* The paper is lit by the sun where you are. Hue and warmth move through
+       the day, peach at sunrise, clearest at dhuhr, gold before maghrib, and
+       the brightness never changes, so the ink reads the same all day.
+       Each stop is [minute of the day, hue, chroma]. */
+    var sunPaper = function (mins, list) {
+      for (var n = 0; n < 5; n++) if (list[n] === null) return;
+      var f = list[0] * 60, sr = list[1] * 60, d = list[2] * 60, a = list[3] * 60, m = list[4] * 60;
+      var stops = [[0, 84, 0.008], [f, 76, 0.009], [sr, 62, 0.017], [sr + 100, 92, 0.011],
+                   [d, 96, 0.009], [a, 88, 0.012], [m - 50, 74, 0.019], [m, 62, 0.022],
+                   [m + 45, 84, 0.008], [1440, 84, 0.008]];
+      for (var s = 1; s < stops.length; s++) {
+        if (mins <= stops[s][0]) {
+          var p = stops[s - 1], q = stops[s];
+          var t = q[0] === p[0] ? 0 : (mins - p[0]) / (q[0] - p[0]);
+          var hue = p[1] + (q[1] - p[1]) * t, chroma = p[2] + (q[2] - p[2]) * t;
+          root.style.setProperty("--sun-paper", "oklch(97.4% " + chroma.toFixed(4) + " " + hue.toFixed(1) + ")");
+          root.style.setProperty("--sun-paper-high", "oklch(99.2% " + (chroma * 0.55).toFixed(4) + " " + hue.toFixed(1) + ")");
+          return;
+        }
+      }
+    };
+
+    /* The memo is dated the day you open it. */
+    var memoDate = $("#memo-date"), datedKey = "";
+    var datedToday = function (now) {
+      if (!memoDate) return;
+      var key = now.toDateString();
+      if (key === datedKey) return;
+      datedKey = key;
+      memoDate.textContent = "";
+      var t = document.createElement("time");
+      t.dateTime = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+      t.textContent = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(now);
+      memoDate.appendChild(t);
+    };
+
+    var onBilal = /ventures\/bilal/.test(location.pathname);
     var tick = function () {
       var now = new Date();
       var tzMin = -now.getTimezoneOffset();
       var t = fmt.format(now).replace(/\s/g, "");
       var known = !!ZONES[tz];
+      if (!known) datedToday(now);
       if (!known) {                       /* no idea where you are, so do not pretend */
         clock.classList.remove("soon");
-        clock.textContent = "It\u2019s " + t + " where you are.";
+        clock.textContent = onBilal ? "It\u2019s " + t + " where you are." : "";
         return;
       }
       var here = place[2];
       var list = prayers(now, place[0], place[1], tzMin);
       var mins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+      sunPaper(mins, list);
+      datedToday(now);
 
       var next = null, name = "", gap = 1e9;
       for (var k = 0; k < list.length; k++) {
@@ -137,10 +177,13 @@
         if (fj !== null) { name = "Fajr"; gap = (24 * 60 - mins) + fj * 60; next = fj; }
       }
 
-      if (next === null) { clock.textContent = "It\u2019s " + t + " in " + here + "."; return; }
+      if (next === null) { clock.textContent = onBilal ? "It\u2019s " + t + " in " + here + "." : ""; return; }
 
       var at = new Date(now); at.setHours(0, Math.round(next * 60), 0, 0);
       var atTxt = fmt.format(at).replace(/\s/g, "");
+      /* prayer times are Bilal's subject, so they show on Bilal's page. everywhere
+         else the footer keeps to the visit count */
+      if (!onBilal) { clock.classList.remove("soon"); clock.textContent = ""; return; }
       clock.classList.toggle("soon", gap <= 30);
       clock.textContent = gap <= 30
         ? name + " in " + Math.max(1, Math.round(gap)) + " min" + (Math.round(gap) === 1 ? "" : "s") + "."
@@ -149,6 +192,214 @@
     };
     tick();
     setInterval(tick, 20000);
+
+    /* the memo is addressed to whoever opened it, wherever and whenever that was */
+    var memoTo = $("#memo-to");
+    if (memoTo) {
+      var opened = fmt.format(new Date()).replace(/\s/g, "");
+      memoTo.textContent = "whoever just opened this" +
+        (ZONES[tz] ? " in " + place[2] : "") + " at " + opened;
+    }
+  }
+
+  /* ---------- how long you have been here ---------- */
+  /* The stranger at the prayer room door said "don't stay too long in this
+     place", and the memo is named after it, so the footer keeps count. The
+     clock starts on the first page you land on and carries across the site. */
+  (function () {
+    var foot = $(".foot");
+    if (!foot) return;
+    var start = Date.now();
+    try {
+      var kept = +sessionStorage.getItem("arrived");
+      if (kept) start = kept; else sessionStorage.setItem("arrived", String(start));
+    } catch (err) { /* private mode: count this page only */ }
+    var el = $("#stay");
+    if (!el) {
+      var line = $(".colophon-line", foot);
+      if (!line) {
+        line = document.createElement("span");
+        line.className = "colophon-line";
+        foot.appendChild(line);
+      }
+      el = document.createElement("span");
+      el.id = "stay";
+      line.insertBefore(el, line.firstChild);
+    }
+    var sd = document.createElement("span");
+    sd.className = "door stay-door seen";
+    sd.setAttribute("aria-hidden", "true");
+    sd.innerHTML = '<span class="room"><svg class="frame" viewBox="0 0 20 27">' +
+      '<path class="glow" d="M3.5 26.2 L3.8 3.1 L16.5 2.8 L16.7 26.2 Z"/>' +
+      '<path class="line" pathLength="1" d="M2.1 26.4 L2.5 1.9 L17.7 1.5 L18 26.5"/></svg>' +
+      '<svg class="leaf" viewBox="0 0 20 27"><path class="panel" d="M3.3 26.2 L3.6 3 L16.7 2.7 L16.9 26.3 Z"/>' +
+      '<circle class="knob" cx="14.3" cy="14.9" r="0.9"/></svg></span>';
+    el.parentNode.insertBefore(sd, el);
+    var clockEl = $("#clock");
+    var say = function () {
+      var secs = Math.max(1, Math.floor((Date.now() - start) / 1000));
+      var mins = Math.floor(secs / 60);
+      /* inside half an hour of a prayer the clock turns red, and the line means it */
+      var soon = !!(clockEl && clockEl.classList.contains("soon"));
+      el.textContent = "You’ve been here " +
+        (mins < 1 ? secs + (secs === 1 ? " second" : " seconds")
+                  : mins + (mins === 1 ? " minute" : " minutes")) + "." +
+        (mins >= 5 || soon ? " Don’t stay too long in this place." : "") + " ";
+      sd.style.setProperty("--a", (soon ? 78 : Math.min(78, 6 + (secs / 300) * 72)).toFixed(1) + "deg");
+      sd.classList.toggle("lit", mins >= 5 || soon);
+    };
+    say();
+    setInterval(say, 1000);
+  })();
+
+  /* ---------- receipts ---------- */
+  /* Touch a red number and its post lights up. Two long receipts beside two
+     short paragraphs would sit on top of each other in the margin, so each
+     one checks the one above and steps down if it has to. */
+  var stacks = $$(".receipts");
+  if (stacks.length) {
+    var settle = function () {
+      var floor = 0;
+      stacks.forEach(function (st) {
+        st.style.marginTop = "";
+        st.style.top = "";
+        if (getComputedStyle(st).position !== "absolute") return;
+        /* start level with the line the number sits on */
+        var ref = st.parentNode.querySelector(".ref");
+        if (ref) {
+          var y = ref.getBoundingClientRect().top - st.parentNode.getBoundingClientRect().top;
+          st.style.top = Math.max(0, Math.round(y) - 3) + "px";
+        }
+        var box = st.getBoundingClientRect();
+        var top = box.top + window.scrollY;
+        if (top < floor + 14) {
+          st.style.marginTop = Math.ceil(floor + 14 - top) + "px";
+          top = floor + 14;
+        }
+        floor = top + box.height;
+      });
+    };
+    settle();
+    window.addEventListener("resize", settle);
+    window.addEventListener("load", settle);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+    $$(".ref a").forEach(function (a) {
+      var r = document.getElementById(a.getAttribute("href").slice(1));
+      if (!r) return;
+      var on = function () { r.classList.add("lit"); };
+      var off = function () { r.classList.remove("lit"); };
+      a.addEventListener("mouseenter", on);
+      a.addEventListener("mouseleave", off);
+      a.addEventListener("focus", on);
+      a.addEventListener("blur", off);
+    });
+  }
+
+  /* ---------- you took the advice ---------- */
+  /* Leave the tab and its title says so. Come back and it is the page again. */
+  (function () {
+    var real = document.title;
+    document.addEventListener("visibilitychange", function () {
+      document.title = document.hidden ? "You left. Good." : real;
+    });
+  })();
+
+  /* ---------- doors ---------- */
+  /* Each chapter's rule ends at a door. It is drawn when you reach it and
+     settles shut, ajar or open, the way that chapter went. Touch it and it
+     says which door it is. A shut one only rattles. */
+  var doors = $$(".door");
+  if (doors.length) {
+    if (REDUCED || !("IntersectionObserver" in window)) {
+      doors.forEach(function (d) { d.classList.add("seen"); });
+    } else {
+      var dio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("seen"); dio.unobserve(en.target); }
+        });
+      }, { rootMargin: "0px 0px -14% 0px" });
+      doors.forEach(function (d) { dio.observe(d); });
+    }
+    var rattle = function (d) {
+      var leaf = $(".leaf", d);
+      if (!leaf || REDUCED || !leaf.animate) return;
+      leaf.animate([
+        { transform: "rotateY(0deg)" }, { transform: "rotateY(8deg)" },
+        { transform: "rotateY(0deg)" }, { transform: "rotateY(5deg)" },
+        { transform: "rotateY(0deg)" }
+      ], { duration: 360, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
+    };
+    doors.forEach(function (d) {
+      if (d.classList.contains("stay-door")) return;
+      d.addEventListener("click", function () {
+        if (d.classList.contains("shut")) rattle(d);
+        if (d.tagName !== "A") d.classList.toggle("said");
+      });
+      if (d.classList.contains("shut")) d.addEventListener("mouseenter", function () { rattle(d); });
+    });
+  }
+
+  /* ---------- the Boris bike ---------- */
+  var riding = false;
+  var rideBike = function (after, from) {
+    if (riding || REDUCED) { if (after) after(); return; }
+    riding = true;
+    var b = document.createElement("div");
+    b.className = "bike";
+    b.setAttribute("aria-hidden", "true");
+    b.innerHTML =
+      '<svg viewBox="0 0 58 43"><g class="bob">' +
+      /* rider: head, back, arm, and a leg that pedals */
+      '<circle cx="33.2" cy="5.2" r="2.7"/>' +
+      '<path d="M31.6 8.4 C28.4 11.6 25 15 22.3 18.6"/>' +
+      '<path d="M30.2 10.6 C33.6 12.6 37 13.6 40.6 14.2"/>' +
+      '<path class="leg-a" d="M22.3 18.6 C25 22 27 25.6 27.6 30.4"/>' +
+      /* frame, saddle, bars */
+      '<path d="M12 32 L21.8 19.4 L38.6 19 L28 32.2 Z"/>' +
+      '<path d="M21.8 19.4 L28 32.2"/>' +
+      '<path d="M38.6 19 L46 32"/><path d="M38.6 19 L40.2 14.4 L43.4 13.8"/>' +
+      '<path d="M19.2 18.9 L24.6 18.6"/>' +
+      /* the carrier on the front, with the bag in it */
+      '<path d="M43.8 15.4 L51.6 15 L51 21.4 L44.6 21.6 Z"/>' +
+      '<path d="M45.4 15.2 L45.9 10.6 L50 10.3 L50.3 15"/>' +
+      '</g>' +
+      '<g class="wheel"><circle cx="12" cy="32" r="8.6"/><path d="M12 23.4 L12 40.6 M3.4 32 L20.6 32"/></g>' +
+      '<g class="wheel"><circle cx="46" cy="32" r="8.6"/><path d="M46 23.4 L46 40.6 M37.4 32 L54.6 32"/></g>' +
+      '</svg>';
+    var far = window.innerWidth + 150, frames;
+    if (from) {
+      /* it sets off from the line it is mentioned on and rides out through the margin */
+      var ref = from.querySelector(".ref");
+      var y = ref ? ref.getBoundingClientRect().top - from.getBoundingClientRect().top : 40;
+      b.className = "bike margin";
+      b.style.top = Math.max(0, Math.round(y) - 50) + "px";
+      from.appendChild(b);
+      far = window.innerWidth - from.getBoundingClientRect().right + 90;
+      frames = [{ transform: "translateX(0)", opacity: 0 },
+                { opacity: 1, offset: 0.14 },
+                { transform: "translateX(" + far + "px)", opacity: 1 }];
+    } else {
+      document.body.appendChild(b);
+      frames = [{ transform: "translateX(0)" }, { transform: "translateX(" + far + "px)" }];
+    }
+    var ride = b.animate(frames,
+      { duration: Math.max(2400, far * 2.6), easing: "cubic-bezier(0.45, 0.02, 0.6, 0.98)", fill: "forwards" });
+    ride.onfinish = function () { b.remove(); riding = false; if (after) after(); };
+  };
+  /* it goes past once, the first time you read about it */
+  var bikeLine = $("#boris");
+  if (bikeLine && !REDUCED && "IntersectionObserver" in window && window.innerWidth >= 1180) {
+    var seenBike = false;
+    try { seenBike = sessionStorage.getItem("bike") === "1"; } catch (err) { /* fine */ }
+    if (!seenBike) {
+      var bio = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        bio.disconnect();
+        try { sessionStorage.setItem("bike", "1"); } catch (err) { /* fine */ }
+        setTimeout(function () { rideBike(null, bikeLine); }, 900);
+      }, { rootMargin: "0px 0px -45% 0px" });
+      bio.observe(bikeLine);
+    }
   }
 
   /* ---------- theme: the sun sets properly ---------- */
@@ -195,6 +446,7 @@
       if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
     };
     var bump = function () {
+      root.classList.add("counting");     /* found it: now it gets its place in the footer */
       count += 1;
       buzz(count >= 33 ? [14, 45, 14] : 8);
       if (count >= 33) {
@@ -387,8 +639,8 @@
         }
       })();
 
-      /* on the Lofi Muslim page the player owns up to itself */
-      if (/lofi-muslim/.test(location.pathname)) {
+      /* on the page the beats live on, the player owns up to itself */
+      if (/ventures\/vibenasheeds/.test(location.pathname)) {
         var mine = document.createElement("span");
         mine.className = "mine";
         mine.textContent = "these are the ones";
@@ -408,7 +660,8 @@
   (function () {
     if (REDUCED) return;
     var page = $(".page");
-    var prevA = $(".prevnext .prev"), nextA = $(".prevnext .next");
+    /* swiping is for flicking between projects, not for long reads */
+    var prevA = $(".prevnext:not(.path) .prev"), nextA = $(".prevnext:not(.path) .next");
     if (!page || (!prevA && !nextA)) return;
 
     var LIMIT = 96;        // px the page can travel, asymptotically
@@ -690,21 +943,18 @@
 
     var ACTIONS = [
       { t: "Home",               i: "home", k: "sakib start", go: HOME },
-      { t: "Ventures",           i: "grid", k: "mains sides projects built", go: HOME + "ventures/" },
       { t: "MiniDeed",           i: "heart", k: "charity app likes pennies main", go: HOME + "ventures/minideed/" },
       { t: "Simply Smashed",     i: "burger", k: "burger joint main food", go: HOME + "ventures/simply-smashed/" },
-      { t: "Peruvian Street Kitchen", i: "bowl", k: "psk chicken rice green sauce main", go: HOME + "ventures/psk/" },
       { t: "Draper",             i: "pen", k: "founders authorities content main work", go: HOME + "ventures/draper/" },
-      { t: "dhikry",             i: "beads", k: "side dhikr circle invite ios", go: HOME + "ventures/dhikry/" },
       { t: "Bilal",              i: "tv", k: "side athan masjid times tv", go: HOME + "ventures/bilal/" },
-      { t: "vibenasheeds",       i: "waves", k: "side halal music nasheed ai", go: HOME + "ventures/vibenasheeds/" },
-      { t: "Lofi Muslim",        i: "phones", k: "side beats youtube vocals", go: HOME + "ventures/lofi-muslim/" },
-      { t: "Simply Clo",         i: "shirt", k: "side hoodie palestine clothing", go: HOME + "ventures/simply-clo/" },
-      { t: "Simply Foundation",  i: "book", k: "side school huffadh charity", go: HOME + "ventures/simply-foundation/" },
       { t: "Chapters",           i: "scroll", k: "story writing timeline", go: HOME + "chapters/" },
       { t: "The Corridor",       i: "pen", k: "manifesto essay writing witness", go: HOME + "manifesto/" },
       { t: "How this site works", i: "pencil", k: "craft colophon design type", go: HOME + "craft/" },
       { t: "Toggle dark mode",   i: "moon", k: "theme light night maghrib", fn: toggleTheme },
+      { t: "Hire a Boris bike",  i: "burger", k: "bike boris delivery chicken burger whitechapel cycle", fn: function () {
+          rideBike(function () { toast("Delivered. He shut the door without a word."); });
+        } },
+      { t: "Call the Tiramisu Response Unit", i: "bowl", k: "tru tiramisu mum dessert", fn: function () { toast("#TRU always delivers."); } },
       { t: "Count tasbih",       i: "dot", k: "dhikr beads 33", fn: function () { var b = $("#tasbih"); if (b) b.click(); } },
       { t: "Copy email",         i: "at",      k: "contact mail", fn: function () {
           navigator.clipboard.writeText("sakib@withsignal.io").then(function () { toast("Copied. Say salaam."); });

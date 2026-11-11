@@ -5,7 +5,14 @@ import json, os, re, html, glob
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 BUCKETS = json.load(open(os.path.join(HERE, "buckets.json")))
-SPEC = json.load(open(os.path.join(HERE, "ventures.json")))
+# a project marked "page": false keeps its write-up in the file but gets no page
+SPEC = {k: v for k, v in json.load(open(os.path.join(HERE, "ventures.json"))).items()
+        if v.get("page", True)}
+
+# A project page is the story I chose to tell. The lane underneath used to add
+# every other post in the bucket, unread, every Monday. Off: nothing reaches the
+# site that has not been picked.
+LANES = False
 
 BUCKET_ALIAS = {"simply-smashed": "simplysmashed", "psk": "psk",
                 "minideed": "minideed", "draper": "draper"}
@@ -20,11 +27,12 @@ HEAD = """<!doctype html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{stand_plain}">
 <meta property="og:type" content="article">
-<meta property="og:image" content="https://sakib.lol/assets/og-v2.png">
+<meta property="og:image" content="https://sakib.lol/assets/og-v3.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23bf3a2a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' fill='%23faf7f0' text-anchor='middle'%3E%D8%B3%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41z' fill='%23efc96a'/%3E%3Cpath d='M19 12l18.5 3.6v33.8L19 53z' fill='%232b2822'/%3E%3Ccircle cx='33' cy='33.4' r='1.9' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41' fill='none' stroke='%232b2822' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M10 53h44' stroke='%232b2822' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
 <script>(function(){{document.documentElement.classList.add("js");var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;}})();</script>
 <link rel="preload" href="../../assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/site.css">
@@ -80,7 +88,6 @@ FOOT = """
   <footer class="foot">
     <span class="clock" id="clock" title="Europe/London">&nbsp;</span>
     <nav class="links" aria-label="Elsewhere">
-      <a class="u" href="../">Ventures</a>
       <a class="u" href="../../">Home</a>
     </nav>
     <button class="moon" id="moon" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle dark mode">
@@ -100,11 +107,6 @@ FOOT = """
         <circle class="core" cx="11" cy="11" r="4.5" mask="url(#bite-mask)"></circle>
       </svg>
     </button>
-    <div class="player" id="player" hidden>
-      <button class="pp" id="pp" aria-label="Play the beats"><span class="tri" aria-hidden="true"></span></button>
-      <span class="track" id="track">Lofi Muslim &#183; Open Road</span>
-      <span class="bar" aria-hidden="true"><i id="bar"></i></span>
-    </div>
   </footer>
 
 </main>
@@ -383,7 +385,7 @@ def write_site_files(feed):
     """sitemap, robots and a real RSS feed — the marks of a site that is kept."""
     import xml.sax.saxutils as sx
     BASE = "https://sakib.lol"
-    paths = ["/", "/chapters/", "/craft/", "/manifesto/", "/ventures/"]
+    paths = ["/", "/chapters/", "/craft/", "/manifesto/"]
     paths += ["/ventures/%s/" % k for k in SPEC.keys()]
     today = max(p["d"] for p in feed) if feed else "2026-08-16"
 
@@ -434,7 +436,8 @@ def main():
     misses = []
     freshest = {}
     for slug, v in SPEC.items():
-        bucket = BUCKETS.get(v.get("bucket") or BUCKET_ALIAS.get(slug, slug), [])
+        names = v.get("buckets") or [v.get("bucket") or BUCKET_ALIAS.get(slug, slug)]
+        bucket = [p for name in names for p in BUCKETS.get(name, [])]
         bucket = drop_near_dupes(bucket)
         used = set()
         proof = "\n".join(
@@ -507,7 +510,7 @@ def main():
 
         # the self-updating lane: everything not already in the spine
         rest = dedupe([p for p in bucket if key_of(p) not in used])
-        if rest:
+        if rest and LANES:
             os.makedirs(FEED_OUT, exist_ok=True)
             feed = [{"d": r["date"], "t": clean(r["text"]), "s": r.get("src", "x"),
                      "u": r.get("url", ""), "f": r.get("fav", 0),
@@ -550,6 +553,11 @@ def main():
         order = list(SPEC.keys())
         i_here = order.index(slug)
         pn = []
+        if i_here == 0:
+            # the first project picks up where the essay leaves off
+            pn.append('    <a class="prev" rel="prev" href="../../manifesto/">'
+                      '<span class="dir">Previous</span>'
+                      '<span class="t">The Corridor</span></a>')
         if i_here > 0:
             prev = order[i_here - 1]
             pn.append('    <a class="prev" rel="prev" href="../%s/">'
@@ -598,13 +606,14 @@ def main():
                           "Photo from the post.")
                      .replace("../../assets/", "assets/"))
     block = ('\n  <section class="section feed-wrap" data-feed="assets/feed/all.json"'
-             ' style="--i:11">\n    <h2>Lately</h2>\n'
+             ' style="--i:11">\n    <h2 class="memo-h"><span class="chno">4.</span> On what I&#8217;m saying lately</h2>\n'
              '    <p class="menu-note">Everything I post, in one place. Keeps going as you scroll.</p>\n'
              '    <div class="feed">\n' + "\n".join(cards) +
              '\n      <div class="feed-end"></div>\n    </div>\n  </section>\n')
     a, b_ = "<!-- LATELY:START -->", "<!-- LATELY:END -->"
-    html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
-    open(home, "w").write(html_s)
+    if a in html_s and b_ in html_s:
+        html_s = html_s[:html_s.index(a) + len(a)] + block + html_s[html_s.index(b_):]
+        open(home, "w").write(html_s)
     with open(os.path.join(FEED_OUT, "search.json"), "w") as fh:
         json.dump(SEARCH, fh)
     print("search index: %d clippings" % len(SEARCH))

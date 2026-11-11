@@ -9,17 +9,18 @@
 <meta property="og:description" content="Paper, ink, one red biro. The type, colour and motion decisions behind this site.">
 <meta name="theme-color" content="#f8f5ee" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17150f" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23bf3a2a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' fill='%23faf7f0' text-anchor='middle'%3E%D8%B3%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41z' fill='%23efc96a'/%3E%3Cpath d='M19 12l18.5 3.6v33.8L19 53z' fill='%232b2822'/%3E%3Ccircle cx='33' cy='33.4' r='1.9' fill='%23f7f3ea'/%3E%3Cpath d='M19 53V12h26v41' fill='none' stroke='%232b2822' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M10 53h44' stroke='%232b2822' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <script>(function(){document.documentElement.classList.add("js");var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;})();</script>
 <meta property="og:url" content="https://sakib.lol/craft/">
 <meta property="og:type" content="article">
-<meta property="og:image" content="https://sakib.lol/assets/og-v2.png">
+<meta property="og:image" content="https://sakib.lol/assets/og-v3.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="../assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="canonical" href="https://sakib.lol/craft/">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Sakib Ahmed, sakib.lol">
+<meta property="og:image:alt" content="A memo from Sakib Ahmed, co-founder of Draper. Re: Don’t stay too long in this place. A door stands ajar with light behind it.">
 <link rel="alternate" type="application/rss+xml" title="Sakib Ahmed" href="https://sakib.lol/feed.xml">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -32,18 +33,21 @@
 
   <header class="article-head rise" style="--i:1">
     <h1>How this site works</h1>
-    <p class="when"><time datetime="2026-09-25">25 September 2026</time></p>
+    <p class="when"><time datetime="2026-11-10">10 November 2026</time></p>
     </header>
 
   <nav class="toc" aria-label="Index">
     <a href="#type">Type</a>
     <a href="#colour">Colour</a>
     <a href="#motion">Motion</a>
+    <a href="#memo">The memo</a>
+    <a href="#doors">Doors</a>
+    <a href="#receipts">Receipts</a>
     <a href="#details">Small details</a>
     <a href="#colophon">Colophon</a>
   </nav>
 
-  <h2 id="type" class="rise" style="--i:2"><span class="chno">01</span> Type</h2>
+  <h2 id="type" class="rise" style="--i:2"><span class="chno">1.</span> Type</h2>
   <p class="rise" style="--i:3">Three typefaces, down from four. I tried a Caslon, then a Garamond, and binned both because neither sat right next to the sans. A story is not a reason. When a word needs emphasis, the same typeface leans over.</p>
   <div class="demo rise" style="--i:4">
     <div class="specimen">
@@ -51,14 +55,14 @@
       <small>built for a Scandinavian newsroom, reads like one</small>
       <p class="s2">and it leans when a word matters.</p>
       <small>its own true italic</small>
-      <p class="s3">and the margin notes are an actual ballpoint</p>
+      <p class="s3">and the scribbles are an actual ballpoint</p>
       <small>Reenie Beanie. the one red biro is a real biro</small>
       <p class="s4" lang="ar" dir="rtl">سبحان الله</p>
       <small>Amiri counts the dhikr. Revived from the Amiria Press in Cairo</small>
     </div>
   </div>
 
-  <h2 id="colour"><span class="chno">02</span> Colour</h2>
+  <h2 id="colour"><span class="chno">2.</span> Colour</h2>
   <div class="anchored">
     <p>The colours are warm paper, warm ink and one seal red, and the red is used sparingly so it still means something when it shows up. The only gold on the site appears when you select text, so go on, <span class="accent">select this sentence</span>.</p>
     <aside class="pen-note" style="--pin:1.2rem">
@@ -77,7 +81,7 @@
   </div>
   <p>Dark mode is called <em>after Maghrib</em> in the stylesheet. The moon is the same sun with its rays folded away.</p>
 
-  <h2 id="motion"><span class="chno">03</span> Motion</h2>
+  <h2 id="motion"><span class="chno">3.</span> Motion</h2>
   <p>The three speeds are named like gears. <em>Swift</em> at 160ms for feedback, <em>settle</em> at 340ms for state, <em>grand</em> at 700ms for entrances. Everything slows down as it lands, the way a real object would. Nothing bounces except the tasbih bead.</p>
   <div class="demo">
     <div class="label">tap to race the three gears</div>
@@ -89,18 +93,35 @@
   </div>
   <p class="quiet">Ask for reduced motion and the site sits still, including the race you just ran.</p>
 
-  <h2 id="details"><span class="chno">04</span> Small details</h2>
+  <h2 id="memo"><span class="chno">4.</span> The memo</h2>
+  <p>The front page is laid out as a memo, with a To, a Date and a Re, because a memo is what it is. It’s from me, it’s addressed to whoever opened it, wherever and whenever that was, and it’s dated that day.</p>
+  <p>The subject line is something a stranger said to me when I was eighteen, and I’ve taken it literally. The bottom of every page counts how long you’ve been here, the little door next to the count opens a bit more every minute, and after five minutes it says the line back to you.</p>
+
+  <h2 id="doors"><span class="chno">5.</span> Doors<span class="door ajar rect" aria-hidden="true"><span class="room"><svg class="frame" viewBox="0 0 20 27" aria-hidden="true"><path class="glow" d="M3.5 26.2 L3.8 3.1 L16.5 2.8 L16.7 26.2 Z"/><path class="line" pathLength="1" d="M2.1 26.4 L2.5 1.9 L17.7 1.5 L18 26.5"/></svg><svg class="leaf" viewBox="0 0 20 27" aria-hidden="true"><path class="panel" d="M3.3 26.2 L3.6 3 L16.7 2.7 L16.9 26.3 Z"/><circle class="knob" cx="14.3" cy="14.9" r="0.9"/></svg></span><span class="says" aria-hidden="true">the prayer room, basement</span></span></h2>
+  <p>My story keeps turning on doors. A prayer room door, a customer’s front door, an airport that wouldn’t let me through one, a mosque arch left open. So in <a class="u" href="../chapters/">Chapters</a> every rule runs along the floor to a door, drawn in pencil, and it’s shut, ajar or open depending on how that chapter went. A lit room shows gold through the gap. Lean on one and it tells you which door it was. The shut ones only rattle.</p>
+  <p>The paper is lit by the sun where you are. It’s peach around sunrise, clearest at noon and gold in the hour before sunset, and only the warmth moves, never the brightness, so the ink reads the same all day. I took that from <a class="u" href="../ventures/bilal/">Bilal</a>, whose sky does the same thing.</p>
+
+  <h2 id="receipts"><span class="chno">6.</span> Receipts</h2>
   <div class="anchored">
-    <p>The clock is a nod to <a class="u" href="../ventures/bilal/">Bilal</a>. It reads your timezone, works out the prayer times on your own machine and tells you what’s next where you are, and inside half an hour of a prayer it stops telling the time and starts nudging you. It never asks where you are and nothing gets sent anywhere. Press <kbd>t</kbd> for the tasbih, thirty-three to the ring, which came from <a class="u" href="../ventures/dhikry/">dhikry</a>. <kbd>⌘K</kbd> opens the palette.</p>
+    <p>In <a class="u" href="../chapters/">Chapters</a>, each red number is a receipt, which is a line I posted at the time, and it sits in the margin next to the sentence it backs up. Like this one, from the year I started at Goldman.<sup class="ref"><a href="#r-demo" aria-label="Receipt">1</a></sup></p>
+    <aside class="receipts">
+      <div class="receipt" id="r-demo"><span class="n">1</span><span class="body"><q>Remember after GCSEs we all thought we had a bright future that was mad</q> <a class="src" data-out href="https://x.com/mertesakib/status/714799181404180480">X, 29 Mar 2016</a></span></div>
+    </aside>
+  </div>
+  <p>They’re copied out of my own archive by a script, and the script stops if a single word doesn’t match the post. I can get the story wrong. I can’t misquote myself.</p>
+
+  <h2 id="details"><span class="chno">7.</span> Small details</h2>
+  <div class="anchored">
+    <p>On the <a class="u" href="../ventures/bilal/">Bilal</a> page the footer has a clock. It reads your timezone, works out the prayer times on your own machine and tells you what’s next where you are. It never asks where you are and nothing gets sent anywhere. Press <kbd>t</kbd> and a tasbih (prayer beads, thirty-three to the ring) turns up in the footer, which came from dhikry, an app I built for my family. <kbd>⌘K</kbd> opens the palette, and two things in it aren’t pages. One of them hires a Boris bike.</p>
     <aside class="pen-note" style="--pin:1.8rem">
       <svg class="stroke" width="52" height="30" viewBox="0 0 52 30" aria-hidden="true"><path d="M50 25 C40 26, 16 24, 5 12"/><path d="M5 12 L14 13"/><path d="M5 12 L9 20"/></svg>
       <span class="txt">try t. go on.</span>
     </aside>
   </div>
-  <p>The favicon is a seal, <span lang="ar">س</span> stamped in red. The margin notes draw themselves in as you reach them, ink first and words after, the way notes actually get written. Links underline in hairline ink and only commit to red when you hover.</p>
+  <p>The icon in your tab is the same door as everywhere else, left ajar with the light on. The scribbles in the margins draw themselves in as you reach them, ink first and words after. Links underline in hairline ink and only commit to red when you hover.</p>
 
-  <h2 id="colophon"><span class="chno">05</span> Colophon</h2>
-  <p>Fifteen pages on one stylesheet and one script, no framework. The venture pages write themselves from my own archive, so what reaches you is still static files. The fonts live here rather than on Google, subset down to the characters this site actually sets. Nothing asks another origin for anything, which rules out analytics.</p>
+  <h2 id="colophon"><span class="chno">8.</span> Colophon</h2>
+  <p>Eight pages on one stylesheet and one script, no framework. The venture pages write themselves from my own archive, so what reaches you is still static files. The fonts live here rather than on Google, subset down to the characters this site actually sets. Nothing asks another origin for anything, which rules out analytics.</p>
   <p class="sign">Websites are a hobby. The day job is <a class="u" data-out href="https://draperhq.com">Draper</a>.</p>
 
   <footer class="foot">
@@ -137,11 +158,6 @@
         <circle class="core" cx="11" cy="11" r="4.5" mask="url(#bite-mask)"></circle>
       </svg>
     </button>
-    <div class="player" id="player" hidden>
-      <button class="pp" id="pp" aria-label="Play the beats"><span class="tri" aria-hidden="true"></span></button>
-      <span class="track" id="track">Lofi Muslim &#183; Open Road</span>
-      <span class="bar" aria-hidden="true"><i id="bar"></i></span>
-    </div>
   </footer>
 
 </main>

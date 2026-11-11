@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Schibsted Grotesk"; font-weight: 400 700; src: url(http://localhost:5178/assets/fonts/schibsted-grotesk-normal.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    position: relative;
+    overflow: hidden;
+    background: oklch(97.4% 0.012 86);
+    color: oklch(24% 0.014 85);
+    font-family: "Schibsted Grotesk", sans-serif;
+    font-weight: 440;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* paper grain so it is not a flat fill once compressed */
+  body::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.55;
+  }
+  .memo { position: absolute; left: 92px; top: 86px; font-size: 25px; line-height: 1.5; letter-spacing: -0.004em; color: oklch(44% 0.014 85); }
+  .memo div { display: grid; grid-template-columns: 84px 1fr; }
+  .memo dt { color: oklch(56% 0.016 85); }
+  .memo b { font-weight: 600; color: oklch(24% 0.014 85); }
+  .re {
+    position: absolute; left: 92px; top: 224px;
+    display: grid; grid-template-columns: 84px 1fr; align-items: baseline;
+  }
+  .re span { font-size: 25px; color: oklch(56% 0.016 85); }
+  .re h1 {
+    font-size: 88px; font-weight: 600; line-height: 1.05; letter-spacing: -0.038em;
+    text-indent: -0.43em; white-space: nowrap;
+  }
+  /* the floor runs to the door, the same as every chapter on the site */
+  .floor { position: absolute; left: 92px; right: 268px; top: 512px; height: 2px; background: oklch(24% 0.014 85 / 0.16); }
+  .floor.after { left: auto; right: 62px; width: 30px; }
+  .url { position: absolute; left: 92px; top: 540px; font-size: 25px; color: oklch(54% 0.016 85); letter-spacing: -0.004em; }
+  .glow {
+    position: absolute; left: 914px; top: 262px; width: 210px; height: 290px;
+    background: radial-gradient(closest-side, oklch(88% 0.11 86 / 0.55), oklch(88% 0.11 86 / 0));
+    filter: blur(26px);
+  }
+  .door { position: absolute; left: 934px; top: 285px; width: 170px; height: 229px; color: oklch(30% 0.014 85); }
+  .door .room { position: absolute; inset: 0; perspective: 620px; perspective-origin: 16.5% 50%; }
+  .door svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 0.36; stroke-linecap: round; stroke-linejoin: round; }
+  .door .glowfill { fill: oklch(87% 0.115 86); stroke: none; }
+  .door .leaf { transform-origin: 16.5% 50%; transform: rotateY(38deg); }
+  .door .leaf .panel { fill: oklch(97.4% 0.012 86); }
+  .door .leaf .knob { fill: currentColor; stroke: none; }
+</style>
+</head>
+<body>
+  <dl class="memo">
+    <div><dt>From</dt><dd><b>Sakib Ahmed</b>, co-founder of Draper</dd></div>
+    <div><dt>To</dt><dd>whoever just opened this</dd></div>
+  </dl>
+  <div class="re"><span>Re</span><h1>&#8220;Don&#8217;t stay too long<br>in this place&#8221;</h1></div>
+  <div class="floor"></div>
+  <div class="floor after"></div>
+  <div class="glow"></div>
+  <div class="door">
+    <span class="room">
+      <svg viewBox="0 0 20 27"><path class="glowfill" d="M3.5 26.2 L3.8 3.1 L16.5 2.8 L16.7 26.2 Z"/><path d="M2.1 26.4 L2.5 1.9 L17.7 1.5 L18 26.5"/></svg>
+      <svg class="leaf" viewBox="0 0 20 27"><path class="panel" d="M3.3 26.2 L3.6 3 L16.7 2.7 L16.9 26.3 Z"/><circle class="knob" cx="14.3" cy="14.9" r="0.55"/></svg>
+    </span>
+  </div>
+  <div class="url">sakib.lol</div>
+</body>
+</html>
