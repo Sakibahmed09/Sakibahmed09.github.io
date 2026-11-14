@@ -339,6 +339,82 @@
     });
   }
 
+  /* ---------- arriving as you scroll ---------- */
+  /* Whatever starts below the fold waits there and rises into place the first
+     time you reach it. Prose is left alone: this is for the objects on the
+     page, the rows, the posts and the rule under each heading. The hiding is
+     done here and not in the stylesheet, so no script means nothing hidden. */
+  (function () {
+    if (REDUCED || !("IntersectionObserver" in window)) return;
+    var fold = window.innerHeight;
+    var below = function (el) { return el.getBoundingClientRect().top > fold; };
+    var things = $$(".ledger li, .post, .demo, .clients li, .prevnext").filter(function (el) {
+      return !el.closest(".rise") && below(el);
+    });
+    var rules = $$(".memo h2, .section > h2.memo-h, .article h2").filter(function (h) {
+      return !h.classList.contains("rise") && below(h);
+    });
+    if (!things.length && !rules.length) return;
+    things.forEach(function (el) { el.classList.add("reveal"); });
+    rules.forEach(function (h) { h.classList.add("rule-wait"); });
+    var rio = new IntersectionObserver(function (entries) {
+      var n = 0;
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        rio.unobserve(el);
+        if (el.classList.contains("rule-wait")) { el.classList.remove("rule-wait"); return; }
+        /* rows that arrive together follow each other in */
+        var wait = Math.min(n++, 5) * 45;
+        el.style.setProperty("--d", wait + "ms");
+        el.classList.add("in");
+        setTimeout(function () {
+          el.classList.remove("reveal", "in");
+          el.style.removeProperty("--d");
+        }, wait + 760);
+      });
+    }, { rootMargin: "0px 0px -6% 0px" });
+    things.concat(rules).forEach(function (el) { rio.observe(el); });
+  })();
+
+  /* ---------- the next page, fetched before you ask ---------- */
+  /* Hover or touch a link to another page here and the browser fetches it
+     while your finger is still on the way down. It only fetches the page
+     itself, never runs it, and Save-Data switches it off. */
+  (function () {
+    var conn = navigator.connection;
+    if (conn && conn.saveData) return;
+    if (window.HTMLScriptElement && HTMLScriptElement.supports &&
+        HTMLScriptElement.supports("speculationrules")) {
+      var rules = document.createElement("script");
+      rules.type = "speculationrules";
+      rules.textContent = JSON.stringify({
+        prefetch: [{
+          where: { and: [{ href_matches: "/*" },
+                         { not: { selector_matches: "[data-out], [href^='mailto:'], [href*='#']" } }] },
+          eagerness: "moderate"
+        }]
+      });
+      document.head.appendChild(rules);
+      return;
+    }
+    var link = document.createElement("link");
+    if (!link.relList || !link.relList.supports || !link.relList.supports("prefetch")) return;
+    var fetched = {};
+    var warm = function (e) {
+      var a = e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a || a.origin !== location.origin || a.hasAttribute("data-out") || a.hash) return;
+      if (a.pathname === location.pathname || fetched[a.pathname]) return;
+      fetched[a.pathname] = 1;
+      var l = document.createElement("link");
+      l.rel = "prefetch";
+      l.href = a.href;
+      document.head.appendChild(l);
+    };
+    document.addEventListener("mouseover", warm, { passive: true });
+    document.addEventListener("touchstart", warm, { passive: true });
+  })();
+
   /* ---------- the Boris bike ---------- */
   var riding = false;
   var rideBike = function (after, from) {
@@ -420,7 +496,19 @@
     var bar = mode === "dark" ? "#17150f" : "#f7f4ec";
     $$('meta[name="theme-color"]').forEach(function (m) { m.setAttribute("content", bar); });
   };
-  var toggleTheme = function () { setTheme(isDark() ? "light" : "dark"); };
+  /* The whole page cross-fades from one light to the other, where the browser
+     can do that. Everywhere else, and with reduced motion, it simply switches. */
+  var fades = 0;
+  var toggleTheme = function () {
+    var mode = isDark() ? "light" : "dark";
+    if (REDUCED || !document.startViewTransition) { setTheme(mode); return; }
+    var mine = ++fades;
+    var done = function () { if (mine === fades) delete root.dataset.vt; };
+    root.dataset.vt = "theme";
+    try {
+      document.startViewTransition(function () { setTheme(mode); }).finished.then(done, done);
+    } catch (err) { setTheme(mode); done(); }
+  };
   if (moon) {
     moon.addEventListener("click", toggleTheme);
     paintMoon();
@@ -445,8 +533,20 @@
     var buzz = function (pattern) {
       if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
     };
+    /* Every count lands: the bead swells and settles, and the number ticks up
+       into place. Done here and not with :active, so the t key and a fast
+       thumb feel the same as a slow press. */
+    var bead = $(".bead", tasbih);
+    var land = function () {
+      if (REDUCED || !bead || !bead.animate) return;
+      bead.animate([{ transform: "scale(1.5)" }, { transform: "scale(1)" }],
+        { duration: 420, easing: "cubic-bezier(0.34, 1.36, 0.44, 1)" });
+      label.animate([{ transform: "translateY(0.3em)", opacity: 0.35 }, { transform: "translateY(0)", opacity: 1 }],
+        { duration: 180, easing: "cubic-bezier(0.19, 1, 0.22, 1)" });
+    };
     var bump = function () {
       root.classList.add("counting");     /* found it: now it gets its place in the footer */
+      land();
       count += 1;
       buzz(count >= 33 ? [14, 45, 14] : 8);
       if (count >= 33) {
@@ -937,7 +1037,7 @@
       WROTE_TRIED = true;
       fetch(HOME + "assets/feed/search.json")
         .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { if (d) { WROTE = d; if (veil && !veil.hidden) paint(); } })
+        .then(function (d) { if (d) { WROTE = d; if (open) render(input.value); } })
         .catch(function () { /* the fourteen titles still work */ });
     }
 
@@ -950,7 +1050,8 @@
       { t: "Chapters",           i: "scroll", k: "story writing timeline", go: HOME + "chapters/" },
       { t: "The Corridor",       i: "pen", k: "manifesto essay writing witness", go: HOME + "manifesto/" },
       { t: "How this site works", i: "pencil", k: "craft colophon design type", go: HOME + "craft/" },
-      { t: "Toggle dark mode",   i: "moon", k: "theme light night maghrib", fn: toggleTheme },
+      /* the palette leaves first, then the light changes */
+      { t: "Toggle dark mode",   i: "moon", k: "theme light night maghrib", fn: function () { setTimeout(toggleTheme, REDUCED ? 0 : 160); } },
       { t: "Hire a Boris bike",  i: "burger", k: "bike boris delivery chicken burger whitechapel cycle", fn: function () {
           rideBike(function () { toast("Delivered. He shut the door without a word."); });
         } },
@@ -1051,7 +1152,7 @@
       open = false;
       veil.classList.remove("open");
       root.classList.remove("locked");
-      setTimeout(function () { if (!open) veil.hidden = true; }, 260);
+      setTimeout(function () { if (!open) veil.hidden = true; }, 160);
     };
     var hint = $("#k-hint");
     if (hint) hint.addEventListener("click", function () { open ? close() : openPalette(); });

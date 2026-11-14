@@ -227,6 +227,14 @@ h1, h2, h3,
 @view-transition { navigation: auto; }
 ::view-transition-old(root) { animation-duration: 120ms; }
 ::view-transition-new(root) { animation-duration: 200ms; }
+/* the theme changes the way the light does: one cross-fade of the whole page */
+:root[data-vt="theme"]::view-transition-old(root),
+:root[data-vt="theme"]::view-transition-new(root) {
+  animation-duration: var(--settle);
+  animation-timing-function: ease;
+}
+/* a second press mid-fade must still land on the button */
+:root[data-vt="theme"]::view-transition { pointer-events: none; }
 
 /* ---------- page grid ----------
    one narrow column of ink; margins are for the pen. */
@@ -418,6 +426,51 @@ html.locked { overflow: hidden; }
   to { opacity: 1; transform: none; }
 }
 
+/* the memo head arrives a line at a time, in the order you read it,
+   and the body waits for the subject line before it follows */
+.memo-head.rise { opacity: 1; transform: none; animation: none; }
+.memo-head.rise dl > div {
+  opacity: 0;
+  transform: translateY(9px);
+  animation: rise var(--grand) var(--out) forwards;
+}
+.memo-head.rise dl > div:nth-child(2) { animation-delay: 35ms; }
+.memo-head.rise dl > div:nth-child(3) { animation-delay: 70ms; }
+.memo-head.rise dl > div.re { animation-delay: 110ms; }
+.memo .rise { animation-delay: calc(var(--i, 0) * 45ms + 110ms); }
+
+/* a heading's rule is drawn along the floor, left to right, towards its door */
+.memo h2::after, .section > h2.memo-h::after, .article h2::after {
+  transform-origin: left center;
+  transition: transform var(--grand) var(--out);
+}
+.memo h2.rise::after, .article h2.rise::after {
+  animation: rule var(--grand) var(--out) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 260ms);
+}
+@keyframes rule { from { transform: scaleX(0); } }
+h2.rule-wait.rule-wait::after { transform: scaleX(0); transition: none; }
+
+/* things further down the page arrive as you reach them, once. site.js adds
+   .reveal only to what starts below the fold, so with no script, or with
+   reduced motion, nothing is ever hidden */
+.reveal { opacity: 0; transform: translateY(10px); }
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--grand) var(--out), transform var(--grand) var(--out);
+  transition-delay: var(--d, 0ms);
+}
+
+/* anything you can press gives a little under the finger */
+.feed-more:active, .unfold:active, .foot .hint:active, .palette li:active { transform: scale(0.97); }
+.ledger li > a, .prevnext a {
+  transform-origin: left center;
+  transition: transform var(--swift) var(--out);
+}
+.prevnext .next { transform-origin: right center; }
+.ledger li > a:active, .prevnext a:active { transform: scale(0.985); }
+
 /* ---------- footer ---------- */
 .foot {
   letter-spacing: 0;
@@ -461,7 +514,7 @@ html.locked { overflow: hidden; }
   margin: -0.4rem 0;
   font: inherit;
   cursor: pointer;
-  transition: color var(--swift) ease;
+  transition: color var(--swift) ease, transform var(--swift) var(--out);
 }
 .foot .hint:hover { color: var(--ink); }
 /* a key is a key wherever it appears. prose used to mark these with the
@@ -582,7 +635,8 @@ kbd {
   transition: transform var(--settle) var(--out);
   transform: translate(8px, -9px);
 }
-.moon[aria-pressed="true"] .ray { transform: scale(0); opacity: 0; }
+/* the rays turn as they fold away, and unfold the same way at sunrise */
+.moon[aria-pressed="true"] .ray { transform: rotate(-60deg) scale(0.3); opacity: 0; }
 .moon[aria-pressed="true"] .bite { transform: translate(2.5px, -2.5px); }
 
 /* ---------- pen: margin annotations ---------- */
@@ -754,13 +808,14 @@ kbd {
   -webkit-backdrop-filter: blur(9px) saturate(1.1);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--settle) ease;
+  /* it leaves faster than it arrives: the system answering should never drag */
+  transition: opacity 150ms ease;
   display: grid;
   justify-items: center;
   align-items: start;
   padding-top: min(18vh, 11rem);
 }
-.veil.open { opacity: 1; pointer-events: auto; }
+.veil.open { opacity: 1; pointer-events: auto; transition-duration: 200ms; }
 
 .palette {
   width: min(33rem, calc(100vw - 2.5rem));
@@ -768,10 +823,11 @@ kbd {
   border-radius: 14px;
   box-shadow: var(--raised);
   overflow: hidden;
-  transform: translateY(8px) scale(0.985);
-  transition: transform var(--settle) var(--nudge);
+  transform: translateY(6px) scale(0.97);
+  transform-origin: 50% 0;
+  transition: transform 150ms var(--out);
 }
-.veil.open .palette { transform: none; }
+.veil.open .palette { transform: none; transition-duration: 260ms; }
 
 .palette input {
   width: 100%;
@@ -806,6 +862,7 @@ kbd {
   font-size: var(--t-m);
   cursor: pointer;
   color: var(--ink-2);
+  transition: transform var(--swift) var(--out);
 }
 .palette li .glyph {
   width: 1.15rem;
@@ -998,7 +1055,7 @@ kbd {
   position: fixed;
   left: 50%;
   bottom: 2rem;
-  transform: translate(-50%, 12px);
+  transform: translate(-50%, 12px) scale(0.96);
   background: var(--paper-high);
   color: var(--ink);
   font-size: var(--t-m);
@@ -1007,10 +1064,14 @@ kbd {
   box-shadow: var(--raised);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--settle) ease, transform var(--settle) var(--nudge);
+  transition: opacity 200ms ease, transform 200ms var(--out);
   z-index: 1001;
 }
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition: opacity var(--settle) ease, transform var(--settle) var(--out);
+}
 
 /* ---------- craft page demos ---------- */
 .demo {
@@ -1401,7 +1462,7 @@ kbd {
   color: var(--ink-2);
   cursor: pointer;
   touch-action: manipulation;
-  transition: border-color var(--swift) ease, color var(--swift) ease;
+  transition: border-color var(--swift) ease, color var(--swift) ease, transform var(--swift) var(--out);
 }
 .feed-more:hover { border-color: var(--seal); color: var(--ink); }
 
@@ -1512,8 +1573,14 @@ kbd {
 .memo-head .from h1 { display: inline; font-size: inherit; letter-spacing: inherit; }
 
 /* the tasbih is for whoever goes looking: press t and it takes its place */
-.foot .tasbih { display: none; }
+.foot .tasbih {
+  display: none;
+  transition: opacity var(--settle) ease, transform var(--settle) var(--out);
+}
 .counting .foot .tasbih { display: inline-flex; }
+@starting-style {
+  .counting .foot .tasbih { opacity: 0; transform: translateX(-6px); }
+}
 
 .memo { margin-top: var(--s2); }
 .memo h2, .section > h2.memo-h {
@@ -1902,7 +1969,7 @@ a.door { cursor: pointer; }
   color: var(--ink-3);
   letter-spacing: 0;
   border-bottom: 1px solid var(--line);
-  transition: color var(--swift) ease, border-color var(--swift) ease;
+  transition: color var(--swift) ease, border-color var(--swift) ease, transform var(--swift) var(--out);
 }
 @media (hover: hover) and (pointer: fine) {
   .unfold:hover { color: var(--seal); border-bottom-color: var(--seal); }
@@ -1919,7 +1986,8 @@ a.door { cursor: pointer; }
   .page { max-width: none; padding: 0; }
   /* a printed link is a dead end unless it says where it went */
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.75em; color: #555; word-break: break-all; }
-  .rise, .drawn { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .rise, .drawn, .reveal, .memo-head.rise dl > div { opacity: 1 !important; transform: none !important; animation: none !important; }
+  h2::after { transform: none !important; animation: none !important; }
   .feed { max-height: none !important; overflow: visible !important; -webkit-mask-image: none !important; mask-image: none !important; }
   h1, h2, h3 { break-after: avoid; }
   .post, .beat { break-inside: avoid; }

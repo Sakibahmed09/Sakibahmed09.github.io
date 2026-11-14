@@ -36,7 +36,7 @@ HEAD = """<!doctype html>
 <script>(function(){{document.documentElement.classList.add("js");var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;}})();</script>
 <link rel="preload" href="../../assets/fonts/schibsted-grotesk-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/sakib-grotesk-regular-v041.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../../assets/site.css?v=reading-042">
+<link rel="stylesheet" href="../../assets/site.css?v=motion-043">
 </head>
 <body>
 
@@ -120,7 +120,7 @@ FOOT = """
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
-<script src="../../assets/site.js" defer></script>
+<script src="../../assets/site.js?v=motion-043" defer></script>
 </body>
 </html>
 """
@@ -256,6 +256,16 @@ def stage_image(fname):
     return out_name
 
 
+def shot_size(img):
+    """Width and height attributes, so the page keeps the photo's place before it loads."""
+    try:
+        from PIL import Image
+        with Image.open(os.path.join(MEDIA_OUT, img)) as im:
+            return ' width="%d" height="%d"' % im.size
+    except Exception:
+        return ""
+
+
 def card(p, i, img=None, alt=""):
     src = p.get("src", "x")
     glyph = "𝕏" if src == "x" else "in"
@@ -277,8 +287,8 @@ def card(p, i, img=None, alt=""):
     if img:
         if p.get("video"):
             alt = "Still from the video in the post."
-        shot = ('<img class="shot" src="../../assets/media/%s" alt="%s" '
-                'loading="lazy" decoding="async">' % (img, html.escape(alt)))
+        shot = ('<img class="shot" src="../../assets/media/%s"%s alt="%s" '
+                'loading="lazy" decoding="async">' % (img, shot_size(img), html.escape(alt)))
         if p.get("video"):
             # a still is not the video, so it says so and opens the real thing
             shot = ('<a class="shot-play" href="%s" aria-label="Play the video on X">%s</a>'
